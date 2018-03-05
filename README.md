@@ -12,6 +12,14 @@ Plan
 - Look at genie code
 - Define some development rules
 
+Vague concepts to fit in if somehow the basics come together
+---
+
+- Phase-based changes in abilities/properties. As in the Lottery in Babylon.
+- Factions
+- Idea-spreading
+- Geometrical movement
+
 Installation
 ------------
 
