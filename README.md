@@ -6,11 +6,14 @@ This is my 2018 7DRL attempt!
 Plan
 ---
 
-- Look at Pico8
-- Look at Bitsy
-- Look at exogenite code
-- Look at genie code
+- Look at Pico8 - done!
+- Look at Bitsy - done
+- Look at exogenite code - done
+- Look at genie code - done
 - Define some development rules
+  - No single graphic should take more than 15 minutes to make
+  - No cellular-automata-style cellular simultaneous updates. Everything should be sequential
+  - Allow complex drawing code that does a lot on its own instead of trying to model everything
 
 Vague concepts to fit in if somehow the basics come together
 ---
