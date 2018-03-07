@@ -4,7 +4,26 @@ var update = require('./flows/update');
 var render = require('./renderers/render');
 var probable = require('probable'); // TODO: Use seed
 
-var theGameState = {};
+var theGameState = {
+  grids: [
+    {
+      id: 'basic',
+      xSpace: 64,
+      ySpace: 64,
+      xOffset: -32,
+      yOffset: -32,
+      color: 'blue'
+    },
+    {
+      id: 'other',
+      xSpace: 96,
+      ySpace: 32,
+      xOffset: -16,
+      yOffset: 0,
+      color: 'red'
+    }
+  ]
+};
 
 var routeState = RouteState({
   followRoute,
@@ -17,12 +36,12 @@ var routeState = RouteState({
 })();
 
 function followRoute(routeDict) {
-  advance({gameState: theGameState});
+  advance({ gameState: theGameState });
 }
 
-function advance({gameState}) {
-  update({gameState});
-  render({gameState, onAdvance: advance, probable});
+function advance({ gameState }) {
+  update({ gameState });
+  render({ gameState, onAdvance: advance, probable });
 }
 
 function reportTopLevelError(msg, url, lineNo, columnNo, error) {

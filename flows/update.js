@@ -1,5 +1,3 @@
+function update({ gameState }) {}
 
-function update({gameState}) {
-}
-
-module.exports  = update;
+module.exports = update;

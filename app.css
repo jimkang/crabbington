@@ -27,7 +27,7 @@ body {
   position: absolute;
 }
 
-#text-board {
+#ui-board {
   z-index: 2;
   position: absolute;
 }
