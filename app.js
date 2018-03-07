@@ -2,6 +2,7 @@ var RouteState = require('route-state');
 var handleError = require('handle-error-web');
 var update = require('./flows/update');
 var render = require('./renderers/render');
+var probable = require('probable'); // TODO: Use seed
 
 var theGameState = {};
 
@@ -21,7 +22,7 @@ function followRoute(routeDict) {
 
 function advance({gameState}) {
   update({gameState});
-  render({gameState, onAdvance: advance});
+  render({gameState, onAdvance: advance, probable});
 }
 
 function reportTopLevelError(msg, url, lineNo, columnNo, error) {

@@ -13,14 +13,14 @@ var textBoard = d3.select('#text-board');
 var imageContext = imageBoard.node().getContext('2d', { alpha: false });
 var inputContext = inputBoard.node().getContext('2d', { alpha: false });
 
-function render({gameState, onAdvance}) {
+function render({gameState, onAdvance, probable}) {
   // Does this have to get called every time?
   resizeBoards();
 
   imageContext.strokeStyle = 'green';
   imageContext.beginPath();
-  imageContext.moveTo(0, 300);
-  imageContext.lineTo(800, 500);
+  imageContext.moveTo(0, probable.roll(800));
+  imageContext.lineTo(800, probable.roll(800));
   imageContext.stroke();
 
   inputBoard.on('click.input', null);
@@ -34,7 +34,7 @@ function render({gameState, onAdvance}) {
       .data;
     // var cell = trackingColorer.getCellForImageData(imageData);
     // Temporary:
-    onAdvance(gameState);
+    onAdvance({gameState});
   }
 }
 
