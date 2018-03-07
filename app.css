@@ -11,3 +11,29 @@ body {
 #status-message {
   background-color: #ffffee;
 }
+
+/* Canvases stuff */
+
+.canvases-container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+}
+
+#image-board {
+  z-index: 1;
+  position: absolute;
+}
+
+#text-board {
+  z-index: 2;
+  position: absolute;
+}
+
+#input-board {
+  position: absolute;
+  opacity: 0;
+  z-index: 3;
+}

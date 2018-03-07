@@ -5,9 +5,15 @@
 </head>
 <body>
 
-<div id="status-message" class="hidden"></div>
+<pre id="status-message" class="hidden"></pre>
 
-<p>This is an app.</p>
+<div class="canvases-container">
+  <canvas id="image-board" width="800" height="0"></canvas>
+  <svg id="text-board">
+    <g class="label-layer" transform="translate(4, 15)"></g>
+  </svg>
+  <canvas id="input-board" width="800" height="0"></canvas>
+</div>
 
 <script src="index.js"></script>
 

@@ -1,8 +1,12 @@
 var RouteState = require('route-state');
 var handleError = require('handle-error-web');
+var update = require('./flows/update');
+var render = require('./renderers/render');
+
+var theGameState = {};
 
 var routeState = RouteState({
-  followRoute: followRoute,
+  followRoute,
   windowObject: window
 });
 
@@ -12,8 +16,12 @@ var routeState = RouteState({
 })();
 
 function followRoute(routeDict) {
-  // TODO: Look at the key-value pairs in routeDict and 
-  // decide how your app should respond based on that.
+  advance({gameState: theGameState});
+}
+
+function advance({gameState}) {
+  update({gameState});
+  render({gameState, onAdvance: advance});
 }
 
 function reportTopLevelError(msg, url, lineNo, columnNo, error) {
