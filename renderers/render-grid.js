@@ -1,9 +1,7 @@
 var curry = require('lodash.curry');
+var applyToPointsInRows = require('../apply-to-points-in-rows');
 
-function renderGrid(
-  { imageContext, boardWidth, boardHeight, probable },
-  grid
-) {
+function renderGrid({ imageContext, probable }, grid) {
   drawGridLines({ grid, imageContext });
   drawIntersections({ grid, imageContext });
 }
@@ -31,7 +29,7 @@ function drawGridLines({ grid, imageContext }) {
   // What should be rendered onto inputContext? Circles at intersections?
 
   function drawLineCurves(curvesKit) {
-    imageContext.moveTo.apply(imageContext, curvesKit.start);
+    imageContext.moveTo(curvesKit.start.x, curvesKit.start.y);
     curvesKit.curves.forEach(drawC);
   }
 }
@@ -58,23 +56,23 @@ function curvesFromExtremes(vertical, extremes) {
   for (var i = 1; i < extremes.length; ++i) {
     let dest = extremes[i];
     let src = extremes[i - 1];
-    let distToPrev = dest[0] - src[0];
+    let distToPrev = dest.x - src.x;
     if (vertical) {
-      distToPrev = dest[1] - src[1];
+      distToPrev = dest.y - src.y;
     }
-    var srcCtrlX = src[0] + distToPrev / 2;
-    var srcCtrlY = src[1];
-    var destCtrlX = dest[0] - distToPrev / 2;
-    var destCtrlY = dest[1];
+    var srcCtrlX = src.x + distToPrev / 2;
+    var srcCtrlY = src.y;
+    var destCtrlX = dest.x - distToPrev / 2;
+    var destCtrlY = dest.y;
     if (vertical) {
-      srcCtrlX = src[0];
-      srcCtrlY = src[1] + distToPrev / 2;
-      destCtrlX = dest[0];
-      destCtrlY = dest[1] - distToPrev / 2;
+      srcCtrlX = src.x;
+      srcCtrlY = src.y + distToPrev / 2;
+      destCtrlX = dest.x;
+      destCtrlY = dest.y - distToPrev / 2;
     }
 
     // This is the order that the params for bezierCurveTo go in.
-    curves.push([srcCtrlX, srcCtrlY, destCtrlX, destCtrlY, dest[0], dest[1]]);
+    curves.push([srcCtrlX, srcCtrlY, destCtrlX, destCtrlY, dest.x, dest.y]);
   }
   return { start: extremes[0], curves };
 }
@@ -82,17 +80,13 @@ function curvesFromExtremes(vertical, extremes) {
 function drawIntersections({ grid, imageContext }) {
   imageContext.fillStyle = grid.color;
   imageContext.beginPath();
-
-  for (var rowIndex = 0; rowIndex < grid.rows.length; ++rowIndex) {
-    let row = grid.rows[rowIndex];
-    for (var colIndex = 0; colIndex < row.length; ++colIndex) {
-      let point = row[colIndex];
-      imageContext.moveTo(point[0], point[1]);
-      imageContext.arc(point[0], point[1], 4, 0, Math.PI * 2);
-    }
-  }
-
+  applyToPointsInRows(grid.rows, curry(drawIntersectionCircle)(imageContext));
   imageContext.fill();
+}
+
+function drawIntersectionCircle(imageContext, point) {
+  imageContext.moveTo(point.x, point.y);
+  imageContext.arc(point.x, point.y, 4, 0, Math.PI * 2);
 }
 
 module.exports = renderGrid;

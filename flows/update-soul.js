@@ -9,10 +9,10 @@ function updateSoul(grids, targetTree, soul) {
   }
 
   var intersection = grid.rows[soul.grid.row][soul.grid.col];
-  soul.minX = intersection[0] - soul.sprite.width / 2;
-  soul.maxX = intersection[0] + soul.sprite.width / 2;
-  soul.minY = intersection[1] - soul.sprite.height / 2;
-  soul.maxY = intersection[1] + soul.sprite.height / 2;
+  soul.minX = intersection.x - soul.sprite.width / 2;
+  soul.maxX = intersection.x + soul.sprite.width / 2;
+  soul.minY = intersection.y - soul.sprite.height / 2;
+  soul.maxY = intersection.y + soul.sprite.height / 2;
 
   // Update it the search tree.
   // Someday always removing and inserting may be a performance issue?

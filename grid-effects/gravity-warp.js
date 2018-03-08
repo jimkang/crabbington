@@ -14,14 +14,15 @@ function gravityWarp({ centers, strength, decayDist }, pointsInRows) {
 
 function warpTowardCenter({ points, strength, decayDist }, center) {
   var indexesByClosenessToCenter = sortCellsByDist(
-    center,
+    { x: center[0], y: center[1] },
     pluck(points, 'value'),
-    '0',
-    '1'
+    'x',
+    'y'
   );
   for (var i = 0; i < indexesByClosenessToCenter.length; ++i) {
     let index = indexesByClosenessToCenter[i];
-    let point = points[index].value;
+    let intersectionObj = points[index].value;
+    let point = pt(intersectionObj);
     let dist = math.getVectorMagnitude(math.subtractPairs(point, center));
     if (dist > decayDist) {
       break;
@@ -33,8 +34,13 @@ function warpTowardCenter({ points, strength, decayDist }, center) {
       changeStrength
     );
     var warpedPoint = math.addPairs(point, vectorTowardCenter);
-    points[index].value = warpedPoint;
+    intersectionObj.x = warpedPoint[0];
+    intersectionObj.y = warpedPoint[1];
   }
+}
+
+function pt(intersectionObj) {
+  return [intersectionObj.x, intersectionObj.y];
 }
 
 module.exports = gravityWarp;

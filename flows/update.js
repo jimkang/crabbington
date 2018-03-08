@@ -3,7 +3,8 @@ var updateGrid = require('./update-grid');
 var updateSoul = require('./update-soul');
 var rbush = require('rbush');
 
-const clickRadius = 20; // Not really a radius: More like half a square.
+// Not really a radius: More like half a square.
+const clickRadius = 20;
 
 var targetTree = rbush(9);
 var turn = 0;
@@ -20,7 +21,7 @@ function update({ gameState, recentClickX, recentClickY }) {
   }
 
   if (turn === 0) {
-    gameState.grids.forEach(updateGrid);
+    gameState.grids.forEach(curry(updateGrid)(targetTree));
   }
   gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
   turn += 1;

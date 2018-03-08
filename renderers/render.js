@@ -20,8 +20,6 @@ function render({ gameState, onAdvance, probable }) {
   gameState.grids.forEach(
     curry(renderGrid)({
       imageContext,
-      boardWidth,
-      boardHeight,
       probable
     })
   );
