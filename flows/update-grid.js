@@ -5,15 +5,25 @@ var applyToPointsInRows = require('../apply-to-points-in-rows');
 const gridIntersectionRadius = 10;
 
 function updateGrid(targetTree, grid) {
+  var needToUpdateDerived = false;
+  var needToAddToTree = false;
+
   if (!grid.rows) {
     grid.rows = getIntersectionRows(grid);
-    applyToPointsInRows(grid.rows, updateDerivedIntersectionProps);
+    needToUpdateDerived = true;
+    needToAddToTree = true;
   }
   if (grid.effects) {
     applyToPointsInRows(grid.rows, targetTree.remove.bind(targetTree));
     grid.effects.forEach(applyEffect);
-    // This needs to be done every time the grid x and y change.
+    needToAddToTree = true;
+    needToUpdateDerived = true;
+  }
+
+  if (needToUpdateDerived) {
     applyToPointsInRows(grid.rows, updateDerivedIntersectionProps);
+  }
+  if (needToAddToTree) {
     applyToPointsInRows(grid.rows, targetTree.insert.bind(targetTree));
   }
 
