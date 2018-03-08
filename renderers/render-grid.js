@@ -4,6 +4,11 @@ function renderGrid(
   { imageContext, inputContext, boardWidth, boardHeight, probable },
   grid
 ) {
+  drawGridLines({ grid, imageContext });
+  drawIntersections({ grid, imageContext });
+}
+
+function drawGridLines({ grid, imageContext }) {
   var cols = rowsToCols(grid.rows);
 
   var horizontalBezierCurvesPerLine = grid.rows.map(
@@ -47,16 +52,6 @@ function rowsToCols(rows) {
   return cols;
 }
 
-function getVerticalPath(col) {
-  // TODO: Transforms? Interpolation?
-  return col;
-}
-
-function getHorizontalPath(row) {
-  // TODO: Transforms? Interpolation?
-  return row;
-}
-
 // Assumes extremes are sorted, ascending.
 function curvesFromExtremes(vertical, extremes) {
   var curves = [];
@@ -82,6 +77,22 @@ function curvesFromExtremes(vertical, extremes) {
     curves.push([srcCtrlX, srcCtrlY, destCtrlX, destCtrlY, dest[0], dest[1]]);
   }
   return { start: extremes[0], curves };
+}
+
+function drawIntersections({ grid, imageContext }) {
+  imageContext.fillStyle = grid.color;
+  imageContext.beginPath();
+
+  for (var rowIndex = 0; rowIndex < grid.rows.length; ++rowIndex) {
+    let row = grid.rows[rowIndex];
+    for (var colIndex = 0; colIndex < row.length; ++colIndex) {
+      let point = row[colIndex];
+      imageContext.moveTo(point[0], point[1]);
+      imageContext.arc(point[0], point[1], 4, 0, Math.PI * 2);
+    }
+  }
+
+  imageContext.fill();
 }
 
 module.exports = renderGrid;
