@@ -1,20 +1,12 @@
 var curry = require('lodash.curry');
-var effects = require('../grid-effects/grid-effects');
 
 function renderGrid(
   { imageContext, inputContext, boardWidth, boardHeight, probable },
   grid
 ) {
-  var rows = getIntersectionRows(grid, boardWidth, boardHeight, probable);
-  if (grid.effects) {
-    grid.effects.forEach(applyEffect);
-  }
+  var cols = rowsToCols(grid.rows);
 
-  var cols = rowsToCols(rows);
-  console.log(rows);
-  console.log(cols);
-
-  var horizontalBezierCurvesPerLine = rows.map(
+  var horizontalBezierCurvesPerLine = grid.rows.map(
     curry(curvesFromExtremes)(false)
   );
   var verticalBezierCurvesPerLine = cols.map(curry(curvesFromExtremes)(true));
@@ -37,30 +29,10 @@ function renderGrid(
     imageContext.moveTo.apply(imageContext, curvesKit.start);
     curvesKit.curves.forEach(drawC);
   }
-
-  function applyEffect(effect) {
-    rows = effects[effect.name](effect, rows);
-  }
 }
 
 function drawCurve(ctx, curveParams) {
   ctx.bezierCurveTo.apply(ctx, curveParams);
-}
-
-function getIntersectionRows(grid, boardWidth, boardHeight, probable) {
-  var rows = [];
-  for (var y = grid.yOffset; y <= boardHeight; y += grid.ySpace) {
-    let row = [];
-    for (var x = grid.xOffset; x <= boardWidth; x += grid.xSpace) {
-      row.push([x, y]);
-      // Random warp:
-      // row.push([x + (-20 + probable.roll(40)), y + (-20 + probable.roll(40))])
-    }
-    rows.push(row);
-  }
-
-  // TODO: Warping and/or transforms on points.
-  return rows;
 }
 
 function rowsToCols(rows) {
