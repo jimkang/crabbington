@@ -23,8 +23,8 @@ function followRoute(routeDict) {
   advance({ gameState: theGameState });
 }
 
-function advance({ gameState }) {
-  update({ gameState });
+function advance({ gameState, recentClickX, recentClickY }) {
+  update({ gameState, recentClickX, recentClickY });
   render({ gameState, onAdvance: advance, probable });
 }
 

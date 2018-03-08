@@ -10,7 +10,8 @@ module.exports = [
       col: 2,
       row: 0,
       width: 32,
-      height: 32
+      height: 32,
+      hitRadius: 48
     }
   },
   {
@@ -24,7 +25,8 @@ module.exports = [
       col: 1,
       row: 0,
       width: 32,
-      height: 32
+      height: 32,
+      hitRadius: 100
     }
   }
 ];

@@ -1,10 +1,28 @@
+var curry = require('lodash.curry');
 var updateGrid = require('./update-grid');
+var updateSoul = require('./update-soul');
+var rbush = require('rbush');
+
+const clickRadius = 20; // Not really a radius: More like half a square.
+
+var targetTree = rbush(9);
 var turn = 0;
 
-function update({ gameState }) {
+function update({ gameState, recentClickX, recentClickY }) {
+  if (!isNaN(recentClickX) && !isNaN(recentClickY)) {
+    var thingsHit = targetTree.search({
+      minX: recentClickX - clickRadius,
+      maxX: recentClickX + clickRadius,
+      minY: recentClickY - clickRadius,
+      maxY: recentClickY + clickRadius
+    });
+    console.log('thingsHit', thingsHit);
+  }
+
   if (turn === 0) {
     gameState.grids.forEach(updateGrid);
   }
+  gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
   turn += 1;
 }
 

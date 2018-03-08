@@ -1,7 +1,7 @@
 var curry = require('lodash.curry');
 
 function renderGrid(
-  { imageContext, inputContext, boardWidth, boardHeight, probable },
+  { imageContext, boardWidth, boardHeight, probable },
   grid
 ) {
   drawGridLines({ grid, imageContext });
