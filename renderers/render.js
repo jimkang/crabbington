@@ -1,12 +1,12 @@
 var d3 = require('d3-selection');
 var curry = require('lodash.curry');
 var renderGrid = require('./render-grid');
+var renderSoul = require('./render-soul');
 // var callNextTick = require('call-next-tick');
 
 const widthLimit = 800;
 
 // Get the various DOM roots.
-
 var canvasesContainer = d3.select('#canvases-container');
 var imageBoard = d3.select('#image-board');
 var inputBoard = d3.select('#input-board');
@@ -14,8 +14,6 @@ var uiBoard = d3.select('#ui-board');
 // var labelLayer = d3.select('#labels-layer');
 var imageContext = imageBoard.node().getContext('2d', { alpha: false });
 var inputContext = inputBoard.node().getContext('2d', { alpha: false });
-
-var spriteSheet = document.getElementById('sprite-sheet');
 
 function render({ gameState, onAdvance, probable }) {
   // Does this have to get called every time?
@@ -31,6 +29,13 @@ function render({ gameState, onAdvance, probable }) {
       probable
     })
   );
+  gameState.souls.forEach(
+    curry(renderSoul)({
+      imageContext,
+      inputContext,
+      grids: gameState.grids
+    })
+  );
 
   // Test.
   // imageContext.strokeStyle = 'green';
@@ -38,7 +43,6 @@ function render({ gameState, onAdvance, probable }) {
   // imageContext.moveTo(0, probable.roll(800));
   // imageContext.lineTo(800, probable.roll(800));
   // imageContext.stroke();
-  imageContext.drawImage(spriteSheet, 32 * 2, 32 * 0, 32, 32, probable.roll(800), probable.roll(800), 32, 32);
 
   inputBoard.on('click.input', null);
   inputBoard.on('click.input', onInputBoardClick);

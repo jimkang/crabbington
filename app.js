@@ -5,7 +5,8 @@ var render = require('./renderers/render');
 var probable = require('probable'); // TODO: Use seed
 
 var theGameState = {
-  grids: require('./defs/grid-defs')
+  grids: require('./defs/grid-defs'),
+  souls: require('./defs/soul-defs')
 };
 
 var routeState = RouteState({
