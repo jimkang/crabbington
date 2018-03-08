@@ -21,7 +21,7 @@ prettier:
 
 # Convert black pixels to transparent ones, resize, nearest-neighbor-style.
 prepare-sheet:
-	convert ../carts/octo.png \
+	convert meta/pico-8/sprites.png \
 		-alpha set \
 		-channel RGBA \
 		-fill none \
