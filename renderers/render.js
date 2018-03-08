@@ -21,7 +21,13 @@ function render({ gameState, onAdvance, probable }) {
 
   imageContext.clearRect(0, 0, boardWidth, boardWidth);
   gameState.grids.forEach(
-    curry(renderGrid)({ imageContext, inputContext, boardWidth, boardHeight })
+    curry(renderGrid)({
+      imageContext,
+      inputContext,
+      boardWidth,
+      boardHeight,
+      probable
+    })
   );
 
   // Test.

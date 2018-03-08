@@ -20,7 +20,21 @@ var theGameState = {
       ySpace: 32,
       xOffset: -16,
       yOffset: 0,
-      color: 'red'
+      color: 'red',
+      effects: [
+        {
+          name: 'gravityWarp',
+          centers: [[300, 300]],
+          strength: 16, // How far it pulls a point at strongest gravity.
+          decayDist: 288 // At what point gravity fades completely.
+        },
+        {
+          name: 'gravityWarp',
+          centers: [[500, 100], [400, 700]],
+          strength: 64, // How far it pulls a point at strongest gravity.
+          decayDist: 192 // At what point gravity fades completely.
+        }
+      ]
     }
   ]
 };
