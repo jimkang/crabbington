@@ -15,6 +15,8 @@ var uiBoard = d3.select('#ui-board');
 var imageContext = imageBoard.node().getContext('2d', { alpha: false });
 var inputContext = inputBoard.node().getContext('2d', { alpha: false });
 
+var spriteSheet = document.getElementById('sprite-sheet');
+
 function render({ gameState, onAdvance, probable }) {
   // Does this have to get called every time?
   var { boardWidth, boardHeight } = resizeBoards();
@@ -31,11 +33,12 @@ function render({ gameState, onAdvance, probable }) {
   );
 
   // Test.
-  imageContext.strokeStyle = 'green';
-  imageContext.beginPath();
-  imageContext.moveTo(0, probable.roll(800));
-  imageContext.lineTo(800, probable.roll(800));
-  imageContext.stroke();
+  // imageContext.strokeStyle = 'green';
+  // imageContext.beginPath();
+  // imageContext.moveTo(0, probable.roll(800));
+  // imageContext.lineTo(800, probable.roll(800));
+  // imageContext.stroke();
+  imageContext.drawImage(spriteSheet, 32 * 2, 32 * 0, 32, 32, probable.roll(800), probable.roll(800), 32, 32);
 
   inputBoard.on('click.input', null);
   inputBoard.on('click.input', onInputBoardClick);

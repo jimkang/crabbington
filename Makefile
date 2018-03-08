@@ -18,3 +18,20 @@ build:
 
 prettier:
 	prettier --single-quote --write "**/*.js"
+
+# Convert black pixels to transparent ones, resize, nearest-neighbor-style.
+prepare-sheet:
+	convert ../carts/octo.png \
+		-alpha set \
+		-channel RGBA \
+		-fill none \
+		-opaque black \
+		-filter point \
+		-resize 512x512 \
+		static/sheet.png
+
+# scale-sheet:
+# 	ffmpeg -i ../carts/octo.png \
+# 		-vf scale=512:512 \
+# 		-sws_flags neighbor \
+# 		static/sheet.png
