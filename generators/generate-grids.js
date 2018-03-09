@@ -3,10 +3,9 @@ var generateGravityWarp = require('./effects/generate-gravity-warp');
 
 function generateGrids({ probable }) {
   var spaceSizeTable = probable.createTableFromSizes([
-    [4, 64],
-    [3, 32],
-    [2, 96],
-    [1, 128]
+    [4, 128],
+    [3, 64],
+    [1, 256]
   ]);
   var gridSizeTable = probable.createTableFromSizes([
     [4, 800],
@@ -23,10 +22,16 @@ function generateGrids({ probable }) {
   var grids = [];
   var numberOfGrids = 1 + probable.rollDie(2);
   for (var i = 0; i < numberOfGrids; ++i) {
+    var isSquare = probable.roll(4) > 0;
+    var xSpace = spaceSizeTable.roll();
+    var ySpace = xSpace;
+    if (!isSquare) {
+      ySpace = spaceSizeTable.roll();
+    }
     let grid = {
       id: 'grid-' + randomId(4),
-      xSpace: spaceSizeTable.roll(),
-      ySpace: spaceSizeTable.roll(),
+      xSpace,
+      ySpace,
       // TODO: Should this be a separate table?
       xOffset: spaceSizeTable.roll(),
       yOffset: spaceSizeTable.roll(),
