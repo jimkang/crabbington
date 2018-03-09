@@ -20,7 +20,24 @@ function update({ gameState, recentClickX, recentClickY, probable }) {
       maxY: recentClickY + clickRadius
     });
     // console.log('thingsHit', thingsHit);
-    interact(gameState, thingsHit, probable);
+
+    // Assuming: if there is more than one intersection from the same grid hit,
+    // there are so close that it doesn't matter which one we pick.
+    // If it does matter, we can sort thingsHit by click distance.
+    var selectedGridPoint = findWhere(thingsHit, {
+      gridId: gameState.player.grid.id
+    });
+    if (
+      selectedGridPoint &&
+      pointsAreAdjacent(
+        [selectedGridPoint.col, selectedGridPoint.row],
+        [gameState.player.grid.colOnGrid, gameState.player.grid.rowOnGrid]
+      )
+    ) {
+      // Eventually, things other than clicking an adjacent space should
+      // trigger interact().
+      interact(gameState, thingsHit, selectedGridPoint, probable);
+    }
   }
 
   if (turn === 0) {
@@ -30,28 +47,14 @@ function update({ gameState, recentClickX, recentClickY, probable }) {
   turn += 1;
 }
 
-function interact(gameState, thingsHit, probable) {
-  maybeMovePlayer(gameState, thingsHit);
+function interact(gameState, thingsHit, selectedGridPoint, probable) {
+  movePlayer(gameState, selectedGridPoint);
   gameState.souls.forEach(curry(moveSoul)(gameState, probable));
 }
 
-function maybeMovePlayer(gameState, thingsHit) {
-  // Assuming: if there is more than one intersection from the same grid hit,
-  // there are so close that it doesn't matter which one we pick.
-  // If it does matter, we can sort thingsHit by click distance.
-  var selectedGridPoint = findWhere(thingsHit, {
-    gridId: gameState.player.grid.id
-  });
-  if (
-    selectedGridPoint &&
-    pointsAreAdjacent(
-      [selectedGridPoint.col, selectedGridPoint.row],
-      [gameState.player.grid.colOnGrid, gameState.player.grid.rowOnGrid]
-    )
-  ) {
-    gameState.player.grid.colOnGrid = selectedGridPoint.col;
-    gameState.player.grid.rowOnGrid = selectedGridPoint.row;
-  }
+function movePlayer(gameState, selectedGridPoint) {
+  gameState.player.grid.colOnGrid = selectedGridPoint.col;
+  gameState.player.grid.rowOnGrid = selectedGridPoint.row;
 }
 
 function moveSoul(gameState, probable, soul) {
