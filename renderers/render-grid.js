@@ -30,12 +30,9 @@ function drawGridLines({ grid, imageContext, transform }) {
 
   // What should be rendered onto inputContext? Circles at intersections?
 
+  // Assumes curves have already beed transformed.
   function drawLineCurves(curvesKit) {
-    imageContext.moveTo(
-      transform.applyX(curvesKit.start.x),
-      transform.applyY(curvesKit.start.y)
-    );
-
+    imageContext.moveTo(curvesKit.start.x, curvesKit.start.y);
     curvesKit.curves.forEach(drawC);
   }
 }
@@ -61,11 +58,18 @@ function curvesFromExtremes(shouldDrawVertically, transform, extremes) {
   var curves = [];
   var transformedStart = {
     x: transform.applyX(extremes[0].x),
-    y: transform.applyX(extremes[0].y)
+    y: transform.applyY(extremes[0].y)
   };
   for (var i = 1; i < extremes.length; ++i) {
-    let dest = extremes[i];
-    let src = extremes[i - 1];
+    let dest = {
+      x: transform.applyX(extremes[i].x),
+      y: transform.applyY(extremes[i].y)
+    };
+    let src = {
+      x: transform.applyX(extremes[i - 1].x),
+      y: transform.applyY(extremes[i - 1].y)
+    };
+
     let distToPrev = dest.x - src.x;
     if (shouldDrawVertically) {
       distToPrev = dest.y - src.y;
@@ -82,14 +86,7 @@ function curvesFromExtremes(shouldDrawVertically, transform, extremes) {
     }
 
     // This is the order that the params for bezierCurveTo go in.
-    curves.push([
-      transform.applyX(srcCtrlX),
-      transform.applyY(srcCtrlY),
-      transform.applyX(destCtrlX),
-      transform.applyY(destCtrlY),
-      transform.applyX(dest.x),
-      transform.applyY(dest.y)
-    ]);
+    curves.push([srcCtrlX, srcCtrlY, destCtrlX, destCtrlY, dest.x, dest.y]);
   }
   return { start: transformedStart, curves };
 }
