@@ -5,25 +5,18 @@ var applyToPointsInRows = require('../apply-to-points-in-rows');
 const gridIntersectionRadius = 10;
 
 function updateGrid(targetTree, grid) {
-  var needToUpdateDerived = false;
-  var needToAddToTree = false;
+  var needToUpdateDerived = !gridHasDerivedProps(grid);
 
-  if (!grid.rows) {
-    grid.rows = getIntersectionRows(grid);
-    needToUpdateDerived = true;
-    needToAddToTree = true;
-  }
   if (grid.effects) {
     applyToPointsInRows(grid.rows, targetTree.remove.bind(targetTree));
     grid.effects.forEach(applyEffect);
-    needToAddToTree = true;
     needToUpdateDerived = true;
   }
 
   if (needToUpdateDerived) {
     applyToPointsInRows(grid.rows, updateDerivedIntersectionProps);
-  }
-  if (needToAddToTree) {
+    // Derived properties need to be up-to-date before putting them in the tree.
+    // And points with updated properties, need to be (re)added to the tree.
     applyToPointsInRows(grid.rows, targetTree.insert.bind(targetTree));
   }
 
@@ -32,32 +25,16 @@ function updateGrid(targetTree, grid) {
   }
 }
 
-function getIntersectionRows(grid) {
-  var rows = [];
-  for (var y = grid.yOffset; y <= grid.height; y += grid.ySpace) {
-    let row = [];
-    for (var x = grid.xOffset; x <= grid.width; x += grid.xSpace) {
-      row.push({
-        x,
-        y,
-        col: row.length,
-        row: rows.length,
-        gridId: grid.id
-      });
-      // Random warp:
-      // row.push([x + (-20 + probable.roll(40)), y + (-20 + probable.roll(40))])
-    }
-    rows.push(row);
-  }
-
-  return rows;
-}
-
 function updateDerivedIntersectionProps(intersection) {
   intersection.minX = intersection.x - gridIntersectionRadius;
   intersection.maxX = intersection.x + gridIntersectionRadius;
   intersection.minY = intersection.y - gridIntersectionRadius;
   intersection.maxY = intersection.y + gridIntersectionRadius;
+}
+
+// Cheap check: Assumes a non-empty grid, uniformity among grid points.
+function gridHasDerivedProps(grid) {
+  return grid.rows[0][0].minX !== undefined;
 }
 
 module.exports = updateGrid;

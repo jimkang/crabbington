@@ -1,11 +1,6 @@
-module.exports = [
-  {
-    id: 'player',
-    grid: {
-      id: 'basic',
-      colOnGrid: 4,
-      rowOnGrid: 5
-    },
+module.exports = {
+  player: {
+    type: 'player',
     sprite: {
       col: 2,
       row: 0,
@@ -14,13 +9,8 @@ module.exports = [
       hitRadius: 48
     }
   },
-  {
-    id: 'doof',
-    grid: {
-      id: 'other',
-      colOnGrid: 4,
-      rowOnGrid: 5
-    },
+  doof: {
+    type: 'doof',
     sprite: {
       col: 1,
       row: 0,
@@ -28,5 +18,15 @@ module.exports = [
       height: 32,
       hitRadius: 100
     }
+  },
+  octo: {
+    type: 'octo',
+    sprite: {
+      col: 0,
+      row: 0,
+      width: 32,
+      height: 32,
+      hitRadius: 32
+    }
   }
-];
+};
