@@ -1,15 +1,15 @@
 var spriteSheet = document.getElementById('sprite-sheet');
 const spriteBlockSize = 32;
 
-function renderSoul({ imageContext }, soul) {
+function renderSoul({ imageContext, transform }, soul) {
   imageContext.drawImage(
     spriteSheet,
     soul.sprite.col * spriteBlockSize,
     soul.sprite.row * spriteBlockSize,
     soul.sprite.width,
     soul.sprite.height,
-    soul.minX,
-    soul.minY,
+    transform.applyX(soul.minX),
+    transform.applyY(soul.minY),
     soul.sprite.width,
     soul.sprite.height
   );

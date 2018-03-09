@@ -50,7 +50,7 @@ function draw(transform) {
       transform
     })
   );
-  lastGameState.souls.forEach(curry(renderSoul)({ imageContext }));
+  lastGameState.souls.forEach(curry(renderSoul)({ imageContext, transform }));
 }
 
 function resizeBoards() {
