@@ -30,7 +30,7 @@ function followRoute(routeDict) {
 
 function advance({ gameState, recentClickX, recentClickY }) {
   update({ gameState, recentClickX, recentClickY, probable });
-  render({ gameState, onAdvance: advance, probable });
+  render({ gameState, onAdvance: advance });
 }
 
 function reportTopLevelError(msg, url, lineNo, columnNo, error) {

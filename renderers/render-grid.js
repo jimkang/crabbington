@@ -1,18 +1,20 @@
 var curry = require('lodash.curry');
 var applyToPointsInRows = require('../apply-to-points-in-rows');
 
-function renderGrid({ imageContext, probable }, grid) {
-  drawGridLines({ grid, imageContext });
-  drawIntersections({ grid, imageContext });
+function renderGrid({ imageContext, transform }, grid) {
+  drawGridLines({ grid, imageContext, transform });
+  drawIntersections({ grid, imageContext, transform });
 }
 
-function drawGridLines({ grid, imageContext }) {
+function drawGridLines({ grid, imageContext, transform }) {
   var cols = rowsToCols(grid.rows);
 
   var horizontalBezierCurvesPerLine = grid.rows.map(
-    curry(curvesFromExtremes)(false)
+    curry(curvesFromExtremes)(false, transform)
   );
-  var verticalBezierCurvesPerLine = cols.map(curry(curvesFromExtremes)(true));
+  var verticalBezierCurvesPerLine = cols.map(
+    curry(curvesFromExtremes)(true, transform)
+  );
   // console.log('horizontalBezierCurvesPerLine', horizontalBezierCurvesPerLine);
   // console.log('verticalBezierCurvesPerLine', verticalBezierCurvesPerLine);
 
@@ -29,7 +31,11 @@ function drawGridLines({ grid, imageContext }) {
   // What should be rendered onto inputContext? Circles at intersections?
 
   function drawLineCurves(curvesKit) {
-    imageContext.moveTo(curvesKit.start.x, curvesKit.start.y);
+    imageContext.moveTo(
+      transform.applyX(curvesKit.start.x),
+      transform.applyY(curvesKit.start.y)
+    );
+
     curvesKit.curves.forEach(drawC);
   }
 }
@@ -51,20 +57,24 @@ function rowsToCols(rows) {
 }
 
 // Assumes extremes are sorted, ascending.
-function curvesFromExtremes(vertical, extremes) {
+function curvesFromExtremes(shouldDrawVertically, transform, extremes) {
   var curves = [];
+  var transformedStart = {
+    x: transform.applyX(extremes[0].x),
+    y: transform.applyX(extremes[0].y)
+  };
   for (var i = 1; i < extremes.length; ++i) {
     let dest = extremes[i];
     let src = extremes[i - 1];
     let distToPrev = dest.x - src.x;
-    if (vertical) {
+    if (shouldDrawVertically) {
       distToPrev = dest.y - src.y;
     }
     var srcCtrlX = src.x + distToPrev / 2;
     var srcCtrlY = src.y;
     var destCtrlX = dest.x - distToPrev / 2;
     var destCtrlY = dest.y;
-    if (vertical) {
+    if (shouldDrawVertically) {
       srcCtrlX = src.x;
       srcCtrlY = src.y + distToPrev / 2;
       destCtrlX = dest.x;
@@ -72,21 +82,33 @@ function curvesFromExtremes(vertical, extremes) {
     }
 
     // This is the order that the params for bezierCurveTo go in.
-    curves.push([srcCtrlX, srcCtrlY, destCtrlX, destCtrlY, dest.x, dest.y]);
+    curves.push([
+      transform.applyX(srcCtrlX),
+      transform.applyY(srcCtrlY),
+      transform.applyX(destCtrlX),
+      transform.applyY(destCtrlY),
+      transform.applyX(dest.x),
+      transform.applyY(dest.y)
+    ]);
   }
-  return { start: extremes[0], curves };
+  return { start: transformedStart, curves };
 }
 
-function drawIntersections({ grid, imageContext }) {
+function drawIntersections({ grid, imageContext, transform }) {
   imageContext.fillStyle = grid.color;
   imageContext.beginPath();
-  applyToPointsInRows(grid.rows, curry(drawIntersectionCircle)(imageContext));
+  applyToPointsInRows(
+    grid.rows,
+    curry(drawIntersectionCircle)(imageContext, transform)
+  );
   imageContext.fill();
 }
 
-function drawIntersectionCircle(imageContext, point) {
-  imageContext.moveTo(point.x, point.y);
-  imageContext.arc(point.x, point.y, 4, 0, Math.PI * 2);
+function drawIntersectionCircle(imageContext, transform, point) {
+  var x = transform.applyX(point.x);
+  var y = transform.applyY(point.y);
+  imageContext.moveTo(x, y);
+  imageContext.arc(x, y, 4, 0, Math.PI * 2);
 }
 
 module.exports = renderGrid;

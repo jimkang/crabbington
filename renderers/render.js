@@ -2,6 +2,7 @@ var d3 = require('d3-selection');
 var curry = require('lodash.curry');
 var renderGrid = require('./render-grid');
 var renderSoul = require('./render-soul');
+var Zoom = require('d3-zoom');
 
 const widthLimit = 800;
 
@@ -13,19 +14,17 @@ var inputBoard = d3.select('#input-board');
 // var labelLayer = d3.select('#labels-layer');
 var imageContext = imageBoard.node().getContext('2d', { alpha: false });
 
-function render({ gameState, onAdvance, probable }) {
-  // Does this have to get called every time?
-  var { boardWidth } = resizeBoards();
+var lastGameState;
+var currentTransform = Zoom.zoomIdentity;
+// If changing window size means that board size needs to change, consider
+// putting this in render();
+var { boardWidth, boardHeight } = resizeBoards();
 
-  imageContext.clearRect(0, 0, boardWidth, boardWidth);
-  gameState.grids.forEach(
-    curry(renderGrid)({
-      imageContext,
-      probable
-    })
-  );
-  gameState.souls.forEach(curry(renderSoul)({ imageContext }));
+setUpZoom(draw);
 
+function render({ gameState, onAdvance }) {
+  lastGameState = gameState;
+  draw(currentTransform);
   // Test.
   // imageContext.strokeStyle = 'green';
   // imageContext.beginPath();
@@ -41,6 +40,17 @@ function render({ gameState, onAdvance, probable }) {
     var recentClickY = d3.event.layerY;
     onAdvance({ gameState, recentClickX, recentClickY });
   }
+}
+
+function draw(transform) {
+  imageContext.clearRect(0, 0, boardWidth, boardHeight);
+  lastGameState.grids.forEach(
+    curry(renderGrid)({
+      imageContext,
+      transform
+    })
+  );
+  lastGameState.souls.forEach(curry(renderSoul)({ imageContext }));
 }
 
 function resizeBoards() {
@@ -62,6 +72,21 @@ function resizeBoards() {
   inputBoard.attr('height', boardHeight);
 
   return { boardWidth, boardHeight };
+}
+
+function setUpZoom(draw) {
+  var zoom = Zoom.zoom()
+    .scaleExtent([0.03, 2])
+    .on('zoom', zoomed);
+
+  inputBoard.call(zoom);
+
+  function zoomed() {
+    // Warning: This is reference. Is d3 going to change it unexpectedly?
+    currentTransform = d3.event.transform;
+    console.log('transform', currentTransform);
+    draw(currentTransform);
+  }
 }
 
 module.exports = render;
