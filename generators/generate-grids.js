@@ -7,11 +7,11 @@ function generateGrids({ probable }) {
     [3, 64],
     [1, 256]
   ]);
-  var gridSizeTable = probable.createTableFromSizes([
-    [4, 800],
-    [3, 600],
-    [2, 400],
-    [1, 200]
+  var numberOfUnitsTable = probable.createTableFromSizes([
+    [4, 10],
+    [3, 6],
+    [2, 4],
+    [1, 2]
   ]);
   var numberOfEffectsTable = probable.createTableFromSizes([
     [2, 0],
@@ -22,12 +22,14 @@ function generateGrids({ probable }) {
   var grids = [];
   var numberOfGrids = 1 + probable.rollDie(2);
   for (var i = 0; i < numberOfGrids; ++i) {
-    var isSquare = probable.roll(4) > 0;
-    var xSpace = spaceSizeTable.roll();
-    var ySpace = xSpace;
+    let isSquare = probable.roll(4) > 0;
+    let xSpace = spaceSizeTable.roll();
+    let ySpace = xSpace;
     if (!isSquare) {
       ySpace = spaceSizeTable.roll();
     }
+    let numberOfCols = numberOfUnitsTable.roll();
+    let numberOfRows = numberOfUnitsTable.roll();
     let grid = {
       id: 'grid-' + randomId(4),
       xSpace,
@@ -35,8 +37,10 @@ function generateGrids({ probable }) {
       // TODO: Should this be a separate table?
       xOffset: spaceSizeTable.roll(),
       yOffset: spaceSizeTable.roll(),
-      width: gridSizeTable.roll(),
-      height: gridSizeTable.roll(),
+      numberOfCols,
+      numberOfRows,
+      width: numberOfCols * xSpace,
+      height: numberOfRows * ySpace,
       // color: probable.pickFromArray(['red', 'green', 'blue'])
       color: `hsl(${probable.roll(360)}, 50%, 50%)`
     };
@@ -56,14 +60,14 @@ function generateGrids({ probable }) {
 
 function getIntersectionRows(grid) {
   var rows = [];
-  for (var y = grid.yOffset; y <= grid.height; y += grid.ySpace) {
+  for (var rowIndex = 0; rowIndex < grid.numberOfRows; ++rowIndex) {
     let row = [];
-    for (var x = grid.xOffset; x <= grid.width; x += grid.xSpace) {
+    for (var colIndex = 0; colIndex < grid.numberOfCols; ++colIndex) {
       row.push({
-        x,
-        y,
-        col: row.length,
-        row: rows.length,
+        x: grid.xOffset + colIndex * grid.xSpace,
+        y: grid.yOffset + rowIndex * grid.ySpace,
+        col: colIndex,
+        row: rowIndex,
         gridId: grid.id
       });
       // Random warp:

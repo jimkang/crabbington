@@ -34,6 +34,9 @@ function updateDerivedIntersectionProps(intersection) {
 
 // Cheap check: Assumes a non-empty grid, uniformity among grid points.
 function gridHasDerivedProps(grid) {
+  // if (!grid || !grid.rows || !grid.rows[0] || !grid.rows[0][0]) {
+  //   debugger;
+  // }
   return grid.rows[0][0].minX !== undefined;
 }
 
