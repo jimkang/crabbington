@@ -19,23 +19,8 @@ function update({ gameState, recentClickX, recentClickY }) {
       minY: recentClickY - clickRadius,
       maxY: recentClickY + clickRadius
     });
-    console.log('thingsHit', thingsHit);
-    // Assuming: if there is more than one intersection from the same grid hit,
-    // there are so close that it doesn't matter which one we pick.
-    // If it does matter, we can sort thingsHit by click distance.
-    var selectedGridPoint = findWhere(thingsHit, {
-      gridId: gameState.player.grid.id
-    });
-    if (
-      selectedGridPoint &&
-      pointsAreAdjacent(
-        [selectedGridPoint.col, selectedGridPoint.row],
-        [gameState.player.grid.colOnGrid, gameState.player.grid.rowOnGrid]
-      )
-    ) {
-      gameState.player.grid.colOnGrid = selectedGridPoint.col;
-      gameState.player.grid.rowOnGrid = selectedGridPoint.row;
-    }
+    // console.log('thingsHit', thingsHit);
+    maybeMovePlayer(gameState, thingsHit);
   }
 
   if (turn === 0) {
@@ -43,6 +28,25 @@ function update({ gameState, recentClickX, recentClickY }) {
   }
   gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
   turn += 1;
+}
+
+function maybeMovePlayer(gameState, thingsHit) {
+  // Assuming: if there is more than one intersection from the same grid hit,
+  // there are so close that it doesn't matter which one we pick.
+  // If it does matter, we can sort thingsHit by click distance.
+  var selectedGridPoint = findWhere(thingsHit, {
+    gridId: gameState.player.grid.id
+  });
+  if (
+    selectedGridPoint &&
+    pointsAreAdjacent(
+      [selectedGridPoint.col, selectedGridPoint.row],
+      [gameState.player.grid.colOnGrid, gameState.player.grid.rowOnGrid]
+    )
+  ) {
+    gameState.player.grid.colOnGrid = selectedGridPoint.col;
+    gameState.player.grid.rowOnGrid = selectedGridPoint.row;
+  }
 }
 
 // Cardinally adjacent, that is.
