@@ -11,7 +11,7 @@ const clickRadius = 20;
 var targetTree = rbush(9);
 var turn = 0;
 
-function update({ gameState, recentClickX, recentClickY }) {
+function update({ gameState, recentClickX, recentClickY, probable }) {
   if (!isNaN(recentClickX) && !isNaN(recentClickY)) {
     var thingsHit = targetTree.search({
       minX: recentClickX - clickRadius,
@@ -20,7 +20,7 @@ function update({ gameState, recentClickX, recentClickY }) {
       maxY: recentClickY + clickRadius
     });
     // console.log('thingsHit', thingsHit);
-    maybeMovePlayer(gameState, thingsHit);
+    interact(gameState, thingsHit, probable);
   }
 
   if (turn === 0) {
@@ -28,6 +28,11 @@ function update({ gameState, recentClickX, recentClickY }) {
   }
   gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
   turn += 1;
+}
+
+function interact(gameState, thingsHit, probable) {
+  maybeMovePlayer(gameState, thingsHit);
+  gameState.souls.forEach(curry(moveSoul)(gameState, probable));
 }
 
 function maybeMovePlayer(gameState, thingsHit) {
@@ -49,10 +54,44 @@ function maybeMovePlayer(gameState, thingsHit) {
   }
 }
 
+function moveSoul(gameState, probable, soul) {
+  // TODO: Moving for an actual reason.
+  if (soul.id === 'player') {
+    return;
+  }
+  var neighbors = getNeighboringGridPoints(
+    soul,
+    findWhere(gameState.grids, { id: soul.grid.id })
+  );
+  console.log('neighbors', neighbors);
+  var neighbor = probable.pickFromArray(neighbors);
+  soul.grid.colOnGrid = neighbor[0];
+  soul.grid.rowOnGrid = neighbor[1];
+}
+
 // Cardinally adjacent, that is.
 function pointsAreAdjacent(a, b) {
   var dist = math.getVectorMagnitude(math.subtractPairs(a, b));
   return dist === 1;
+}
+
+function getNeighboringGridPoints(soul, grid) {
+  var neighbors = [
+    [soul.grid.colOnGrid + 1, soul.grid.rowOnGrid],
+    [soul.grid.colOnGrid, soul.grid.rowOnGrid + 1],
+    [soul.grid.colOnGrid - 1, soul.grid.rowOnGrid],
+    [soul.grid.colOnGrid, soul.grid.rowOnGrid - 1]
+  ];
+  return neighbors.filter(isInGridBounds);
+
+  function isInGridBounds(neighbor) {
+    return (
+      neighbor[0] >= 0 &&
+      neighbor[0] < grid.rows[0].length &&
+      neighbor[1] >= 0 &&
+      neighbor[1] < grid.rows.length
+    );
+  }
 }
 
 module.exports = update;

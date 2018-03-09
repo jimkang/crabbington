@@ -15,7 +15,7 @@ var imageContext = imageBoard.node().getContext('2d', { alpha: false });
 
 function render({ gameState, onAdvance, probable }) {
   // Does this have to get called every time?
-  var { boardWidth, boardHeight } = resizeBoards();
+  var { boardWidth } = resizeBoards();
 
   imageContext.clearRect(0, 0, boardWidth, boardWidth);
   gameState.grids.forEach(
