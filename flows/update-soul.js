@@ -8,7 +8,7 @@ function updateSoul(grids, targetTree, soul) {
     return;
   }
 
-  var intersection = grid.rows[soul.grid.row][soul.grid.col];
+  var intersection = grid.rows[soul.grid.rowOnGrid][soul.grid.colOnGrid];
   soul.minX = intersection.x - soul.sprite.width / 2;
   soul.maxX = intersection.x + soul.sprite.width / 2;
   soul.minY = intersection.y - soul.sprite.height / 2;

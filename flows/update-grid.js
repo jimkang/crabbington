@@ -40,6 +40,8 @@ function getIntersectionRows(grid) {
       row.push({
         x,
         y,
+        col: row.length,
+        row: rows.length,
         gridId: grid.id
       });
       // Random warp:

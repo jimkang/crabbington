@@ -3,11 +3,13 @@ var handleError = require('handle-error-web');
 var update = require('./flows/update');
 var render = require('./renderers/render');
 var probable = require('probable'); // TODO: Use seed
+var findWhere = require('lodash.findwhere');
 
 var theGameState = {
   grids: require('./defs/grid-defs'),
   souls: require('./defs/soul-defs')
 };
+theGameState.player = findWhere(theGameState.souls, {id: 'player'});
 
 var routeState = RouteState({
   followRoute,

@@ -3,8 +3,8 @@ module.exports = [
     id: 'player',
     grid: {
       id: 'basic',
-      col: 4,
-      row: 5
+      colOnGrid: 4,
+      rowOnGrid: 5
     },
     sprite: {
       col: 2,
@@ -18,8 +18,8 @@ module.exports = [
     id: 'doof',
     grid: {
       id: 'other',
-      col: 4,
-      row: 5
+      colOnGrid: 4,
+      rowOnGrid: 5
     },
     sprite: {
       col: 1,

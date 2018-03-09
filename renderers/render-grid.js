@@ -13,8 +13,8 @@ function drawGridLines({ grid, imageContext }) {
     curry(curvesFromExtremes)(false)
   );
   var verticalBezierCurvesPerLine = cols.map(curry(curvesFromExtremes)(true));
-  console.log('horizontalBezierCurvesPerLine', horizontalBezierCurvesPerLine);
-  console.log('verticalBezierCurvesPerLine', verticalBezierCurvesPerLine);
+  // console.log('horizontalBezierCurvesPerLine', horizontalBezierCurvesPerLine);
+  // console.log('verticalBezierCurvesPerLine', verticalBezierCurvesPerLine);
 
   var drawC = curry(drawCurve)(imageContext);
 

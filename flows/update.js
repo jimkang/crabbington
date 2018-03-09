@@ -18,6 +18,7 @@ function update({ gameState, recentClickX, recentClickY }) {
       maxY: recentClickY + clickRadius
     });
     console.log('thingsHit', thingsHit);
+    // gameState.player.grid.id
   }
 
   if (turn === 0) {
