@@ -36,8 +36,9 @@ function render({ gameState, onAdvance }) {
   inputBoard.on('click.input', onInputBoardClick);
 
   function onInputBoardClick() {
-    var recentClickX = d3.event.layerX;
-    var recentClickY = d3.event.layerY;
+    // Undo the zoom transforms before sending the clicks on.
+    var recentClickX = currentTransform.invertX(d3.event.layerX);
+    var recentClickY = currentTransform.invertY(d3.event.layerY);
     onAdvance({ gameState, recentClickX, recentClickY });
   }
 }
