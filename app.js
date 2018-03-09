@@ -9,7 +9,7 @@ var theGameState = {
   grids: require('./defs/grid-defs'),
   souls: require('./defs/soul-defs')
 };
-theGameState.player = findWhere(theGameState.souls, {id: 'player'});
+theGameState.player = findWhere(theGameState.souls, { id: 'player' });
 
 var routeState = RouteState({
   followRoute,
