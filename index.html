@@ -13,10 +13,12 @@
 
 <div id="canvases-container">
   <canvas id="image-board" width="800" height="0"></canvas>
-  <svg id="ui-board">
-    <g class="label-layer" transform="translate(4, 15)"></g>
-  </svg>
   <canvas id="input-board" width="800" height="0"></canvas>
+  <section id="ui-board">
+    <div id="controls-layer" class="hidden">
+      <button id="blast-button" class="clickable">Blast!</button>
+    </div>
+  </section>
 </div>
 
 <script src="index.js"></script>

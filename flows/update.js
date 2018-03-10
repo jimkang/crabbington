@@ -4,6 +4,7 @@ var updateSoul = require('./update-soul');
 var rbush = require('rbush');
 var findWhere = require('lodash.findwhere');
 var math = require('basic-2d-math');
+var pluck = require('lodash.pluck');
 
 // Not really a radius: More like half a square.
 const clickRadius = 20;
@@ -11,7 +12,10 @@ const clickRadius = 20;
 var targetTree = rbush(9);
 var turn = 0;
 
-function update({ gameState, recentClickX, recentClickY, probable }) {
+function update({ gameState, recentClickX, recentClickY, commands, probable }) {
+  if (commands) {
+    commands.forEach(curry(runCommand)(gameState));
+  }
   if (!isNaN(recentClickX) && !isNaN(recentClickY)) {
     var thingsHit = targetTree.search({
       minX: recentClickX - clickRadius,
@@ -27,16 +31,23 @@ function update({ gameState, recentClickX, recentClickY, probable }) {
     var selectedGridPoint = findWhere(thingsHit, {
       gridId: gameState.player.grid.id
     });
-    if (
-      selectedGridPoint &&
-      pointsAreAdjacent(
-        [selectedGridPoint.col, selectedGridPoint.row],
-        [gameState.player.grid.colOnGrid, gameState.player.grid.rowOnGrid]
-      )
-    ) {
-      // Eventually, things other than clicking an adjacent space should
-      // trigger interact().
-      interact(gameState, thingsHit, selectedGridPoint, probable);
+    if (selectedGridPoint) {
+      if (
+        selectedGridPoint.col === gameState.player.grid.colOnGrid &&
+        selectedGridPoint.row === gameState.player.grid.rowOnGrid
+      ) {
+        gameState.uiOn = true;
+        // TODO: This shouldn't increment turn.
+      } else if (
+        pointsAreAdjacent(
+          [selectedGridPoint.col, selectedGridPoint.row],
+          [gameState.player.grid.colOnGrid, gameState.player.grid.rowOnGrid]
+        )
+      ) {
+        // Eventually, things other than clicking an adjacent space should
+        // trigger interact().
+        interact(gameState, thingsHit, selectedGridPoint, probable);
+      }
     }
   }
 
@@ -95,6 +106,42 @@ function getNeighboringGridPoints(soul, grid) {
       neighbor[1] < grid.rows.length
     );
   }
+}
+
+function runCommand(gameState, command) {
+  if (command.cmdType === 'blast') {
+    let thingsHit = targetTree.search({
+      // This probably should be based on something other than the sprite size.
+      minX: gameState.player.x - 3 * gameState.player.sprite.width,
+      maxX: gameState.player.x + 3 * gameState.player.sprite.width,
+      minY: gameState.player.y - 3 * gameState.player.sprite.height,
+      maxY: gameState.player.y + 3 * gameState.player.sprite.height
+    });
+    thingsHit = thingsHit.filter(isBlastable);
+    console.log('blasting:', thingsHit);
+    removeSouls(gameState, thingsHit);
+  }
+}
+
+function isBlastable(thing) {
+  // For now, only blast other souls.
+  return thing.type && thing.type !== 'player';
+}
+
+function removeSouls(gameState, souls) {
+  var ids = pluck(souls, 'id');
+  souls.forEach(removeFromTargetTree);
+
+  // Find souls that match these ids, then splice them out of the array.
+  for (var i = gameState.souls.length - 1; i >= 0; --i) {
+    if (ids.indexOf(gameState.souls[i].id) !== -1) {
+      gameState.souls.splice(i, 1);
+    }
+  }
+}
+
+function removeFromTargetTree(soul) {
+  targetTree.remove(soul);
 }
 
 module.exports = update;

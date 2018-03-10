@@ -2,6 +2,7 @@ var d3 = require('d3-selection');
 var curry = require('lodash.curry');
 var renderGrid = require('./render-grid');
 var renderSoul = require('./render-soul');
+var renderUI = require('./render-ui');
 var Zoom = require('d3-zoom');
 
 const widthLimit = 800;
@@ -22,7 +23,7 @@ var { boardWidth, boardHeight } = resizeBoards();
 
 setUpZoom(draw);
 
-function render({ gameState, onAdvance }) {
+function render({ gameState, onAdvance, uiOn }) {
   lastGameState = gameState;
   draw(currentTransform);
   // Test.
@@ -34,6 +35,8 @@ function render({ gameState, onAdvance }) {
 
   inputBoard.on('click.input', null);
   inputBoard.on('click.input', onInputBoardClick);
+
+  renderUI({ gameState, onAdvance, uiOn });
 
   function onInputBoardClick() {
     // Undo the zoom transforms before sending the clicks on.
@@ -68,8 +71,8 @@ function resizeBoards() {
   canvasesContainer.style('height', boardHeight);
   imageBoard.attr('width', boardWidth);
   imageBoard.attr('height', boardHeight);
-  uiBoard.attr('width', boardWidth);
-  uiBoard.attr('height', boardHeight);
+  uiBoard.style('width', boardWidth);
+  uiBoard.style('height', boardHeight);
   inputBoard.attr('width', boardWidth);
   inputBoard.attr('height', boardHeight);
 
