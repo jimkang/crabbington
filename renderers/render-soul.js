@@ -8,8 +8,8 @@ function renderSoul({ imageContext, transform }, soul) {
     soul.sprite.row * spriteBlockSize,
     soul.sprite.width,
     soul.sprite.height,
-    transform.applyX(soul.minX),
-    transform.applyY(soul.minY),
+    transform.applyX(soul.x) - soul.sprite.width / 2,
+    transform.applyY(soul.y) - soul.sprite.height / 2,
     soul.sprite.width,
     soul.sprite.height
   );
