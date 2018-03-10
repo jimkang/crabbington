@@ -48,7 +48,8 @@ function draw(transform) {
   lastGameState.grids.forEach(
     curry(renderGrid)({
       imageContext,
-      transform
+      transform,
+      playerGridId: lastGameState.player.grid.id
     })
   );
   lastGameState.souls.forEach(curry(renderSoul)({ imageContext, transform }));

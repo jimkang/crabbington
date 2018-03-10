@@ -1,12 +1,12 @@
 var curry = require('lodash.curry');
 var applyToPointsInRows = require('../apply-to-points-in-rows');
 
-function renderGrid({ imageContext, transform }, grid) {
-  drawGridLines({ grid, imageContext, transform });
-  drawIntersections({ grid, imageContext, transform });
+function renderGrid({ imageContext, transform, playerGridId }, grid) {
+  drawGridLines({ grid, imageContext, transform, playerGridId });
+  drawIntersections({ grid, imageContext, transform, playerGridId });
 }
 
-function drawGridLines({ grid, imageContext, transform }) {
+function drawGridLines({ grid, imageContext, transform, playerGridId }) {
   var cols = rowsToCols(grid.rows);
 
   var horizontalBezierCurvesPerLine = grid.rows.map(
@@ -21,6 +21,7 @@ function drawGridLines({ grid, imageContext, transform }) {
   var drawC = curry(drawCurve)(imageContext);
 
   imageContext.strokeStyle = grid.color;
+  imageContext.lineWidth = playerGridId === grid.id ? 2 : 1;
   imageContext.beginPath();
 
   horizontalBezierCurvesPerLine.forEach(drawLineCurves);
@@ -91,21 +92,22 @@ function curvesFromExtremes(shouldDrawVertically, transform, extremes) {
   return { start: transformedStart, curves };
 }
 
-function drawIntersections({ grid, imageContext, transform }) {
+function drawIntersections({ grid, imageContext, transform, playerGridId }) {
+  var radius = playerGridId === grid.id ? 8 : 4;
   imageContext.fillStyle = grid.color;
   imageContext.beginPath();
   applyToPointsInRows(
     grid.rows,
-    curry(drawIntersectionCircle)(imageContext, transform)
+    curry(drawIntersectionCircle)(imageContext, transform, radius)
   );
   imageContext.fill();
 }
 
-function drawIntersectionCircle(imageContext, transform, point) {
+function drawIntersectionCircle(imageContext, transform, radius, point) {
   var x = transform.applyX(point.x);
   var y = transform.applyY(point.y);
   imageContext.moveTo(x, y);
-  imageContext.arc(x, y, 4, 0, Math.PI * 2);
+  imageContext.arc(x, y, radius, 0, Math.PI * 2);
 }
 
 module.exports = renderGrid;
