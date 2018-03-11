@@ -79,8 +79,10 @@ function resizeBoards() {
   if (boardWidth > widthLimit) {
     boardWidth = widthLimit;
   }
-  // TODO: Something other than square if necessary.
-  var boardHeight = boardWidth;
+  var boardHeight = document.body.getBoundingClientRect().height;
+  if (boardHeight < 400) {
+    boardHeight = boardWidth;
+  }
 
   canvasesContainer.style('width', boardWidth);
   canvasesContainer.style('height', boardHeight);
