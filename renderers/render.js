@@ -2,7 +2,9 @@ var d3 = require('d3-selection');
 var curry = require('lodash.curry');
 var renderGrid = require('./render-grid');
 var renderSoul = require('./render-soul');
+var renderBlast = require('./render-blast');
 var renderUI = require('./render-ui');
+var renderAnimations = require('./render-animations');
 var Zoom = require('d3-zoom');
 
 const widthLimit = 800;
@@ -25,7 +27,15 @@ setUpZoom(draw);
 
 function render({ gameState, onAdvance, uiOn }) {
   lastGameState = gameState;
-  draw(currentTransform);
+
+  if (gameState.animations.length > 0) {
+    // Stop rendering and taking input normally. Instead, run all of the animations
+    // and their postAnimationGameStateUpdaters before returning to normal.
+    renderAnimations({ gameState, onAdvance, draw });
+    return;
+  }
+
+  draw();
   // Test.
   // imageContext.strokeStyle = 'green';
   // imageContext.beginPath();
@@ -46,16 +56,21 @@ function render({ gameState, onAdvance, uiOn }) {
   }
 }
 
-function draw(transform) {
+function draw() {
   imageContext.clearRect(0, 0, boardWidth, boardHeight);
   lastGameState.grids.forEach(
     curry(renderGrid)({
       imageContext,
-      transform,
+      transform: currentTransform,
       playerGridId: lastGameState.player.grid.id
     })
   );
-  lastGameState.souls.forEach(curry(renderSoul)({ imageContext, transform }));
+  lastGameState.souls.forEach(
+    curry(renderSoul)({ imageContext, transform: currentTransform })
+  );
+  lastGameState.ephemerals.blasts.forEach(
+    curry(renderBlast)({ imageContext, transform: currentTransform })
+  );
 }
 
 function resizeBoards() {

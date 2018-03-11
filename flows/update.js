@@ -5,6 +5,7 @@ var rbush = require('rbush');
 var findWhere = require('lodash.findwhere');
 var math = require('basic-2d-math');
 var pluck = require('lodash.pluck');
+var callNextTick = require('call-next-tick');
 
 // Not really a radius: More like half a square.
 const clickRadius = 20;
@@ -15,8 +16,9 @@ var turn = 0;
 function update({ gameState, recentClickX, recentClickY, commands, probable }) {
   if (commands) {
     commands.forEach(curry(runCommand)(gameState));
+    return;
   }
-  if (!isNaN(recentClickX) && !isNaN(recentClickY)) {
+  if (gameState.allowAdvance && !isNaN(recentClickX) && !isNaN(recentClickY)) {
     var thingsHit = targetTree.search({
       minX: recentClickX - clickRadius,
       maxX: recentClickX + clickRadius,
@@ -109,17 +111,33 @@ function getNeighboringGridPoints(soul, grid) {
 }
 
 function runCommand(gameState, command) {
+  var thingsHit;
+
   if (command.cmdType === 'blast') {
-    let thingsHit = targetTree.search({
+    thingsHit = targetTree.search({
       // This probably should be based on something other than the sprite size.
       minX: gameState.player.x - 3 * gameState.player.sprite.width,
       maxX: gameState.player.x + 3 * gameState.player.sprite.width,
       minY: gameState.player.y - 3 * gameState.player.sprite.height,
       maxY: gameState.player.y + 3 * gameState.player.sprite.height
     });
+    // TODO: Further check that these are actually in a circle, rather than just
+    // in a box circumscribing it.
     thingsHit = thingsHit.filter(isBlastable);
     console.log('blasting:', thingsHit);
+    gameState.animations.push({
+      type: 'blast',
+      cx: gameState.player.x,
+      cy: gameState.player.y,
+      r: 3 * gameState.player.sprite.width,
+      duration: 1000,
+      postAnimationGameStateUpdater: doSoulRemoval
+    });
+  }
+
+  function doSoulRemoval(done) {
     removeSouls(gameState, thingsHit);
+    callNextTick(done);
   }
 }
 

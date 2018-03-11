@@ -7,7 +7,13 @@ var findWhere = require('lodash.findwhere');
 var generateGrids = require('./generators/generate-grids');
 var generateSouls = require('./generators/generate-souls');
 
-var theGameState = {};
+var theGameState = {
+  allowAdvance: true,
+  animations: [],
+  ephemerals: {
+    blasts: []
+  }
+};
 
 var routeState = RouteState({
   followRoute,
@@ -29,8 +35,10 @@ function followRoute(routeDict) {
 }
 
 function advance({ gameState, recentClickX, recentClickY, commands }) {
-  update({ gameState, recentClickX, recentClickY, commands, probable });
-  render({ gameState, onAdvance: advance });
+  if (gameState.allowAdvance) {
+    update({ gameState, recentClickX, recentClickY, commands, probable });
+    render({ gameState, onAdvance: advance });
+  }
 }
 
 function reportTopLevelError(msg, url, lineNo, columnNo, error) {
