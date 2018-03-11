@@ -7,7 +7,7 @@ function generateSouls({ probable, grids }) {
 
   var player = cloneDeep(soulDefs.player);
   player.id = 'player';
-  var souls = [player];
+  var souls = [];
 
   var numberOfSouls = probable.rollDie(16) + probable.roll(16);
 
@@ -16,6 +16,8 @@ function generateSouls({ probable, grids }) {
     soul.id = soul.type + '-' + randomId(4);
     souls.push(soul);
   }
+
+  souls.push(player);
 
   souls.forEach(setGridProps);
   return souls;
