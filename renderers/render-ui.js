@@ -4,13 +4,21 @@ var d3 = require('d3-selection');
 // var uiBoard = d3.select('#ui-board');
 var controlsLayer = d3.select('#controls-layer');
 var blastButton = d3.select('#blast-button');
+var helpLayer = d3.select('#help-layer');
+var closeHelpButton = d3.select('#close-help-button');
 
 var playerCommandQueue = [];
 var concludeUI;
 blastButton.on('click.blast', onBlastClick);
+closeHelpButton.on('click.close-help', onCloseHelpClick);
 
 function onBlastClick() {
   playerCommandQueue.push({ cmdType: 'blast' });
+  concludeUI();
+}
+
+function onCloseHelpClick() {
+  helpLayer.classed('hidden', true);
   concludeUI();
 }
 

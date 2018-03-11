@@ -70,3 +70,16 @@ body {
   margin-bottom: 1.5em;
   min-width: 44px;
 }
+
+#help-layer {
+  background-color: white;
+  text-align: center;
+  padding: 1em;
+  font-size: larger;
+  border-radius: 0.5em;
+}
+
+#help-layer strong {
+  text-transform: uppercase;
+}
+
