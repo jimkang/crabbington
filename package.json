@@ -1,24 +1,25 @@
 {
-  "name": "7drl-2018",
+  "name": "crabbington",
   "version": "1.0.0",
-  "description": "This is my 2018 7DRL attempt!",
+  "description": "This is my 2020 7DRL attempt!",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "test": "make test"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:jimkang/7drl-2018.git"
+    "url": "git@github.com:jimkang/crabbington.git"
   },
   "keywords": [],
   "author": "Jim Kang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jimkang/7drl-2018/issues"
+    "url": "https://github.com/jimkang/crabbington/issues"
   },
-  "homepage": "https://github.com/jimkang/7drl-2018",
+  "homepage": "https://github.com/jimkang/crabbington",
   "devDependencies": {
-    "browserify": "^14.5.0",
+    "browserify": "^16.5.0",
     "uglify-es": "^3.1.9"
   },
   "dependencies": {
