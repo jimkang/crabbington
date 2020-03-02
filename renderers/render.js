@@ -7,8 +7,6 @@ var renderUI = require('./render-ui');
 var renderAnimations = require('./render-animations');
 var Zoom = require('d3-zoom');
 
-const widthLimit = 800;
-
 // Get the various DOM roots.
 var canvasesContainer = d3.select('#canvases-container');
 var imageBoard = d3.select('#image-board');
@@ -75,10 +73,6 @@ function draw() {
 
 function resizeBoards() {
   var boardWidth = document.body.getBoundingClientRect().width;
-
-  if (boardWidth > widthLimit) {
-    boardWidth = widthLimit;
-  }
   var boardHeight = document.body.getBoundingClientRect().height;
   if (boardHeight < 400) {
     boardHeight = boardWidth;

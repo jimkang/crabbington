@@ -6,12 +6,11 @@ This is my 2020 DRL attempt!
 Plan
 ---
 
-- Look at Pico8 - done!
-- Look at Bitsy - done
-- Look at exogenite code - done
-- Look at genie code - done
+- Specify allowed grids in soul def
+- Specify motion pattern in soul def
+- Tablenest hierarchy
+- Help button
 - Define some development rules
-  - No single graphic should take more than 15 minutes to make
   - No cellular-automata-style cellular simultaneous updates. Everything should be sequential
   - Allow complex drawing code that does a lot on its own instead of trying to model everything
 
