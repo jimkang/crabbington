@@ -1,23 +1,34 @@
 BROWSERIFY = ./node_modules/.bin/browserify
 UGLIFY = ./node_modules/uglify-es/bin/uglifyjs
+TRANSFORM_SWITCH = -t [ babelify --presets [ es2015 ] --extensions ['.ts'] ]
+PLUGIN_SWITCH = -p [tsify]
 
 pushall:
-	git push origin gh-pages
+	git push origin master
 
 run:
 	wzrd app.js:index.js -- \
-		-d
-
-# Some apps needs to run at port 80 because some auth APIs will only redirect
-# back to port 80/443.
-run-on-80:
-	sudo wzrd app.js:index.js --port 80 -- -d
+		-d \
+		$(PLUGIN_SWITCH)
 
 build:
-	$(BROWSERIFY) app.js | $(UGLIFY) -c -m -o index.js
+	$(BROWSERIFY) $(PLUGIN_SWITCH) app.js | $(UGLIFY) -c -m -o index.js
 
 prettier:
-	prettier --single-quote --write "**/*.js"
+	prettier --write index.html
+
+sync:
+	scp index.html $(USER)@$(SERVER):$(APPDIR)
+	scp index.js $(USER)@$(SERVER):$(APPDIR)
+	scp app.css $(USER)@$(SERVER):$(APPDIR)
+	rsync -a $(HOMEDIR)/static/ $(USER)@$(SERVER):/$(APPDIR) \
+    --exclude source-images \
+		--exclude .git \
+    --omit-dir-times \
+    --no-perms
+
+set-up-server-dir:
+	ssh $(USER)@$(SERVER) "mkdir -p $(APPDIR)/static"
 
 # Convert black pixels to transparent ones, resize, nearest-neighbor-style.
 prepare-sheet:

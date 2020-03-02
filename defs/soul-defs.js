@@ -1,6 +1,9 @@
+//var moves = require('./moves');
+
 module.exports = {
   plantGuy: {
-    type: 'plantGuy',
+    type: "plantGuy",
+    //  move: moves.RandomMove({ collisions: 'avoid' }),
     sprite: {
       col: 2,
       row: 0,
@@ -10,7 +13,7 @@ module.exports = {
     }
   },
   doof: {
-    type: 'doof',
+    type: "doof",
     sprite: {
       col: 1,
       row: 0,
@@ -20,7 +23,7 @@ module.exports = {
     }
   },
   octo: {
-    type: 'octo',
+    type: "octo",
     sprite: {
       col: 0,
       row: 0,
@@ -30,7 +33,7 @@ module.exports = {
     }
   },
   player: {
-    type: 'player',
+    type: "player",
     sprite: {
       col: 7,
       row: 0,
@@ -40,7 +43,7 @@ module.exports = {
     }
   },
   snailShell: {
-    type: 'snailShell',
+    type: "snailShell",
     sprite: {
       col: 3,
       row: 0,
@@ -50,7 +53,7 @@ module.exports = {
     }
   },
   beanie: {
-    type: 'beanie',
+    type: "beanie",
     sprite: {
       col: 4,
       row: 0,
@@ -60,7 +63,7 @@ module.exports = {
     }
   },
   box: {
-    type: 'box',
+    type: "box",
     sprite: {
       col: 5,
       row: 0,
@@ -70,7 +73,7 @@ module.exports = {
     }
   },
   bucket: {
-    type: 'bucket',
+    type: "bucket",
     sprite: {
       col: 6,
       row: 0,
@@ -80,7 +83,7 @@ module.exports = {
     }
   },
   cup: {
-    type: 'cup',
+    type: "cup",
     sprite: {
       col: 9,
       row: 0,
@@ -90,7 +93,7 @@ module.exports = {
     }
   },
   fancyShell: {
-    type: 'fancyShell',
+    type: "fancyShell",
     sprite: {
       col: 10,
       row: 0,
@@ -100,7 +103,7 @@ module.exports = {
     }
   },
   spaceHelmet: {
-    type: 'spaceHelmet',
+    type: "spaceHelmet",
     sprite: {
       col: 11,
       row: 0,
@@ -110,7 +113,7 @@ module.exports = {
     }
   },
   horn: {
-    type: 'horn',
+    type: "horn",
     sprite: {
       col: 12,
       row: 0,
@@ -120,7 +123,7 @@ module.exports = {
     }
   },
   lagavulin: {
-    type: 'lagavulin',
+    type: "lagavulin",
     sprite: {
       col: 13,
       row: 0,
@@ -130,7 +133,7 @@ module.exports = {
     }
   },
   blueSnailShell: {
-    type: 'blueSnailShell',
+    type: "blueSnailShell",
     sprite: {
       col: 14,
       row: 0,
@@ -140,7 +143,7 @@ module.exports = {
     }
   },
   longShell: {
-    type: 'longShell',
+    type: "longShell",
     sprite: {
       col: 15,
       row: 0,
@@ -150,7 +153,7 @@ module.exports = {
     }
   },
   pot: {
-    type: 'pot',
+    type: "pot",
     sprite: {
       col: 16,
       row: 0,
@@ -160,7 +163,7 @@ module.exports = {
     }
   },
   shoe: {
-    type: 'shoe',
+    type: "shoe",
     sprite: {
       col: 17,
       row: 0,
@@ -170,7 +173,7 @@ module.exports = {
     }
   },
   skull: {
-    type: 'skull',
+    type: "skull",
     sprite: {
       col: 18,
       row: 0,
@@ -180,7 +183,7 @@ module.exports = {
     }
   },
   soupCan: {
-    type: 'soupCan',
+    type: "soupCan",
     sprite: {
       col: 19,
       row: 0,
@@ -190,7 +193,7 @@ module.exports = {
     }
   },
   simpleShell: {
-    type: 'simpleShell',
+    type: "simpleShell",
     sprite: {
       col: 20,
       row: 0,
@@ -200,7 +203,7 @@ module.exports = {
     }
   },
   trilby: {
-    type: 'trilby',
+    type: "trilby",
     sprite: {
       col: 21,
       row: 0,
@@ -210,7 +213,7 @@ module.exports = {
     }
   },
   purpleShell: {
-    type: 'purpleShell',
+    type: "purpleShell",
     sprite: {
       col: 22,
       row: 0,

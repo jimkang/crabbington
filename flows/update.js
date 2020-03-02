@@ -79,7 +79,7 @@ function moveSoul(gameState, probable, soul) {
     soul,
     findWhere(gameState.grids, { id: soul.grid.id })
   );
-  console.log('neighbors', neighbors);
+  //console.log('neighbors', neighbors);
   var neighbor = probable.pickFromArray(neighbors);
   soul.grid.colOnGrid = neighbor[0];
   soul.grid.rowOnGrid = neighbor[1];
