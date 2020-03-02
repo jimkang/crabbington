@@ -1,45 +1,55 @@
 <html>
-<head>
-  <title>crabbington</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-  <link rel="stylesheet" href="app.css"></link>
-</head>
-<body>
+  <head>
+    <title>crabbington</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <pre id="status-message" class="hidden"></pre>
 
-<pre id="status-message" class="hidden"></pre>
-
-<div style="display:none;">
-  <img id="sprite-sheet" src="static/sheet.png" width="512" height="512">
-</div>
-
-<div id="canvases-container">
-  <canvas id="image-board" width="100vmax" height="95vmin"></canvas>
-  <canvas id="input-board" width="100vmax" height="0"></canvas>
-  <section id="ui-board">
-    <div id="controls-layer" class="hidden">
-      <button id="blast-button" class="clickable">Blast!</button>
+    <div style="display:none;">
+      <img id="sprite-sheet" src="static/sheet.png" width="512" height="512" />
     </div>
-    <div id="help-layer" class="clickable">
-      <p>
-        <strong>Zoom in and out</strong> of the map using the mouse wheel or pinch gestures. <strong>Pan around</strong> by clicking and dragging.
-      </p>
-      <p>
-        You are this green creature on the right:
-      </p>
-      <img src="static/guys.png" alt="characters" />
-      <p>
-        The other two are your enemies. <strong>Move</strong> by clicking or tapping points adjacent to yourself that are on the grid you are on. The grid you are on is drawn with thicker lines and points.
-      </p>
-      <p>
-        <strong>Click yourself</strong> to see action options. Currently, there is only one: blast. Blast will kill any enemies in the blast radius. If you kill all of your enemies, consider yourself a winner! (Some levels may not be winnable. Just <strong>reload the browser</strong> if you don't like the level.)
-      </p>
-      <button id="close-help-button" class="clickable">OK!</button>
-    </div>
-    <button id="open-help-button">Help</button>
-  </section>
-</div>
 
-<script src="index.js"></script>
+    <section class="overlays-container centered-col">
+      <section id="canvases-container" class="centered-col">
+        <canvas id="image-board" width="100vmax" height="95vmin"></canvas>
+        <canvas id="input-board" width="100vmax" height="0"></canvas>
+      </section>
 
-</body>
+      <section id="ui-board" class="centered-col">
+        <section id="top-level-toggles-container">
+          <button id="open-help-button" class="clickable hidden">Help</button>
+        </section>
+        <div id="controls-layer" class="hidden">
+          <button id="blast-button" class="clickable">Blast!</button>
+        </div>
+        <div id="help-layer" class="clickable">
+          <p>
+            You are this crab:
+          </p>
+          <img src="static/crab1.png" alt="Picture of a crab" />
+          <p>
+            <strong>Zoom in and out</strong> of the map using the mouse wheel or
+            pinch gestures. <strong>Pan around</strong> by clicking and
+            dragging.
+          </p>
+          <p>
+            <strong>Move</strong> by clicking or tapping points adjacent to
+            yourself that are on the grid you are on. The grid you are on is
+            drawn with thicker lines and points.
+          </p>
+          <p>
+            <strong>Click yourself</strong> to see action options. Currently,
+            there is only one: blast. Blast will kill any enemies in the blast
+            radius. If you kill all of your enemies, consider yourself a winner!
+            (Some levels may not be winnable. Just
+            <strong>reload the browser</strong> if you don't like the level.)
+          </p>
+          <button id="close-help-button" class="clickable">OK!</button>
+        </div>
+      </section>
+    </section>
+    <script src="index.js"></script>
+  </body>
 </html>

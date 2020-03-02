@@ -83,7 +83,8 @@ function resizeBoards() {
   imageBoard.attr('width', boardWidth);
   imageBoard.attr('height', boardHeight);
   uiBoard.style('width', boardWidth);
-  uiBoard.style('height', boardHeight);
+  // Don't set uiBoard height. It should only be as tall as the viewport.
+  //uiBoard.style('height', boardHeight);
   inputBoard.attr('width', boardWidth);
   inputBoard.attr('height', boardHeight);
 
