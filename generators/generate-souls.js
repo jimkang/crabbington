@@ -3,7 +3,11 @@ var randomId = require('idmaker').randomId;
 var cloneDeep = require('lodash.clonedeep');
 
 function generateSouls({ probable, grids }) {
-  var soulTypeTable = probable.createTableFromSizes([[3, 'doof'], [1, 'octo']]);
+  var soulTypeTable = probable.createTableFromSizes([
+    [3, 'doof'],
+    [1, 'octo']
+    //    [1, 'shell']
+  ]);
 
   var player = cloneDeep(soulDefs.player);
   player.id = 'player';
