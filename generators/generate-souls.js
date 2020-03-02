@@ -6,7 +6,24 @@ function generateSouls({ probable, grids }) {
   var soulTypeTable = probable.createTableFromSizes([
     [3, 'doof'],
     [1, 'octo'],
-    [1, 'snailShell']
+    [1, 'snailShell'],
+    [1, 'beanie'],
+    [1, 'box'],
+    [1, 'bucket'],
+    [1, 'cup'],
+    [1, 'fancyShell'],
+    [1, 'spaceHelmet'],
+    [1, 'horn'],
+    [1, 'lagavulin'],
+    [1, 'blueSnailShell'],
+    [1, 'longShell'],
+    [1, 'pot'],
+    [1, 'shoe'],
+    [1, 'skull'],
+    [1, 'soupCan'],
+    [1, 'simpleShell'],
+    [1, 'trilby'],
+    [1, 'purpleShell']
   ]);
 
   var player = cloneDeep(soulDefs.player);
