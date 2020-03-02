@@ -5,8 +5,8 @@ var cloneDeep = require('lodash.clonedeep');
 function generateSouls({ probable, grids }) {
   var soulTypeTable = probable.createTableFromSizes([
     [3, 'doof'],
-    [1, 'octo']
-    //    [1, 'shell']
+    [1, 'octo'],
+    [1, 'snailShell']
   ]);
 
   var player = cloneDeep(soulDefs.player);
