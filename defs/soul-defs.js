@@ -4,8 +4,8 @@ module.exports = {
     sprite: {
       col: 2,
       row: 0,
-      width: 32,
-      height: 32,
+      width: 128,
+      height: 128,
       hitRadius: 48
     }
   },
@@ -14,8 +14,8 @@ module.exports = {
     sprite: {
       col: 1,
       row: 0,
-      width: 32,
-      height: 32,
+      width: 128,
+      height: 128,
       hitRadius: 100
     }
   },
@@ -24,9 +24,9 @@ module.exports = {
     sprite: {
       col: 0,
       row: 0,
-      width: 32,
-      height: 32,
-      hitRadius: 32
+      width: 128,
+      height: 128,
+      hitRadius: 100
     }
   }
 };
