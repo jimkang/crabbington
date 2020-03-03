@@ -42,7 +42,7 @@ function update({ gameState, recentClickX, recentClickY, commands, probable }) {
         selectedGridPoint.row === player.gridContext.rowOnGrid
       ) {
         gameState.uiOn = true;
-        // TODO: This shouldn't increment turn.
+        // This shouldn't increment the turn.
       } else if (
         pointsAreAdjacent(
           [selectedGridPoint.col, selectedGridPoint.row],
@@ -52,14 +52,20 @@ function update({ gameState, recentClickX, recentClickY, commands, probable }) {
         // Eventually, things other than clicking an adjacent space should
         // trigger interact().
         interact(gameState, thingsHit, selectedGridPoint, probable);
+        incrementTurn();
       }
     }
   }
 
-  if (turn === 0) {
+  if (!gameState.gridsInit) {
     gameState.grids.forEach(curry(updateGrid)(targetTree));
+    gameState.gridsInit = true;
   }
   gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
+}
+
+function incrementTurn() {
+  console.log('Turn', turn, 'complete.');
   turn += 1;
 }
 

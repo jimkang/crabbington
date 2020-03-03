@@ -15,7 +15,8 @@ var theGameState = {
   animations: [],
   ephemerals: {
     blasts: []
-  }
+  },
+  gridsInit: false
 };
 
 var routeState = RouteState({
