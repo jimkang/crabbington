@@ -7,6 +7,8 @@ var math = require('basic-2d-math');
 var pluck = require('lodash.pluck');
 var callNextTick = require('call-next-tick');
 
+import { Pt, MoveFn, Box, Filter } from '../types';
+
 // Not really a radius: More like half a square.
 const clickRadius = 20;
 
@@ -75,14 +77,20 @@ function moveSoul(gameState, probable, soul) {
   if (soul.id === 'player') {
     return;
   }
+  var move: MoveFn = soul.move;
+  if (!soul.move) {
+    return;
+  }
+
   var neighbors = getNeighboringGridPoints(
     soul,
     findWhere(gameState.grids, { id: soul.grid.id })
   );
-  //console.log('neighbors', neighbors);
-  var neighbor = probable.pickFromArray(neighbors);
-  soul.grid.colOnGrid = neighbor[0];
-  soul.grid.rowOnGrid = neighbor[1];
+  var dest: Pt = move({ soul, neighbors, probable, getTargetsInBox });
+  if (dest) {
+    soul.grid.colOnGrid = dest[0];
+    soul.grid.rowOnGrid = dest[1];
+  }
 }
 
 // Cardinally adjacent, that is.
@@ -114,16 +122,14 @@ function runCommand(gameState, command) {
   var thingsHit;
 
   if (command.cmdType === 'blast') {
-    thingsHit = targetTree.search({
-      // This probably should be based on something other than the sprite size.
+    // This probably should be based on something other than the sprite size.
+    var blastBox = {
       minX: gameState.player.x - 3 * gameState.player.sprite.width,
       maxX: gameState.player.x + 3 * gameState.player.sprite.width,
       minY: gameState.player.y - 3 * gameState.player.sprite.height,
       maxY: gameState.player.y + 3 * gameState.player.sprite.height
-    });
-    // TODO: Further check that these are actually in a circle, rather than just
-    // in a box circumscribing it.
-    thingsHit = thingsHit.filter(isBlastable);
+    };
+    thingsHit = getTargetsInBox({ filter: isBlastable, box: blastBox });
     console.log('blasting:', thingsHit);
     gameState.animations.push({
       type: 'blast',
@@ -160,6 +166,22 @@ function removeSouls(gameState, souls) {
 
 function removeFromTargetTree(soul) {
   targetTree.remove(soul);
+}
+
+function getTargetsInBox({
+  box,
+  filter
+}: {
+  box: Box;
+  filter?: Filter;
+}): Array<any> {
+  var targets = targetTree.search(box);
+  // TODO: Further check that these are actually in a circle, rather than just
+  // in a box circumscribing it.
+  if (filter) {
+    targets = targets.filter(filter);
+  }
+  return targets;
 }
 
 module.exports = update;

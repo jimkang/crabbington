@@ -1,11 +1,11 @@
 var spriteSheet = document.getElementById('sprite-sheet');
-const spriteBlockSize = 128;
+import { spriteSize } from '../sizes';
 
 function renderSoul({ imageContext, transform }, soul) {
   imageContext.drawImage(
     spriteSheet,
-    soul.sprite.col * spriteBlockSize,
-    soul.sprite.row * spriteBlockSize,
+    soul.sprite.col * spriteSize,
+    soul.sprite.row * spriteSize,
     soul.sprite.width,
     soul.sprite.height,
     transform.applyX(soul.x) - soul.sprite.width / 2,

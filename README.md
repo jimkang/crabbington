@@ -7,7 +7,7 @@ Plan
 ---
 
 - Specify allowed grids in soul def
-- Specify motion pattern in soul def
+- Specify motion pattern in soul def - Done
 - Tablenest hierarchy
 - Help button - Done
 - Define some development rules - Done

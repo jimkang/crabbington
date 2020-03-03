@@ -1,10 +1,14 @@
 var soulDefs = require('../defs/soul-defs');
-var randomId = require('idmaker').randomId;
 var cloneDeep = require('lodash.clonedeep');
+var RandomId = require('@jimkang/randomid');
+var Probable = require('probable').createProbable;
 
-function generateSouls({ probable, grids }) {
+function generateSouls({ random, grids }) {
+  var probable = Probable({ random });
+  var randomId = RandomId({ random });
   var soulTypeTable = probable.createTableFromSizes([
     [3, 'doof'],
+    [1, 'plantGuy'],
     [1, 'octo'],
     [1, 'snailShell'],
     [1, 'beanie'],
@@ -26,15 +30,13 @@ function generateSouls({ probable, grids }) {
     [1, 'purpleShell']
   ]);
 
-  var player = cloneDeep(soulDefs.player);
-  player.id = 'player';
+  var player = instantiateFromDef({ def: soulDefs.player, id: 'player' });
   var souls = [];
 
   var numberOfSouls = probable.rollDie(16) + probable.roll(16);
 
   for (var i = 0; i < numberOfSouls; ++i) {
-    let soul = cloneDeep(soulDefs[soulTypeTable.roll()]);
-    soul.id = soul.type + '-' + randomId(4);
+    let soul = instantiateFromDef({ def: soulDefs[soulTypeTable.roll()] });
     souls.push(soul);
   }
 
@@ -50,6 +52,16 @@ function generateSouls({ probable, grids }) {
       colOnGrid: probable.roll(grid.rows[0].length),
       rowOnGrid: probable.roll(grid.rows.length)
     };
+  }
+
+  function instantiateFromDef({ def, id }) {
+    var instance = cloneDeep(def);
+    if (id) {
+      instance.id = id;
+    } else {
+      instance.id = instance.type + '-' + randomId(4);
+    }
+    return instance;
   }
 }
 

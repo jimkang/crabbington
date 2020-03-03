@@ -33,16 +33,23 @@ function followRoute({ seed }) {
     routeState.addToRoute({ seed: randomid(8) });
     return;
   }
-  var probable = Probable({ random: seedrandom(seed) });
+  var random = seedrandom(seed);
+  var probable = Probable({ random });
   theGameState.grids = generateGrids({ probable });
-  theGameState.souls = generateSouls({ probable, grids: theGameState.grids });
+  theGameState.souls = generateSouls({ random, grids: theGameState.grids });
   theGameState.player = findWhere(theGameState.souls, { id: 'player' });
 
   advance({ gameState: theGameState });
 
   function advance({ gameState, recentClickX, recentClickY, commands }) {
     if (gameState.allowAdvance) {
-      update({ gameState, recentClickX, recentClickY, commands, probable });
+      update({
+        gameState,
+        recentClickX,
+        recentClickY,
+        commands,
+        probable
+      });
       render({ gameState, onAdvance: advance });
     }
   }
