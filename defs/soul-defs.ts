@@ -73,7 +73,8 @@ var defList: Array<SoulDef> = [
       height: spriteSize,
       hitRadius: 100
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    offsetAsItem: [0, -64]
   },
   {
     type: 'box',

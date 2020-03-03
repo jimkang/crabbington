@@ -33,6 +33,7 @@ export interface SoulDef {
   sprite: Sprite;
   allowedGrids: Array<string>;
   startingItemIds?: Array<string>;
+  offsetAsItem?: Pt;
 }
 
 export interface Soul extends SoulDef {

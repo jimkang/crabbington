@@ -2,10 +2,24 @@ var spriteSheet = document.getElementById('sprite-sheet');
 var isEqual = require('lodash.isequal');
 
 import { spriteSize } from '../sizes';
-import { Soul } from '../types';
+import { Soul, Pt } from '../types';
 
 function renderSoul(
-  { imageContext, transform, baseX, baseY, facing },
+  {
+    imageContext,
+    transform,
+    baseX,
+    baseY,
+    offset,
+    facing
+  }: {
+    imageContext: any;
+    transform: any;
+    baseX: number;
+    baseY: number;
+    offset: Pt;
+    facing: Pt;
+  },
   soul: Soul
 ) {
   // Is save expensive?
@@ -17,6 +31,10 @@ function renderSoul(
     transform.applyY(isNaN(baseY) ? soul.y : baseY) - soul.sprite.height / 2;
   var localX = 0;
   var localY = 0;
+  if (offset) {
+    localX = offset[0];
+    localY = offset[1];
+  }
   var facingDir = facing || soul.facing;
 
   imageContext.translate(x, y);
@@ -35,8 +53,8 @@ function renderSoul(
     const angle: number = Math.atan2(facingDir[1], facingDir[0]);
     imageContext.translate(soul.sprite.width / 2, soul.sprite.height / 2);
     imageContext.rotate(angle);
-    localX = -soul.sprite.width / 2;
-    localY = -soul.sprite.height / 2;
+    localX += -soul.sprite.width / 2;
+    localY += -soul.sprite.height / 2;
   }
 
   imageContext.drawImage(
@@ -64,6 +82,7 @@ function renderSoul(
         transform,
         baseX: soul.x,
         baseY: soul.y,
+        offset: item.offsetAsItem,
         facing: facingDir
       },
       item
