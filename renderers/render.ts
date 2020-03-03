@@ -7,6 +7,8 @@ var renderUI = require('./render-ui');
 var renderAnimations = require('./render-animations');
 var Zoom = require('d3-zoom');
 
+import { Soul } from '../types';
+
 // Get the various DOM roots.
 var canvasesContainer = d3.select('#canvases-container');
 var imageBoard = d3.select('#image-board');
@@ -56,11 +58,12 @@ function render({ gameState, onAdvance, uiOn }) {
 
 function draw() {
   imageContext.clearRect(0, 0, boardWidth, boardHeight);
+  var player: Soul = lastGameState.player;
   lastGameState.grids.forEach(
     curry(renderGrid)({
       imageContext,
       transform: currentTransform,
-      playerGridId: lastGameState.player.grid.id
+      playerGridId: player.gridContext.id
     })
   );
   lastGameState.souls.forEach(

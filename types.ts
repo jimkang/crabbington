@@ -39,6 +39,13 @@ export interface Soul extends SoulDef {
   facing: Pt;
   x?: number;
   y?: number;
+  gridContext?: GridContext;
+}
+
+export interface GridContext {
+  id: string;
+  colOnGrid: number;
+  rowOnGrid: number;
 }
 
 export interface Sprite {

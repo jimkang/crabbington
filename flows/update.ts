@@ -7,7 +7,7 @@ var math = require('basic-2d-math');
 var pluck = require('lodash.pluck');
 var callNextTick = require('call-next-tick');
 
-import { Pt, MoveFn, Box, Filter } from '../types';
+import { Pt, MoveFn, Box, Filter, Soul, GridContext } from '../types';
 
 // Not really a radius: More like half a square.
 const clickRadius = 20;
@@ -32,20 +32,21 @@ function update({ gameState, recentClickX, recentClickY, commands, probable }) {
     // Assuming: if there is more than one intersection from the same grid hit,
     // there are so close that it doesn't matter which one we pick.
     // If it does matter, we can sort thingsHit by click distance.
+    var player: Soul = gameState.player;
     var selectedGridPoint = findWhere(thingsHit, {
-      gridId: gameState.player.grid.id
+      gridId: player.gridContext.id
     });
     if (selectedGridPoint) {
       if (
-        selectedGridPoint.col === gameState.player.grid.colOnGrid &&
-        selectedGridPoint.row === gameState.player.grid.rowOnGrid
+        selectedGridPoint.col === player.gridContext.colOnGrid &&
+        selectedGridPoint.row === player.gridContext.rowOnGrid
       ) {
         gameState.uiOn = true;
         // TODO: This shouldn't increment turn.
       } else if (
         pointsAreAdjacent(
           [selectedGridPoint.col, selectedGridPoint.row],
-          [gameState.player.grid.colOnGrid, gameState.player.grid.rowOnGrid]
+          [player.gridContext.colOnGrid, player.gridContext.rowOnGrid]
         )
       ) {
         // Eventually, things other than clicking an adjacent space should
@@ -68,11 +69,16 @@ function interact(gameState, thingsHit, selectedGridPoint, probable) {
 }
 
 function movePlayer(gameState, selectedGridPoint) {
-  gameState.player.grid.colOnGrid = selectedGridPoint.col;
-  gameState.player.grid.rowOnGrid = selectedGridPoint.row;
+  var player: Soul = gameState.player;
+  player.facing = getFacingDir(player.gridContext, [
+    selectedGridPoint.col,
+    selectedGridPoint.row
+  ]);
+  player.gridContext.colOnGrid = selectedGridPoint.col;
+  player.gridContext.rowOnGrid = selectedGridPoint.row;
 }
 
-function moveSoul(gameState, probable, soul) {
+function moveSoul(gameState, probable, soul: Soul) {
   // TODO: Moving for an actual reason.
   if (soul.id === 'player') {
     return;
@@ -84,12 +90,13 @@ function moveSoul(gameState, probable, soul) {
 
   var neighbors = getNeighboringGridPoints(
     soul,
-    findWhere(gameState.grids, { id: soul.grid.id })
+    findWhere(gameState.grids, { id: soul.gridContext.id })
   );
   var dest: Pt = move({ soul, neighbors, probable, getTargetsInBox });
   if (dest) {
-    soul.grid.colOnGrid = dest[0];
-    soul.grid.rowOnGrid = dest[1];
+    soul.facing = getFacingDir(soul.gridContext, dest);
+    soul.gridContext.colOnGrid = dest[0];
+    soul.gridContext.rowOnGrid = dest[1];
   }
 }
 
@@ -99,12 +106,12 @@ function pointsAreAdjacent(a, b) {
   return dist === 1;
 }
 
-function getNeighboringGridPoints(soul, grid) {
+function getNeighboringGridPoints(soul: Soul, grid) {
   var neighbors = [
-    [soul.grid.colOnGrid + 1, soul.grid.rowOnGrid],
-    [soul.grid.colOnGrid, soul.grid.rowOnGrid + 1],
-    [soul.grid.colOnGrid - 1, soul.grid.rowOnGrid],
-    [soul.grid.colOnGrid, soul.grid.rowOnGrid - 1]
+    [soul.gridContext.colOnGrid + 1, soul.gridContext.rowOnGrid],
+    [soul.gridContext.colOnGrid, soul.gridContext.rowOnGrid + 1],
+    [soul.gridContext.colOnGrid - 1, soul.gridContext.rowOnGrid],
+    [soul.gridContext.colOnGrid, soul.gridContext.rowOnGrid - 1]
   ];
   return neighbors.filter(isInGridBounds);
 
@@ -164,7 +171,7 @@ function removeSouls(gameState, souls) {
   }
 }
 
-function removeFromTargetTree(soul) {
+function removeFromTargetTree(soul: Soul) {
   targetTree.remove(soul);
 }
 
@@ -174,7 +181,7 @@ function getTargetsInBox({
 }: {
   box: Box;
   filter?: Filter;
-}): Array<any> {
+}): Array<Soul> {
   var targets = targetTree.search(box);
   // TODO: Further check that these are actually in a circle, rather than just
   // in a box circumscribing it.
@@ -182,6 +189,16 @@ function getTargetsInBox({
     targets = targets.filter(filter);
   }
   return targets;
+}
+
+function getFacingDir(
+  srcGridContext: GridContext,
+  dest: [number, number]
+): [number, number] {
+  return math.subtractPairs(dest, [
+    srcGridContext.colOnGrid,
+    srcGridContext.rowOnGrid
+  ]);
 }
 
 module.exports = update;
