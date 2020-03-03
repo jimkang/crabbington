@@ -1,17 +1,15 @@
 var cloneDeep = require('lodash.clonedeep');
 var RandomId = require('@jimkang/randomid');
 var Probable = require('probable').createProbable;
+var { Tablenest, r } = require('tablenest');
 
 import { Soul } from '../types';
 import { soulDefs } from '../defs/soul-defs';
 
-function generateSouls({ random, grids }) {
-  var probable = Probable({ random });
-  var randomId = RandomId({ random });
-  var soulTypeTable = probable.createTableFromSizes([
-    [3, 'doof'],
-    [1, 'plantGuy'],
-    [1, 'octo'],
+var soulTypeTableDef = {
+  root: [[3, r`guy`], [2, r`item`]],
+  guy: [[3, 'doof'], [1, 'plantGuy'], [1, 'octo']],
+  item: [
     [1, 'snailShell'],
     [1, 'beanie'],
     [1, 'box'],
@@ -30,7 +28,15 @@ function generateSouls({ random, grids }) {
     [1, 'simpleShell'],
     [1, 'trilby'],
     [1, 'purpleShell']
-  ]);
+  ]
+};
+
+function generateSouls({ random, grids }) {
+  var probable = Probable({ random });
+  var randomId = RandomId({ random });
+  var tablenest = Tablenest({ random });
+
+  var soulTypeTableRoll = tablenest(soulTypeTableDef);
 
   var player: Soul = instantiateFromDef({ def: soulDefs.player, id: 'player' });
   var souls: Array<Soul> = [];
@@ -39,7 +45,7 @@ function generateSouls({ random, grids }) {
 
   for (var i = 0; i < numberOfSouls; ++i) {
     let soul: Soul = instantiateFromDef({
-      def: soulDefs[soulTypeTable.roll()]
+      def: soulDefs[soulTypeTableRoll()]
     });
     souls.push(soul);
   }

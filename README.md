@@ -8,13 +8,17 @@ Plan
 
 - Specify allowed grids in soul def - Done
 - Specify motion pattern in soul def - Done
-- Tablenest hierarchy
+- Tablenest hierarchy - Done
 - Help button - Done
 - Define some development rules - Done
   - No cellular-automata-style cellular simultaneous updates. Everything should be sequential
   - Allow complex drawing code that does a lot on its own instead of trying to model everything
 - Make all grids cover most of board - Done
 - Characters facing specific directions
+- Impassable souls (walls)
+- Passable souls (floor tiles)
+- Item pickup
+- Hide most of grid?
 
 Vague concepts to fit in if somehow the basics come together
 ---
