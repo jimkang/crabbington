@@ -34,7 +34,9 @@ function onOpenHelpClick() {
 function renderUI({ gameState, onAdvance }) {
   playerCommandQueue.length = 0;
 
+  console.log('uiActions', gameState.uiActions);
   controlsLayer.classed('hidden', !gameState.uiOn);
+
   concludeUI = function advanceWithCommands() {
     gameState.uiOn = false;
     onAdvance({ gameState, commands: playerCommandQueue });

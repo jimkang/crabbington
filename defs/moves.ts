@@ -1,5 +1,4 @@
 import { ColRow, MoveParams, MoveFn } from '../types';
-import { getBoxAroundPosition } from '../tasks/get-box-around-position';
 
 export function RandomMove({
   avoidAll,
@@ -11,10 +10,9 @@ export function RandomMove({
   return randomMove;
 
   function randomMove({
-    soul,
     probable,
     neighbors,
-    getTargetsInBox
+    getTargetsAtColRow
   }: MoveParams): ColRow {
     // Assuming we're being passed the right neighbors,
     // calculated keeping the soul's sprite size in mind.
@@ -26,12 +24,9 @@ export function RandomMove({
     return probable.pickFromArray(unoccupiedNeighbors);
 
     function isUnoccupied(neighbor: ColRow) {
-      var box = getBoxAroundPosition({
-        position: neighbor,
-        boxWidth: soul.sprite.width,
-        boxHeight: soul.sprite.height
-      });
-      var targets = getTargetsInBox({ box, filter: considerOccupied });
+      var targets = getTargetsAtColRow({ colRow: neighbor }).filter(
+        considerOccupied
+      );
       return targets.length < 1;
     }
   }

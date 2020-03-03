@@ -49,6 +49,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'player',
     categories: ['guy'],
+    getInteractionsWithThing: getPlayerInteractionsWithThing,
     sprite: {
       col: 7,
       row: 0,
@@ -283,4 +284,14 @@ defList.forEach(addToDict);
 
 function addToDict(def: SoulDef) {
   soulDefs[def.type] = def;
+}
+
+function getPlayerInteractionsWithThing(thing): Array<string> {
+  if (thing.type && thing.type === 'player') {
+    return ['blast'];
+  }
+  if (thing.categories && thing.categories.includes('item')) {
+    return ['take'];
+  }
+  return [];
 }

@@ -16,13 +16,15 @@ export type BoxFindFn = ({
 }: {
   box: Box;
   filter?: Filter;
-}) => Array<Soul>;
+}) => Array<any>;
+
+export type ColRowFindFn = ({ colRow }: { colRow: ColRow }) => Array<any>;
 
 export interface MoveParams {
   soul: Soul;
   neighbors: Array<Pt>;
   probable: any;
-  getTargetsInBox: BoxFindFn;
+  getTargetsAtColRow: ColRowFindFn;
 }
 
 export type MoveFn = (MoveParams) => Pt;
@@ -31,6 +33,7 @@ export interface SoulDef {
   type: string;
   categories: Array<string>;
   move?: MoveFn;
+  getInteractionsWithThing?: (any) => Array<string>;
   sprite: Sprite;
   allowedGrids: Array<string>;
   startingItemIds?: Array<string>;

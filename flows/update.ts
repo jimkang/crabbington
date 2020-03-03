@@ -5,12 +5,14 @@ var rbush = require('rbush');
 var findWhere = require('lodash.findwhere');
 var math = require('basic-2d-math');
 var pluck = require('lodash.pluck');
+var uniq = require('lodash.uniq');
 var callNextTick = require('call-next-tick');
 
-import { Pt, MoveFn, Box, Filter, Soul, GridContext } from '../types';
+import { Pt, ColRow, MoveFn, Box, Filter, Soul, GridContext } from '../types';
+import { getBoxAroundCenter } from '../tasks/box-ops';
 
 // Not really a radius: More like half a square.
-const clickRadius = 20;
+//const clickRadius = 0;
 
 var targetTree = rbush(9);
 var turn = 0;
@@ -21,12 +23,12 @@ function update({ gameState, recentClickX, recentClickY, commands, probable }) {
     return;
   }
   if (gameState.allowAdvance && !isNaN(recentClickX) && !isNaN(recentClickY)) {
-    var thingsHit = targetTree.search({
-      minX: recentClickX - clickRadius,
-      maxX: recentClickX + clickRadius,
-      minY: recentClickY - clickRadius,
-      maxY: recentClickY + clickRadius
+    var clickBox: Box = getBoxAroundCenter({
+      center: [recentClickX, recentClickY],
+      boxWidth: 10,
+      boxHeight: 10
     });
+    var thingsHit = targetTree.search(clickBox);
     // console.log('thingsHit', thingsHit);
 
     // Assuming: if there is more than one intersection from the same grid hit,
@@ -49,6 +51,17 @@ function update({ gameState, recentClickX, recentClickY, commands, probable }) {
           [player.gridContext.colOnGrid, player.gridContext.rowOnGrid]
         )
       ) {
+        if (player.getInteractionsWithThing) {
+          var interactions: Array<string> = uniq(
+            thingsHit.map(player.getInteractionsWithThing).flat()
+          );
+          gameState.uiActions = interactions;
+          if (interactions.length > 0) {
+            gameState.uiOn = true;
+            // This shouldn't increment the turn.
+            return;
+          }
+        }
         // Eventually, things other than clicking an adjacent space should
         // trigger interact().
         interact(gameState, thingsHit, selectedGridPoint, probable);
@@ -98,11 +111,22 @@ function moveSoul(gameState, probable, soul: Soul) {
     soul,
     findWhere(gameState.grids, { id: soul.gridContext.id })
   );
-  var dest: Pt = move({ soul, neighbors, probable, getTargetsInBox });
+  var dest: Pt = move({ soul, neighbors, probable, getTargetsAtColRow });
   if (dest) {
     soul.facing = getFacingDir(soul.gridContext, dest);
     soul.gridContext.colOnGrid = dest[0];
     soul.gridContext.rowOnGrid = dest[1];
+  }
+
+  function getTargetsAtColRow({ colRow }: { colRow: ColRow }): Array<Soul> {
+    return gameState.souls.filter(colRowMatches);
+
+    function colRowMatches(soul: Soul) {
+      return (
+        soul.gridContext.colOnGrid === colRow[0] &&
+        soul.gridContext.rowOnGrid === colRow[1]
+      );
+    }
   }
 }
 
