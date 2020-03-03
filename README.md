@@ -13,7 +13,7 @@ Plan
 - Define some development rules - Done
   - No cellular-automata-style cellular simultaneous updates. Everything should be sequential
   - Allow complex drawing code that does a lot on its own instead of trying to model everything
-- Make all grids cover most of board
+- Make all grids cover most of board - Done
 - Characters facing specific directions
 
 Vague concepts to fit in if somehow the basics come together

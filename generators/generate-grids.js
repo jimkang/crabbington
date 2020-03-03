@@ -1,10 +1,12 @@
-var randomId = require('idmaker').randomId;
 var generateGravityWarp = require('./effects/generate-gravity-warp');
 
+import { spriteSize, gridWidthSprites, gridHeightSprites } from '../sizes';
+
 function generateGrids({ probable }) {
+  /*
   var spaceSizeTable = probable.createTableFromSizes([
     [4, 128],
-    [3, 64],
+    //[3, 64],
     [1, 256]
   ]);
   var numberOfUnitsTable = probable.createTableFromSizes([
@@ -13,49 +15,67 @@ function generateGrids({ probable }) {
     [2, 4],
     [1, 2]
   ]);
+  */
   var numberOfEffectsTable = probable.createTableFromSizes([
     [2, 0],
     [2, 1],
     [1, 2]
   ]);
 
-  var grids = [];
-  var numberOfGrids = 1 + probable.rollDie(2);
-  for (var i = 0; i < numberOfGrids; ++i) {
-    let isSquare = probable.roll(4) > 0;
-    let xSpace = spaceSizeTable.roll();
-    let ySpace = xSpace;
-    if (!isSquare) {
-      ySpace = spaceSizeTable.roll();
-    }
-    let numberOfCols = numberOfUnitsTable.roll();
-    let numberOfRows = numberOfUnitsTable.roll();
+  var airGrid = generateGrid({
+    id: 'grid-air',
+    unitWidth: spriteSize * 2,
+    unitHeight: spriteSize * 2,
+    gridWidth: spriteSize * gridWidthSprites,
+    gridHeight: spriteSize * gridHeightSprites
+  });
+  var airEffects = [];
+  let numberOfEffects = numberOfEffectsTable.roll();
+  if (numberOfEffects > 0) {
+    airEffects = [];
+  }
+  for (let j = 0; j < numberOfEffects; ++j) {
+    // TODO: When there's more than kind of effect, pick among them.
+    airEffects.push(generateGravityWarp({ grid: airGrid, probable }));
+  }
+  airGrid.effects = airEffects;
+
+  return [
+    generateGrid({
+      id: 'grid-ground',
+      unitWidth: spriteSize,
+      unitHeight: spriteSize,
+      gridWidth: spriteSize * gridWidthSprites,
+      gridHeight: spriteSize * gridHeightSprites
+    }),
+    generateGrid({
+      id: 'grid-figures',
+      unitWidth: spriteSize,
+      unitHeight: spriteSize,
+      gridWidth: spriteSize * gridWidthSprites,
+      gridHeight: spriteSize * gridHeightSprites
+    }),
+    airGrid
+  ];
+
+  function generateGrid({ id, unitWidth, unitHeight, gridWidth, gridHeight }) {
+    let numberOfCols = gridWidth / unitWidth;
+    let numberOfRows = gridHeight / unitHeight;
     let grid = {
-      id: 'grid-' + randomId(4),
-      xSpace,
-      ySpace,
-      // TODO: Should this be a separate table?
-      xOffset: spaceSizeTable.roll(),
-      yOffset: spaceSizeTable.roll(),
+      id,
+      unitWidth,
+      unitHeight,
+      xOffset: 0,
+      yOffset: 0,
       numberOfCols,
       numberOfRows,
-      width: numberOfCols * xSpace,
-      height: numberOfRows * ySpace,
-      // color: probable.pickFromArray(['red', 'green', 'blue'])
+      width: gridWidth,
+      height: gridHeight,
       color: `hsl(${probable.roll(360)}, 50%, 50%)`
     };
-    let numberOfEffects = numberOfEffectsTable.roll();
-    if (numberOfEffects > 0) {
-      grid.effects = [];
-    }
-    for (let j = 0; j < numberOfEffects; ++j) {
-      // TODO: When there's more than kind of effect, pick among them.
-      grid.effects.push(generateGravityWarp({ grid, probable }));
-    }
     grid.rows = getIntersectionRows(grid);
-    grids.push(grid);
+    return grid;
   }
-  return grids;
 }
 
 function getIntersectionRows(grid) {
@@ -64,8 +84,8 @@ function getIntersectionRows(grid) {
     let row = [];
     for (var colIndex = 0; colIndex < grid.numberOfCols; ++colIndex) {
       row.push({
-        x: grid.xOffset + colIndex * grid.xSpace,
-        y: grid.yOffset + rowIndex * grid.ySpace,
+        x: grid.xOffset + colIndex * grid.unitWidth,
+        y: grid.yOffset + rowIndex * grid.unitHeight,
         col: colIndex,
         row: rowIndex,
         gridId: grid.id

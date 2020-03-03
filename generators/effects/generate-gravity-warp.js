@@ -14,7 +14,8 @@ function generateGravityWarp({ grid, probable }) {
   return {
     name: 'gravityWarp',
     centers: range(numberOfCentersTable.roll()).map(generateCenter),
-    strength: probable.roll(32) + probable.roll(32),
+    strength:
+      (probable.roll(grid.unitHeight) + probable.roll(grid.unitWidth)) * 0.75,
     decayDist: averageSpan / 5 + probable.roll(averageSpan * 0.4)
   };
 
