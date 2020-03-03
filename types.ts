@@ -32,6 +32,7 @@ export interface SoulDef {
   move?: MoveFn;
   sprite: Sprite;
   allowedGrids: Array<string>;
+  startingItemIds?: Array<string>;
 }
 
 export interface Soul extends SoulDef {
@@ -40,6 +41,7 @@ export interface Soul extends SoulDef {
   x?: number;
   y?: number;
   gridContext?: GridContext;
+  items?: Array<Soul>;
 }
 
 export interface GridContext {

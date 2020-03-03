@@ -14,7 +14,7 @@ Plan
   - No cellular-automata-style cellular simultaneous updates. Everything should be sequential
   - Allow complex drawing code that does a lot on its own instead of trying to model everything
 - Make all grids cover most of board - Done
-- Characters facing specific directions
+- Characters facing specific directions - Done
 - Impassable souls (walls)
 - Passable souls (floor tiles)
 - Item pickup

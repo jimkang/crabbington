@@ -94,7 +94,15 @@ function generateSouls({ random, grids }) {
     }
 
     instance.facing = facing || probable.pickFromArray(facingDirections);
+
+    if (def.startingItemIds) {
+      instance.items = def.startingItemIds.map(instantiateFromDefId);
+    }
     return instance;
+  }
+
+  function instantiateFromDefId(id: string) {
+    return instantiateFromDef({ def: soulDefs[id] });
   }
 }
 
