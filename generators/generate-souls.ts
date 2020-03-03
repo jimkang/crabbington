@@ -1,7 +1,9 @@
-var soulDefs = require('../defs/soul-defs');
 var cloneDeep = require('lodash.clonedeep');
 var RandomId = require('@jimkang/randomid');
 var Probable = require('probable').createProbable;
+
+import { Soul } from '../types';
+import { soulDefs } from '../defs/soul-defs';
 
 function generateSouls({ random, grids }) {
   var probable = Probable({ random });
@@ -30,13 +32,15 @@ function generateSouls({ random, grids }) {
     [1, 'purpleShell']
   ]);
 
-  var player = instantiateFromDef({ def: soulDefs.player, id: 'player' });
-  var souls = [];
+  var player: Soul = instantiateFromDef({ def: soulDefs.player, id: 'player' });
+  var souls: Array<Soul> = [];
 
   var numberOfSouls = probable.rollDie(16) + probable.roll(16);
 
   for (var i = 0; i < numberOfSouls; ++i) {
-    let soul = instantiateFromDef({ def: soulDefs[soulTypeTable.roll()] });
+    let soul: Soul = instantiateFromDef({
+      def: soulDefs[soulTypeTable.roll()]
+    });
     souls.push(soul);
   }
 
@@ -46,16 +50,21 @@ function generateSouls({ random, grids }) {
   return souls;
 
   function setGridProps(soul) {
-    let grid = probable.pickFromArray(grids);
+    var allowedGrids = grids.filter(gridIsAllowed);
+    let grid = probable.pickFromArray(allowedGrids);
     soul.grid = {
       id: grid.id,
       colOnGrid: probable.roll(grid.rows[0].length),
       rowOnGrid: probable.roll(grid.rows.length)
     };
+
+    function gridIsAllowed(grid) {
+      return soul.allowedGrids.includes(grid.id);
+    }
   }
 
-  function instantiateFromDef({ def, id }) {
-    var instance = cloneDeep(def);
+  function instantiateFromDef({ def, id }: { def: Soul; id?: string }) {
+    var instance: Soul = cloneDeep(def);
     if (id) {
       instance.id = id;
     } else {

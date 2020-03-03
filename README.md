@@ -6,7 +6,7 @@ This is my 2020 DRL attempt!
 Plan
 ---
 
-- Specify allowed grids in soul def
+- Specify allowed grids in soul def - Done
 - Specify motion pattern in soul def - Done
 - Tablenest hierarchy
 - Help button - Done

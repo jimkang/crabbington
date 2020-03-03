@@ -16,13 +16,29 @@ export type BoxFindFn = ({
 }: {
   box: Box;
   filter?: Filter;
-}) => Array<any>; // Actually, Array<Soul>
+}) => Array<Soul>;
 
 export interface MoveParams {
-  soul: any;
+  soul: Soul;
   neighbors: Array<Pt>;
   probable: any;
   getTargetsInBox: BoxFindFn;
 }
 
 export type MoveFn = (MoveParams) => Pt;
+
+export interface Soul {
+  id?: string;
+  type: string;
+  move?: MoveFn;
+  sprite: Sprite;
+  allowedGrids: Array<string>;
+}
+
+export interface Sprite {
+  col: number;
+  row: number;
+  width: number;
+  height: number;
+  hitRadius: number;
+}

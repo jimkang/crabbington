@@ -1,11 +1,11 @@
-//var moves = require('./moves');
 import { RandomMove } from './moves';
 import { spriteSize } from '../sizes';
+import { Soul } from '../types';
 
 var randomMoveAvoidAll = RandomMove({ avoid: ['all'] });
 
-module.exports = {
-  plantGuy: {
+var defList: Array<Soul> = [
+  {
     type: 'plantGuy',
     move: randomMoveAvoidAll,
     sprite: {
@@ -14,9 +14,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-air']
   },
-  doof: {
+  {
     type: 'doof',
     move: randomMoveAvoidAll,
     sprite: {
@@ -25,9 +26,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  octo: {
+  {
     type: 'octo',
     move: randomMoveAvoidAll,
     sprite: {
@@ -36,9 +38,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  player: {
+  {
     type: 'player',
     sprite: {
       col: 7,
@@ -46,9 +49,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 48
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  snailShell: {
+  {
     type: 'snailShell',
     sprite: {
       col: 3,
@@ -56,9 +60,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  beanie: {
+  {
     type: 'beanie',
     sprite: {
       col: 4,
@@ -66,9 +71,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  box: {
+  {
     type: 'box',
     sprite: {
       col: 5,
@@ -76,9 +82,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  bucket: {
+  {
     type: 'bucket',
     sprite: {
       col: 6,
@@ -86,9 +93,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  cup: {
+  {
     type: 'cup',
     sprite: {
       col: 9,
@@ -96,9 +104,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  fancyShell: {
+  {
     type: 'fancyShell',
     sprite: {
       col: 10,
@@ -106,9 +115,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  spaceHelmet: {
+  {
     type: 'spaceHelmet',
     sprite: {
       col: 11,
@@ -116,9 +126,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  horn: {
+  {
     type: 'horn',
     sprite: {
       col: 12,
@@ -126,9 +137,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  lagavulin: {
+  {
     type: 'lagavulin',
     sprite: {
       col: 13,
@@ -136,9 +148,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  blueSnailShell: {
+  {
     type: 'blueSnailShell',
     sprite: {
       col: 14,
@@ -146,9 +159,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  longShell: {
+  {
     type: 'longShell',
     sprite: {
       col: 15,
@@ -156,9 +170,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  pot: {
+  {
     type: 'pot',
     sprite: {
       col: 16,
@@ -166,9 +181,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  shoe: {
+  {
     type: 'shoe',
     sprite: {
       col: 17,
@@ -176,9 +192,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  skull: {
+  {
     type: 'skull',
     sprite: {
       col: 18,
@@ -186,9 +203,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  soupCan: {
+  {
     type: 'soupCan',
     sprite: {
       col: 19,
@@ -196,9 +214,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  simpleShell: {
+  {
     type: 'simpleShell',
     sprite: {
       col: 20,
@@ -206,9 +225,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  trilby: {
+  {
     type: 'trilby',
     sprite: {
       col: 21,
@@ -216,9 +236,10 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   },
-  purpleShell: {
+  {
     type: 'purpleShell',
     sprite: {
       col: 22,
@@ -226,6 +247,15 @@ module.exports = {
       width: spriteSize,
       height: spriteSize,
       hitRadius: 100
-    }
+    },
+    allowedGrids: ['grid-figures']
   }
-};
+];
+
+export var soulDefs: Record<string, Soul> = {};
+
+defList.forEach(addToDict);
+
+function addToDict(def: Soul) {
+  soulDefs[def.type] = def;
+}
