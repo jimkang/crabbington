@@ -27,12 +27,18 @@ export interface MoveParams {
 
 export type MoveFn = (MoveParams) => Pt;
 
-export interface Soul {
-  id?: string;
+export interface SoulDef {
   type: string;
   move?: MoveFn;
   sprite: Sprite;
   allowedGrids: Array<string>;
+}
+
+export interface Soul extends SoulDef {
+  id: string;
+  facing: Pt;
+  x?: number;
+  y?: number;
 }
 
 export interface Sprite {

@@ -3,8 +3,11 @@ var RandomId = require('@jimkang/randomid');
 var Probable = require('probable').createProbable;
 var { Tablenest, r } = require('tablenest');
 
-import { Soul } from '../types';
+import { SoulDef, Soul, Pt } from '../types';
 import { soulDefs } from '../defs/soul-defs';
+
+// Sprites are assumed to face the right by default.
+var facingDirections: Array<Pt> = [[1, 0], [0, -1], [-1, 0], [0, 1]];
 
 var soulTypeTableDef = {
   root: [[3, r`guy`], [2, r`item`]],
@@ -38,7 +41,12 @@ function generateSouls({ random, grids }) {
 
   var soulTypeTableRoll = tablenest(soulTypeTableDef);
 
-  var player: Soul = instantiateFromDef({ def: soulDefs.player, id: 'player' });
+  var player: Soul = instantiateFromDef({
+    def: soulDefs.player,
+    id: 'player',
+    //facing: [0, -1]
+    facing: [1, 0]
+  });
   var souls: Array<Soul> = [];
 
   var numberOfSouls = probable.rollDie(16) + probable.roll(16);
@@ -69,13 +77,23 @@ function generateSouls({ random, grids }) {
     }
   }
 
-  function instantiateFromDef({ def, id }: { def: Soul; id?: string }) {
+  function instantiateFromDef({
+    def,
+    id,
+    facing
+  }: {
+    def: SoulDef;
+    id?: string;
+    facing?: Pt;
+  }): Soul {
     var instance: Soul = cloneDeep(def);
     if (id) {
       instance.id = id;
     } else {
       instance.id = instance.type + '-' + randomId(4);
     }
+
+    instance.facing = facing || probable.pickFromArray(facingDirections);
     return instance;
   }
 }

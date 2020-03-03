@@ -1,10 +1,10 @@
 import { RandomMove } from './moves';
 import { spriteSize } from '../sizes';
-import { Soul } from '../types';
+import { SoulDef } from '../types';
 
 var randomMoveAvoidAll = RandomMove({ avoid: ['all'] });
 
-var defList: Array<Soul> = [
+var defList: Array<SoulDef> = [
   {
     type: 'plantGuy',
     move: randomMoveAvoidAll,
@@ -252,10 +252,10 @@ var defList: Array<Soul> = [
   }
 ];
 
-export var soulDefs: Record<string, Soul> = {};
+export var soulDefs: Record<string, SoulDef> = {};
 
 defList.forEach(addToDict);
 
-function addToDict(def: Soul) {
+function addToDict(def: SoulDef) {
   soulDefs[def.type] = def;
 }

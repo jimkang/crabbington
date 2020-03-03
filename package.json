@@ -44,6 +44,7 @@
     "lodash.curry": "^4.1.1",
     "lodash.findwhere": "^3.1.0",
     "lodash.flatten": "^4.4.0",
+    "lodash.isequal": "^4.5.0",
     "lodash.pluck": "^3.1.2",
     "probable": "^2.1.1",
     "rbush": "^2.0.2",
