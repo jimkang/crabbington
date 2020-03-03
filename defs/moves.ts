@@ -1,7 +1,13 @@
 import { ColRow, MoveParams, MoveFn } from '../types';
 import { getBoxAroundPosition } from '../tasks/get-box-around-position';
 
-export function RandomMove({ avoid }: { avoid: Array<string> }): MoveFn {
+export function RandomMove({
+  avoidAll,
+  avoid = []
+}: {
+  avoidAll?: boolean;
+  avoid?: Array<string>;
+}): MoveFn {
   return randomMove;
 
   function randomMove({
@@ -12,7 +18,7 @@ export function RandomMove({ avoid }: { avoid: Array<string> }): MoveFn {
   }: MoveParams): ColRow {
     // Assuming we're being passed the right neighbors,
     // calculated keeping the soul's sprite size in mind.
-    if (!avoid) {
+    if (!avoidAll && avoid.length < 1) {
       return probable.pickFromArray(neighbors);
     }
     // TODO: Do this less stupidly.
@@ -20,7 +26,6 @@ export function RandomMove({ avoid }: { avoid: Array<string> }): MoveFn {
     return probable.pickFromArray(unoccupiedNeighbors);
 
     function isUnoccupied(neighbor: ColRow) {
-      // TODO: Filter for kind of thing to avoid.
       var box = getBoxAroundPosition({
         position: neighbor,
         boxWidth: soul.sprite.width,
@@ -34,6 +39,16 @@ export function RandomMove({ avoid }: { avoid: Array<string> }): MoveFn {
   // Ignore grid tiles when considering if a space
   // is occupied.
   function considerOccupied(thing) {
-    return !thing.gridId;
+    if (thing.gridId) {
+      return false;
+    }
+    if (avoidAll) {
+      return true;
+    }
+    if (avoid && thing.category && avoid.includes(thing.category)) {
+      return true;
+    }
+
+    return false;
   }
 }

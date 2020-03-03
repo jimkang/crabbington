@@ -11,7 +11,7 @@ var facingDirections: Array<Pt> = [[1, 0], [0, -1], [-1, 0], [0, 1]];
 
 var soulTypeTableDef = {
   root: [[3, r`guy`], [2, r`item`]],
-  guy: [[3, 'doof'], [1, 'plantGuy'], [1, 'octo']],
+  guy: [[6, 'doof'], [1, 'plantGuy'], [2, 'octo']],
   item: [
     [1, 'snailShell'],
     [1, 'beanie'],

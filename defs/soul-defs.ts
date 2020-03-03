@@ -2,11 +2,13 @@ import { RandomMove } from './moves';
 import { spriteSize } from '../sizes';
 import { SoulDef } from '../types';
 
-var randomMoveAvoidAll = RandomMove({ avoid: ['all'] });
+var randomMoveAvoidAll = RandomMove({ avoidAll: true });
+var randomMoveAvoidGuys = RandomMove({ avoid: ['guy'] });
 
 var defList: Array<SoulDef> = [
   {
     type: 'plantGuy',
+    categories: ['guy'],
     move: randomMoveAvoidAll,
     sprite: {
       col: 2,
@@ -19,6 +21,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'doof',
+    categories: ['guy'],
     move: randomMoveAvoidAll,
     sprite: {
       col: 1,
@@ -31,7 +34,8 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'octo',
-    move: randomMoveAvoidAll,
+    categories: ['guy'],
+    move: randomMoveAvoidGuys,
     sprite: {
       col: 0,
       row: 0,
@@ -44,6 +48,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'player',
+    categories: ['guy'],
     sprite: {
       col: 7,
       row: 0,
@@ -55,6 +60,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'snailShell',
+    categories: ['item'],
     sprite: {
       col: 3,
       row: 0,
@@ -66,6 +72,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'beanie',
+    categories: ['item'],
     sprite: {
       col: 4,
       row: 0,
@@ -78,6 +85,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'box',
+    categories: ['item'],
     sprite: {
       col: 5,
       row: 0,
@@ -89,6 +97,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'bucket',
+    categories: ['item'],
     sprite: {
       col: 6,
       row: 0,
@@ -100,6 +109,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'cup',
+    categories: ['item'],
     sprite: {
       col: 9,
       row: 0,
@@ -111,6 +121,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'fancyShell',
+    categories: ['item'],
     sprite: {
       col: 10,
       row: 0,
@@ -122,6 +133,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'spaceHelmet',
+    categories: ['item'],
     sprite: {
       col: 11,
       row: 0,
@@ -133,6 +145,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'horn',
+    categories: ['item'],
     sprite: {
       col: 12,
       row: 0,
@@ -144,6 +157,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'lagavulin',
+    categories: ['item'],
     sprite: {
       col: 13,
       row: 0,
@@ -155,6 +169,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'blueSnailShell',
+    categories: ['item'],
     sprite: {
       col: 14,
       row: 0,
@@ -166,6 +181,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'longShell',
+    categories: ['item'],
     sprite: {
       col: 15,
       row: 0,
@@ -177,6 +193,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'pot',
+    categories: ['item'],
     sprite: {
       col: 16,
       row: 0,
@@ -188,6 +205,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'shoe',
+    categories: ['item'],
     sprite: {
       col: 17,
       row: 0,
@@ -199,6 +217,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'skull',
+    categories: ['item'],
     sprite: {
       col: 18,
       row: 0,
@@ -210,6 +229,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'soupCan',
+    categories: ['item'],
     sprite: {
       col: 19,
       row: 0,
@@ -221,6 +241,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'simpleShell',
+    categories: ['item'],
     sprite: {
       col: 20,
       row: 0,
@@ -232,6 +253,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'trilby',
+    categories: ['item'],
     sprite: {
       col: 21,
       row: 0,
@@ -243,6 +265,7 @@ var defList: Array<SoulDef> = [
   },
   {
     type: 'purpleShell',
+    categories: ['item'],
     sprite: {
       col: 22,
       row: 0,

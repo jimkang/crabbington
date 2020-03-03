@@ -29,6 +29,7 @@ export type MoveFn = (MoveParams) => Pt;
 
 export interface SoulDef {
   type: string;
+  categories: Array<string>;
   move?: MoveFn;
   sprite: Sprite;
   allowedGrids: Array<string>;
