@@ -104,7 +104,7 @@ function setUpZoom(draw) {
   function zoomed() {
     // Warning: This is reference. Is d3 going to change it unexpectedly?
     currentTransform = d3.event.transform;
-    console.log('transform', currentTransform);
+    //console.log('transform', currentTransform);
     draw(currentTransform);
   }
 }

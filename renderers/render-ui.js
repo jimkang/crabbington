@@ -39,6 +39,10 @@ function renderUI({ gameState, onAdvance }) {
     gameState.uiOn = false;
     onAdvance({ gameState, commands: playerCommandQueue });
   };
+
+  // Hidden by default so that it can't be clicked before
+  // the JS is loaded.
+  closeHelpButton.classed('hidden', false);
 }
 
 module.exports = renderUI;
