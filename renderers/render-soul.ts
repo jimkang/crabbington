@@ -1,5 +1,6 @@
 var spriteSheet = document.getElementById('sprite-sheet');
 var isEqual = require('lodash.isequal');
+var math = require('basic-2d-math');
 
 import { spriteSize } from '../sizes';
 import { Soul, Pt } from '../types';
@@ -13,8 +14,8 @@ function renderSoul(
     offset,
     facing
   }: {
-    imageContext: any;
-    transform: any;
+    imageContext;
+    transform;
     baseX: number;
     baseY: number;
     offset: Pt;
@@ -75,6 +76,23 @@ function renderSoul(
   }
 
   function renderItem(item: Soul) {
+    if (!item.itemRole) {
+      return;
+    }
+
+    // TODO: Generalize.
+    var offset: Pt = [0, 0];
+    if (
+      soul.type === 'player' &&
+      item.itemRole.itemPositioningStyle === 'shell'
+    ) {
+      // Raise it to sit on top of the soul.
+      offset = [0, -32];
+    }
+    if (item.itemRole.offset) {
+      offset = math.addPairs(offset, item.itemRole.offset);
+    }
+
     // TODO: Items that aren't visible.
     renderSoul(
       {
@@ -82,7 +100,7 @@ function renderSoul(
         transform,
         baseX: soul.x,
         baseY: soul.y,
-        offset: item.offsetAsItem,
+        offset,
         facing: facingDir
       },
       item

@@ -3,6 +3,9 @@ UGLIFY = ./node_modules/uglify-es/bin/uglifyjs
 TRANSFORM_SWITCH = -t [ babelify --presets [ es2015 ] --extensions ['.ts'] ]
 PLUGIN_SWITCH = -p [tsify]
 
+SRCIMGDIR = static/source-images
+RESIZEDDIR = $(SRCIMGDIR)/resized
+
 pushall:
 	git push origin master
 
@@ -30,16 +33,13 @@ sync:
 set-up-server-dir:
 	ssh $(USER)@$(SERVER) "mkdir -p $(APPDIR)/static"
 
-# Convert black pixels to transparent ones, resize, nearest-neighbor-style.
 prepare-sheet:
-	convert meta/pico-8/sprites.png \
-		-alpha set \
-		-channel RGBA \
-		-fill none \
-		-opaque black \
-		-filter point \
-		-resize 512x512 \
-		static/sheet.png
+	montage $(RESIZEDDIR)/*.png -tile 1x -background Transparent -geometry '1x1+0+0<' static/sheet.png
+
+resize-source-images:
+	 rm $(SRCIMGDIR)/resized/*
+	 mogrify -resize 128x128\> -path $(RESIZEDDIR) $(SRCIMGDIR)/*.png
+	 mogrify -gravity center -background transparent -extent 128x128 $(RESIZEDDIR)/*.png
 
 # scale-sheet:
 # 	ffmpeg -i ../carts/octo.png \

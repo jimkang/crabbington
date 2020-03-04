@@ -37,7 +37,7 @@ export interface SoulDef {
   sprite: Sprite;
   allowedGrids: Array<string>;
   startingItemIds?: Array<string>;
-  offsetAsItem?: Pt;
+  itemRole?: ItemRole;
 }
 
 export interface Soul extends SoulDef {
@@ -48,6 +48,11 @@ export interface Soul extends SoulDef {
   y?: number;
   gridContext?: GridContext;
   items?: Array<Soul>;
+}
+
+export interface ItemRole {
+  itemPositioningStyle: string;
+  offset?: Pt;
 }
 
 export interface GridContext {

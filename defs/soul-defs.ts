@@ -5,35 +5,10 @@ import { SoulDef } from '../types';
 var randomMoveAvoidAll = RandomMove({ avoidAll: true });
 var randomMoveAvoidGuys = RandomMove({ avoid: ['guy'] });
 
+// New entry macro: @e
 var defList: Array<SoulDef> = [
   {
-    type: 'plantGuy',
-    categories: ['guy'],
-    move: randomMoveAvoidAll,
-    sprite: {
-      col: 2,
-      row: 0,
-      width: spriteSize,
-      height: spriteSize,
-      hitRadius: 100
-    },
-    allowedGrids: ['grid-air']
-  },
-  {
-    type: 'doof',
-    categories: ['guy'],
-    move: randomMoveAvoidAll,
-    sprite: {
-      col: 1,
-      row: 0,
-      width: spriteSize,
-      height: spriteSize,
-      hitRadius: 100
-    },
-    allowedGrids: ['grid-figures']
-  },
-  {
-    type: 'octo',
+    type: 'avocado',
     categories: ['guy'],
     move: randomMoveAvoidGuys,
     sprite: {
@@ -41,70 +16,125 @@ var defList: Array<SoulDef> = [
       row: 0,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
-    },
-    allowedGrids: ['grid-figures'],
-    startingItemIds: ['beanie']
-  },
-  {
-    type: 'player',
-    categories: ['guy'],
-    getInteractionsWithThing: getPlayerInteractionsWithThing,
-    sprite: {
-      col: 7,
-      row: 0,
-      width: spriteSize,
-      height: spriteSize,
-      hitRadius: 48
+      hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures']
   },
   {
-    type: 'snailShell',
+    type: 'basicShell',
     categories: ['item'],
     sprite: {
-      col: 3,
-      row: 0,
+      col: 0,
+      row: 1,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   },
   {
     type: 'beanie',
     categories: ['item'],
     sprite: {
-      col: 4,
-      row: 0,
+      col: 0,
+      row: 2,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
-    offsetAsItem: [0, -64]
+    itemRole: { itemPositioningStyle: 'shell', offset: [0, -64] }
   },
   {
     type: 'box',
     categories: ['item'],
     sprite: {
-      col: 5,
-      row: 0,
+      col: 0,
+      row: 3,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   },
   {
     type: 'bucket',
     categories: ['item'],
     sprite: {
-      col: 6,
-      row: 0,
+      col: 0,
+      row: 4,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'bug',
+    categories: ['guy'],
+    move: randomMoveAvoidGuys,
+    sprite: {
+      col: 0,
+      row: 5,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures']
+  },
+  {
+    type: 'cat',
+    categories: ['guy'],
+    move: randomMoveAvoidGuys,
+    sprite: {
+      col: 0,
+      row: 6,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures']
+  },
+  {
+    type: 'cloud',
+    categories: ['guy'],
+    move: randomMoveAvoidAll,
+    sprite: {
+      col: 0,
+      row: 7,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-air']
+  },
+  {
+    type: 'corn',
+    categories: ['guy'],
+    move: randomMoveAvoidGuys,
+    sprite: {
+      col: 0,
+      row: 8,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures']
+  },
+  // TODO: Get sleep, other animation in.
+  {
+    type: 'player',
+    categories: ['guy'],
+    getInteractionsWithThing: getPlayerInteractionsWithThing,
+    sprite: {
+      col: 0,
+      row: 10,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures']
   },
@@ -112,143 +142,237 @@ var defList: Array<SoulDef> = [
     type: 'cup',
     categories: ['item'],
     sprite: {
-      col: 9,
-      row: 0,
+      col: 0,
+      row: 12,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'devil',
+    categories: ['guy'],
+    move: randomMoveAvoidGuys,
+    sprite: {
+      col: 0,
+      row: 13,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures']
   },
   {
     type: 'fancyShell',
     categories: ['item'],
+    move: randomMoveAvoidAll,
     sprite: {
-      col: 10,
-      row: 0,
+      col: 0,
+      row: 14,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   },
   {
-    type: 'spaceHelmet',
+    type: 'helmet',
     categories: ['item'],
     sprite: {
-      col: 11,
-      row: 0,
+      col: 0,
+      row: 15,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   },
   {
     type: 'horn',
     categories: ['item'],
     sprite: {
-      col: 12,
-      row: 0,
+      col: 0,
+      row: 16,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   },
   {
-    type: 'lagavulin',
+    type: 'lagavulinShell',
     categories: ['item'],
     sprite: {
-      col: 13,
-      row: 0,
+      col: 0,
+      row: 17,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   },
   {
-    type: 'blueSnailShell',
+    type: 'largeShell',
     categories: ['item'],
     sprite: {
-      col: 14,
-      row: 0,
+      col: 0,
+      row: 18,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   },
   {
     type: 'longShell',
     categories: ['item'],
     sprite: {
-      col: 15,
-      row: 0,
+      col: 0,
+      row: 19,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   },
   {
-    type: 'pot',
+    type: 'pan',
     categories: ['item'],
     sprite: {
-      col: 16,
-      row: 0,
+      col: 0,
+      row: 20,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'pointyRock',
+    categories: ['obstruction'],
+    sprite: {
+      col: 0,
+      row: 21,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'roundRock',
+    categories: ['obstruction'],
+    sprite: {
+      col: 0,
+      row: 22,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   },
   {
     type: 'shoe',
     categories: ['item'],
+    move: randomMoveAvoidAll,
     sprite: {
-      col: 17,
-      row: 0,
+      col: 0,
+      row: 23,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   },
   {
     type: 'skull',
-    categories: ['item'],
+    categories: ['item', 'guy'],
+    move: randomMoveAvoidAll,
     sprite: {
-      col: 18,
-      row: 0,
+      col: 0,
+      row: 24,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   },
   {
     type: 'soupCan',
     categories: ['item'],
     sprite: {
-      col: 19,
-      row: 0,
+      col: 0,
+      row: 25,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'SUV',
+    categories: ['guy'],
+    move: randomMoveAvoidGuys,
+    sprite: {
+      col: 0,
+      row: 26,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures']
   },
   {
-    type: 'simpleShell',
-    categories: ['item'],
+    type: 'tearDrop',
+    categories: ['guy'],
+    move: randomMoveAvoidAll,
     sprite: {
-      col: 20,
-      row: 0,
+      col: 0,
+      row: 27,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'tinyShell',
+    categories: ['item'],
+    sprite: {
+      col: 0,
+      row: 28,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'trike',
+    categories: ['guy'],
+    move: randomMoveAvoidGuys,
+    sprite: {
+      col: 0,
+      row: 29,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures']
   },
@@ -256,25 +380,53 @@ var defList: Array<SoulDef> = [
     type: 'trilby',
     categories: ['item'],
     sprite: {
-      col: 21,
-      row: 0,
+      col: 0,
+      row: 30,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'twistyShell',
+    categories: ['item'],
+    sprite: {
+      col: 0,
+      row: 31,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'twoPointRock',
+    categories: ['obstruction'],
+    sprite: {
+      col: 0,
+      row: 32,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures']
   },
   {
-    type: 'purpleShell',
-    categories: ['item'],
+    type: 'worm',
+    categories: ['guy'],
+    move: randomMoveAvoidAll,
     sprite: {
-      col: 22,
-      row: 0,
+      col: 0,
+      row: 33,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: 100
+      hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-air'],
+    itemRole: { itemPositioningStyle: 'shell' }
   }
 ];
 

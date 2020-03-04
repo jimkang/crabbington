@@ -9,28 +9,42 @@ import { soulDefs } from '../defs/soul-defs';
 // Sprites are assumed to face the right by default.
 var facingDirections: Array<Pt> = [[1, 0], [0, -1], [-1, 0], [0, 1]];
 
+// Add item from soul-defs macro (assuming it's open in
+// the left pane and this is in the right): @i
 var soulTypeTableDef = {
-  root: [[3, r`guy`], [2, r`item`]],
-  guy: [[6, 'doof'], [1, 'plantGuy'], [2, 'octo']],
+  root: [[3, r`guy`], [2, r`item`], [2, r`obstruction`]],
+  guy: [
+    [1, 'bug'],
+    [1, 'cat'],
+    [1, 'cloud'],
+    [1, 'corn'],
+    [1, 'devil'],
+    [1, 'SUV'],
+    [1, 'tearDrop'],
+    [1, 'trike'],
+    [1, 'worm']
+  ],
+  obstruction: [[1, 'pointyRock'], [1, 'roundRock'], [1, 'twoPointRock']],
   item: [
-    [1, 'snailShell'],
+    [1, 'avocado'],
+    [1, 'basicShell'],
     [1, 'beanie'],
     [1, 'box'],
     [1, 'bucket'],
     [1, 'cup'],
     [1, 'fancyShell'],
-    [1, 'spaceHelmet'],
+    [1, 'helmet'],
     [1, 'horn'],
-    [1, 'lagavulin'],
-    [1, 'blueSnailShell'],
+    [1, 'lagavulinShell'],
+    [1, 'largeShell'],
     [1, 'longShell'],
-    [1, 'pot'],
+    [1, 'pan'],
     [1, 'shoe'],
     [1, 'skull'],
     [1, 'soupCan'],
-    [1, 'simpleShell'],
+    [1, 'tinyShell'],
     [1, 'trilby'],
-    [1, 'purpleShell']
+    [1, 'twistyShell']
   ]
 };
 
