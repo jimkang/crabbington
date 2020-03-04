@@ -19,6 +19,10 @@ Plan
 - Passable souls (floor tiles)
 - Item pickup - Done
 - Hide most of grid?
+- Hitting
+- Sleeping
+- Easier clicking - Done
+- Make action buttons easier to notice
 
 Vague concepts to fit in if somehow the basics come together
 ---

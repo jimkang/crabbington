@@ -20,10 +20,12 @@ import {
   Command,
   GridIntersection
 } from '../types';
+
+import { spriteSize } from '../sizes';
 import { getBoxAroundCenter } from '../tasks/box-ops';
 
 // Not really a radius: More like half a square.
-//const clickRadius = 0;
+const clickRadius = spriteSize / 3;
 
 var targetTree = rbush(9);
 var turn = 0;
@@ -48,8 +50,8 @@ function update({
   if (gameState.allowAdvance && !isNaN(recentClickX) && !isNaN(recentClickY)) {
     var clickBox: Box = getBoxAroundCenter({
       center: [recentClickX, recentClickY],
-      boxWidth: 10,
-      boxHeight: 10
+      boxWidth: clickRadius,
+      boxHeight: clickRadius
     });
     var thingsHit = targetTree.search(clickBox);
     gameState.lastClickedThingIds = pluck(thingsHit, 'id');
