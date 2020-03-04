@@ -5,9 +5,9 @@ import { Grid, GridIntersection } from '../types';
 
 function generateGrids({ probable }): Array<Grid> {
   var numberOfEffectsTable = probable.createTableFromSizes([
-    [2, 0],
-    [2, 1],
-    [1, 2]
+    [3, 1],
+    [2, 2],
+    [1, 3]
   ]);
   var airGrid = generateGrid({
     id: 'grid-air',
@@ -17,7 +17,7 @@ function generateGrids({ probable }): Array<Grid> {
     gridHeight: spriteSize * gridHeightSprites
   });
   var airEffects = [];
-  let numberOfEffects = 2; //numberOfEffectsTable.roll();
+  let numberOfEffects = numberOfEffectsTable.roll();
   if (numberOfEffects > 0) {
     airEffects = [];
   }
