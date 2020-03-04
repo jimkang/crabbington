@@ -63,26 +63,23 @@ function update({
       gridId: player.gridContext.id
     });
     if (selectedGridIntersection) {
-      if (isEqual(selectedGridIntersection.colRow, player.gridContext.colRow)) {
-        gameState.uiOn = true;
+      var isPlayerIntersection: boolean = isEqual(
+        selectedGridIntersection.colRow,
+        player.gridContext.colRow
+      );
+      var isAdjacent: boolean = pointsAreAdjacent(
+        selectedGridIntersection.colRow,
+        player.gridContext.colRow
+      );
+      if (isPlayerIntersection || isAdjacent) {
+        gameState.actionChoices = uniq(
+          thingsHit.map(player.getInteractionsWithThing).flat()
+        );
+      }
+      if (gameState.actionChoices.length > 0) {
         // This shouldn't increment the turn.
-      } else if (
-        pointsAreAdjacent(
-          selectedGridIntersection.colRow,
-          player.gridContext.colRow
-        )
-      ) {
-        if (player.getInteractionsWithThing) {
-          var interactions: Array<string> = uniq(
-            thingsHit.map(player.getInteractionsWithThing).flat()
-          );
-          gameState.actionChoices = interactions;
-          if (interactions.length > 0) {
-            gameState.uiOn = true;
-            // This shouldn't increment the turn.
-            return;
-          }
-        }
+        gameState.uiOn = true;
+      } else if (!isPlayerIntersection) {
         // Eventually, things other than clicking an adjacent space should
         // trigger interact().
         interact(gameState, thingsHit, selectedGridIntersection, probable);
@@ -200,6 +197,8 @@ function runCommand(gameState: GameState, command: Command) {
       duration: 1000,
       postAnimationGameStateUpdater: doSoulRemoval
     });
+  } else if (command.cmdType === 'take') {
+    console.log('Take it!');
   }
 
   function doSoulRemoval(done) {
