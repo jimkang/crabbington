@@ -62,3 +62,60 @@ export interface Sprite {
   height: number;
   hitRadius: number;
 }
+
+export type Done = (Error, any?) => void;
+
+export interface AnimationDef extends CircleDef {
+  type: string;
+  duration: number;
+  postAnimationGameStateUpdater: Done;
+}
+
+export interface GameState {
+  allowAdvance: boolean;
+  animations: Array<AnimationDef>;
+  ephemerals: {
+    blasts: Array<BlastDef>;
+  };
+  gridsInit: boolean;
+  grids?: Array<Grid>;
+  souls?: Array<Soul>;
+  player?: Soul;
+}
+
+export interface Grid {
+  id: string;
+  unitWidth: number;
+  unitHeight: number;
+  xOffset: number;
+  yOffset: number;
+  numberOfCols: number;
+  numberOfRows: number;
+  width: number;
+  height: number;
+  color: string;
+  rows: Array<Array<GridIntersection>>;
+}
+
+// TODO: Reuse colRow here.
+export interface GridIntersection {
+  x: number;
+  y: number;
+  col: number;
+  row: number;
+  gridId: string;
+}
+
+export interface BlastDef extends CircleDef {
+  color: string;
+}
+
+export interface CircleDef {
+  cx: number;
+  cy: number;
+  r: number;
+}
+
+export interface Command {
+  cmdType: string;
+}

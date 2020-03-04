@@ -8,9 +8,11 @@ var generateGrids = require('./generators/generate-grids');
 var generateSouls = require('./generators/generate-souls');
 var seedrandom = require('seedrandom');
 
+import { GameState, Command } from './types';
+
 var randomid = require('@jimkang/randomid')();
 
-var theGameState = {
+var theGameState: GameState = {
   allowAdvance: true,
   animations: [],
   ephemerals: {
@@ -42,7 +44,17 @@ function followRoute({ seed }) {
 
   advance({ gameState: theGameState });
 
-  function advance({ gameState, recentClickX, recentClickY, commands }) {
+  function advance({
+    gameState,
+    recentClickX,
+    recentClickY,
+    commands
+  }: {
+    gameState: GameState;
+    recentClickX?: number;
+    recentClickY?: number;
+    commands?: Array<Command>;
+  }) {
     if (gameState.allowAdvance) {
       update({
         gameState,

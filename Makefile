@@ -7,12 +7,12 @@ pushall:
 	git push origin master
 
 run:
-	wzrd app.js:index.js -- \
+	wzrd app.ts:index.js -- \
 		-d \
 		$(PLUGIN_SWITCH)
 
 build:
-	$(BROWSERIFY) $(PLUGIN_SWITCH) app.js | $(UGLIFY) -c -m -o index.js
+	$(BROWSERIFY) $(PLUGIN_SWITCH) app.ts | $(UGLIFY) -c -m -o index.js
 
 prettier:
 	prettier --write index.html
