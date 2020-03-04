@@ -10,14 +10,6 @@ export interface Box {
 
 export type Filter = (any) => boolean;
 
-export type BoxFindFn = ({
-  box,
-  filter
-}: {
-  box: Box;
-  filter?: Filter;
-}) => Array<any>;
-
 export type ColRowFindFn = ({ colRow }: { colRow: ColRow }) => Array<any>;
 
 export interface MoveParams {
