@@ -45,10 +45,18 @@ function update({
   commands?: Array<Command>;
   probable;
 }) {
+  if (!gameState.gridsInit) {
+    // It's important to call updateSoul during
+    // init because it gets the souls into the targetTree.
+    gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
+    gameState.grids.forEach(curry(updateGrid)(targetTree));
+    gameState.gridsInit = true;
+  }
   if (commands) {
     commands.forEach(curry(runCommand)(gameState));
     return;
   }
+  // Find out if something relevant got clicked.
   if (gameState.allowAdvance && !isNaN(recentClickX) && !isNaN(recentClickY)) {
     var clickBox: Box = getBoxAroundCenter({
       center: [recentClickX, recentClickY],
@@ -57,47 +65,72 @@ function update({
     });
     var thingsHit = targetTree.search(clickBox);
     gameState.lastClickedThingIds = pluck(thingsHit, 'id');
-    // console.log('thingsHit', thingsHit);
 
     // Assuming: if there is more than one intersection from the same grid hit,
-    // there are so close that it doesn't matter which one we pick.
+    // they are so close that it doesn't matter which one we pick.
     // If it does matter, we can sort thingsHit by click distance.
-    var player: Soul = gameState.player;
     // Things with gridIds are GridIntersections.
-    var selectedGridIntersection: GridIntersection = findWhere(thingsHit, {
-      gridId: player.gridContext.id
+    var selectedIntersection: GridIntersection = findWhere(thingsHit, {
+      gridId: gameState.player.gridContext.id
     });
-    if (selectedGridIntersection) {
-      var isPlayerIntersection: boolean = isEqual(
-        selectedGridIntersection.colRow,
-        player.gridContext.colRow
-      );
-      var isAdjacent: boolean = pointsAreAdjacent(
-        selectedGridIntersection.colRow,
-        player.gridContext.colRow
-      );
-      if (isPlayerIntersection || isAdjacent) {
-        gameState.actionChoices = uniq(
-          thingsHit.map(player.getInteractionsWithThing).flat()
-        );
-      }
-      if (gameState.actionChoices.length > 0) {
-        // This shouldn't increment the turn.
-        gameState.uiOn = true;
-      } else if (!isPlayerIntersection) {
-        // Eventually, things other than clicking an adjacent space should
-        // trigger interact().
-        interact(gameState, thingsHit, selectedGridIntersection, probable);
-        incrementTurn();
+    if (selectedIntersection) {
+      updateUsingGridSelection({
+        selectedIntersection,
+        gameState,
+        thingsHit,
+        probable
+      });
+    }
+  }
+}
+
+function updateUsingGridSelection({
+  selectedIntersection,
+  gameState,
+  thingsHit,
+  probable
+}: {
+  selectedIntersection: GridIntersection;
+  gameState: GameState;
+  thingsHit;
+  probable;
+}) {
+  var shouldIncrementTurn = false;
+  var player: Soul = gameState.player;
+  var isPlayerIntersection: boolean = isEqual(
+    selectedIntersection.colRow,
+    player.gridContext.colRow
+  );
+  var isAdjacent: boolean = pointsAreAdjacent(
+    selectedIntersection.colRow,
+    player.gridContext.colRow
+  );
+
+  if (isPlayerIntersection || isAdjacent) {
+    gameState.actionChoices = uniq(
+      thingsHit.map(player.getInteractionsWithThing).flat()
+    );
+  }
+
+  if (gameState.actionChoices.length > 0) {
+    // This shouldn't increment the turn.
+    gameState.uiOn = true;
+  } else {
+    if (!isPlayerIntersection) {
+      // Eventually, things other than clicking an adjacent space should
+      // trigger interact().
+      if (isAdjacent) {
+        interact(gameState, thingsHit, selectedIntersection, probable);
+        shouldIncrementTurn = true;
       }
     }
   }
 
-  if (!gameState.gridsInit) {
-    gameState.grids.forEach(curry(updateGrid)(targetTree));
-    gameState.gridsInit = true;
-  }
   gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
+
+  if (shouldIncrementTurn) {
+    incrementTurn();
+  }
 }
 
 function incrementTurn() {
