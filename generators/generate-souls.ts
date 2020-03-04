@@ -68,6 +68,11 @@ function generateSouls({ random, grids }) {
     //facing: [0, -1]
     facing: [1, 0]
   });
+  var grail: Soul = instantiateFromDef({
+    def: soulDefs.grail,
+    id: 'grail'
+  });
+
   var souls: Array<Soul> = [];
 
   // Add obstructions before guys.
@@ -81,6 +86,7 @@ function generateSouls({ random, grids }) {
   });
 
   souls.push(player);
+  souls.push(grail);
 
   var emptySpotsForGrids = initEmptySpotsForGrids(grids);
   souls.forEach(curry(setGridProps)(probable, grids, emptySpotsForGrids));

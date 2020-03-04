@@ -21,25 +21,28 @@
         <section id="top-level-toggles-container">
           <button id="open-help-button" class="clickable hidden">Help</button>
         </section>
+        <div id="hud-layer">
+          <ul class="button-list"></ul>
+        </div>
         <div id="controls-layer" class="hidden">
           <ul class="button-list"></ul>
         </div>
+        <div id="message-layer" class="hidden"></div>
+
         <div id="help-layer" class="clickable">
           <p>
-            You are this crab:
+            <strong>You are this crab:</strong>
           </p>
           <img src="static/crab1.png" alt="Picture of a crab" />
           <p><strong>Zoom</strong> using the mouse wheel or pinch gestures.</p>
           <p><strong>Pan around</strong> by clicking and dragging.</p>
-          <p>
-            <strong>Move</strong> by clicking or tapping points adjacent to
-            yourself that are on the grid you are on. The grid you are on is
-            drawn with thicker lines and points.
-          </p>
+          <p><strong>Move</strong> by clicking spaces adjacent to yourself.</p>
           <p>
             <strong>Click yourself</strong> to see action options. Currently,
             there is only one: blast. Blast will kill any enemies in the blast
-            radius. If you kill all of your enemies, consider yourself a winner!
+            radius.
+          </p>
+          <p>
             (Some levels may not be winnable. Just
             <strong>reload the browser</strong> if you don't like the level.)
           </p>

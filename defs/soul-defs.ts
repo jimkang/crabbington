@@ -428,6 +428,19 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-air'],
     itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'grail',
+    categories: ['item'],
+    sprite: {
+      col: 0,
+      row: 34,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    itemRole: { itemPositioningStyle: 'shell' }
   }
 ];
 
