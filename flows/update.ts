@@ -18,11 +18,13 @@ import {
   GridContext,
   GameState,
   Command,
-  GridIntersection
+  GridIntersection,
+  Pt
 } from '../types';
 
 import { spriteSize } from '../sizes';
 import { getBoxAroundCenter } from '../tasks/box-ops';
+import { sortVectorsByCloseness } from '../tasks/dist-ops';
 
 // Not really a radius: More like half a square.
 const clickRadius = spriteSize / 3;
@@ -126,6 +128,7 @@ function movePlayer(
 ) {
   var player: Soul = gameState.player;
   player.facing = getFacingDir(
+    player.facingsAllowed,
     player.gridContext,
     selectedGridIntersection.colRow
   );
@@ -148,7 +151,7 @@ function moveSoul(gameState, probable, soul: Soul) {
   );
   var dest: ColRow = move({ soul, neighbors, probable, getTargetsAtColRow });
   if (dest) {
-    soul.facing = getFacingDir(soul.gridContext, dest);
+    soul.facing = getFacingDir(soul.facingsAllowed, soul.gridContext, dest);
     soul.gridContext.colRow = dest;
   }
 
@@ -267,10 +270,17 @@ function getTargetsInBox({
 }
 
 function getFacingDir(
+  facingsAllowed: Array<Pt>,
   srcGridContext: GridContext,
   dest: ColRow
 ): [number, number] {
-  return math.subtractPairs(dest, srcGridContext.colRow);
+  var dir: [number, number] = math.subtractPairs(dest, srcGridContext.colRow);
+  if (facingsAllowed) {
+    // Is it really worth doing this much work to make
+    // the guy face the right way?
+    dir = sortVectorsByCloseness(dir, facingsAllowed)[0];
+  }
+  return dir;
 }
 
 function noOp() {}

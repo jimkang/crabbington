@@ -31,7 +31,7 @@
   "dependencies": {
     "@jimkang/randomid": "^1.0.2",
     "accessor": "^3.0.0",
-    "basic-2d-math": "^1.0.0",
+    "basic-2d-math": "^1.0.1",
     "basic-browser-request": "^8.0.0",
     "call-next-tick": "^2.0.1",
     "d3-array": "^1.2.1",

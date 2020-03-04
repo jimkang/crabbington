@@ -34,6 +34,7 @@ export interface SoulDef {
   allowedGrids: Array<string>;
   startingItemIds?: Array<string>;
   itemRole?: ItemRole;
+  facingsAllowed?: Array<Pt>;
 }
 
 export interface Soul extends SoulDef {

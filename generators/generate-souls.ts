@@ -109,7 +109,8 @@ function generateSouls({ random, grids }) {
       instance.id = instance.type + '-' + randomId(4);
     }
 
-    instance.facing = facing || probable.pickFromArray(facingDirections);
+    instance.facing =
+      facing || probable.pickFromArray(def.facingsAllowed || facingDirections);
 
     if (def.startingItemIds) {
       instance.items = def.startingItemIds.map(instantiateFromDefId);

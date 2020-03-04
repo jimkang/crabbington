@@ -73,6 +73,7 @@ var defList: Array<SoulDef> = [
     type: 'bug',
     categories: ['guy'],
     move: getMoveFn({ avoid: ['guy'] }),
+    facingsAllowed: [[1, 0], [-1, 0]],
     sprite: {
       col: 0,
       row: 5,
@@ -263,6 +264,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    facingsAllowed: [[1, 0]],
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -276,6 +278,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    facingsAllowed: [[1, 0]],
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -343,6 +346,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    facingsAllowed: [[1, 0], [-1, 0]],
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -407,6 +411,7 @@ var defList: Array<SoulDef> = [
       height: spriteSize,
       hitRadius: spriteSize * 0.75
     },
+    facingsAllowed: [[1, 0]],
     allowedGrids: ['grid-figures']
   },
   {
