@@ -99,6 +99,8 @@ function generateSouls({ random, grids }) {
 
     if (def.startingItemIds) {
       instance.items = def.startingItemIds.map(instantiateFromDefId);
+    } else {
+      instance.items = [];
     }
     return instance;
   }

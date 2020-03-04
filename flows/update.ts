@@ -52,6 +52,7 @@ function update({
       boxHeight: 10
     });
     var thingsHit = targetTree.search(clickBox);
+    gameState.lastClickedThingIds = pluck(thingsHit, 'id');
     // console.log('thingsHit', thingsHit);
 
     // Assuming: if there is more than one intersection from the same grid hit,
@@ -177,7 +178,7 @@ function getNeighboringGridPoints(soul: Soul, grid) {
 }
 
 function runCommand(gameState: GameState, command: Command) {
-  var thingsHit;
+  var thingsToRemove = [];
 
   if (command.cmdType === 'blast') {
     // This probably should be based on something other than the sprite size.
@@ -187,8 +188,8 @@ function runCommand(gameState: GameState, command: Command) {
       minY: gameState.player.y - 3 * gameState.player.sprite.height,
       maxY: gameState.player.y + 3 * gameState.player.sprite.height
     };
-    thingsHit = getTargetsInBox({ filter: isBlastable, box: blastBox });
-    console.log('blasting:', thingsHit);
+    thingsToRemove = getTargetsInBox({ filter: isBlastable, box: blastBox });
+    console.log('blasting:', thingsToRemove);
     gameState.animations.push({
       type: 'blast',
       cx: gameState.player.x,
@@ -198,12 +199,24 @@ function runCommand(gameState: GameState, command: Command) {
       postAnimationGameStateUpdater: doSoulRemoval
     });
   } else if (command.cmdType === 'take') {
+    var item: Soul = gameState.souls.find(isALastClickedItem);
+    if (item) {
+      gameState.player.items.push(item);
+      thingsToRemove.push(item);
+      doSoulRemoval(noOp);
+    } else {
+      throw new Error('Somehow no item to take.');
+    }
     console.log('Take it!');
   }
 
   function doSoulRemoval(done) {
-    removeSouls(gameState, thingsHit);
+    removeSouls(gameState, thingsToRemove);
     callNextTick(done);
+  }
+
+  function isALastClickedItem(soul: Soul) {
+    return gameState.lastClickedThingIds.includes(soul.id);
   }
 }
 
@@ -250,5 +263,7 @@ function getFacingDir(
 ): [number, number] {
   return math.subtractPairs(dest, srcGridContext.colRow);
 }
+
+function noOp() {}
 
 module.exports = update;

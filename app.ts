@@ -20,7 +20,8 @@ var theGameState: GameState = {
   },
   gridsInit: false,
   uiOn: false,
-  actionChoices: []
+  actionChoices: [],
+  lastClickedThingIds: []
 };
 
 var routeState = RouteState({

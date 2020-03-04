@@ -32,7 +32,8 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": "off",
         "prefer-const": "off",
         "@typescript-eslint/camelcase": "off",
-        "prefer-spread": "off"
+        "prefer-spread": "off",
+        "@typescript-eslint/no-empty-function": "off"
       }
     }
   ]

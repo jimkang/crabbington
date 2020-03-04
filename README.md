@@ -17,7 +17,7 @@ Plan
 - Characters facing specific directions - Done
 - Impassable souls (walls)
 - Passable souls (floor tiles)
-- Item pickup
+- Item pickup - Done
 - Hide most of grid?
 
 Vague concepts to fit in if somehow the basics come together
