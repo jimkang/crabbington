@@ -109,7 +109,14 @@ function interact(
   selectedGridIntersection: GridIntersection,
   probable
 ) {
-  movePlayer(gameState, selectedGridIntersection);
+  if (
+    pointsAreAdjacent(
+      selectedGridIntersection.colRow,
+      gameState.player.gridContext.colRow
+    )
+  ) {
+    movePlayer(gameState, selectedGridIntersection);
+  }
   gameState.souls.forEach(curry(moveSoul)(gameState, probable));
 }
 
