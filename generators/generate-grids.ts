@@ -1,27 +1,14 @@
 var generateGravityWarp = require('./effects/generate-gravity-warp');
 
 import { spriteSize, gridWidthSprites, gridHeightSprites } from '../sizes';
+import { Grid, GridIntersection } from '../types';
 
-function generateGrids({ probable }) {
-  /*
-  var spaceSizeTable = probable.createTableFromSizes([
-    [4, 128],
-    //[3, 64],
-    [1, 256]
-  ]);
-  var numberOfUnitsTable = probable.createTableFromSizes([
-    [4, 10],
-    [3, 6],
-    [2, 4],
-    [1, 2]
-  ]);
-  */
+function generateGrids({ probable }): Array<Grid> {
   var numberOfEffectsTable = probable.createTableFromSizes([
     [2, 0],
     [2, 1],
     [1, 2]
   ]);
-
   var airGrid = generateGrid({
     id: 'grid-air',
     unitWidth: spriteSize * 2,
@@ -30,7 +17,7 @@ function generateGrids({ probable }) {
     gridHeight: spriteSize * gridHeightSprites
   });
   var airEffects = [];
-  let numberOfEffects = numberOfEffectsTable.roll();
+  let numberOfEffects = 2; //numberOfEffectsTable.roll();
   if (numberOfEffects > 0) {
     airEffects = [];
   }
@@ -58,10 +45,16 @@ function generateGrids({ probable }) {
     airGrid
   ];
 
-  function generateGrid({ id, unitWidth, unitHeight, gridWidth, gridHeight }) {
+  function generateGrid({
+    id,
+    unitWidth,
+    unitHeight,
+    gridWidth,
+    gridHeight
+  }): Grid {
     let numberOfCols = gridWidth / unitWidth;
     let numberOfRows = gridHeight / unitHeight;
-    let grid = {
+    let grid: Grid = {
       id,
       unitWidth,
       unitHeight,
@@ -78,16 +71,17 @@ function generateGrids({ probable }) {
   }
 }
 
-function getIntersectionRows(grid) {
+function getIntersectionRows(grid: Grid): Array<Array<GridIntersection>> {
   var rows = [];
   for (var rowIndex = 0; rowIndex < grid.numberOfRows; ++rowIndex) {
-    let row = [];
+    let row: Array<GridIntersection> = [];
     for (var colIndex = 0; colIndex < grid.numberOfCols; ++colIndex) {
       row.push({
-        x: grid.xOffset + colIndex * grid.unitWidth,
-        y: grid.yOffset + rowIndex * grid.unitHeight,
-        col: colIndex,
-        row: rowIndex,
+        pt: [
+          grid.xOffset + colIndex * grid.unitWidth,
+          grid.yOffset + rowIndex * grid.unitHeight
+        ],
+        colRow: [colIndex, rowIndex],
         gridId: grid.id
       });
       // Random warp:

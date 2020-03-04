@@ -68,8 +68,10 @@ function generateSouls({ random, grids }) {
     let grid = probable.pickFromArray(allowedGrids);
     soul.gridContext = {
       id: grid.id,
-      colOnGrid: probable.roll(grid.rows[0].length),
-      rowOnGrid: probable.roll(grid.rows.length)
+      colRow: [
+        probable.roll(grid.rows[0].length),
+        probable.roll(grid.rows.length)
+      ]
     };
 
     function gridIsAllowed(grid) {

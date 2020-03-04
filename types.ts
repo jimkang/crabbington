@@ -23,7 +23,7 @@ export type ColRowFindFn = ({ colRow }: { colRow: ColRow }) => Array<any>;
 export interface MoveParams {
   soul: Soul;
   neighbors: Array<Pt>;
-  probable: any;
+  probable;
   getTargetsAtColRow: ColRowFindFn;
 }
 
@@ -43,6 +43,7 @@ export interface SoulDef {
 export interface Soul extends SoulDef {
   id: string;
   facing: Pt;
+  // TODO: Replace x and y with Pt.
   x?: number;
   y?: number;
   gridContext?: GridContext;
@@ -51,8 +52,7 @@ export interface Soul extends SoulDef {
 
 export interface GridContext {
   id: string;
-  colOnGrid: number;
-  rowOnGrid: number;
+  colRow: ColRow;
 }
 
 export interface Sprite {
@@ -73,6 +73,8 @@ export interface AnimationDef extends CircleDef {
 
 export interface GameState {
   allowAdvance: boolean;
+  uiOn: boolean;
+  actionChoices: Array<string>;
   animations: Array<AnimationDef>;
   ephemerals: {
     blasts: Array<BlastDef>;
@@ -94,15 +96,13 @@ export interface Grid {
   width: number;
   height: number;
   color: string;
-  rows: Array<Array<GridIntersection>>;
+  rows?: Array<Array<GridIntersection>>;
+  effects?: Array<EffectDef>;
 }
 
-// TODO: Reuse colRow here.
-export interface GridIntersection {
-  x: number;
-  y: number;
-  col: number;
-  row: number;
+export interface GridIntersection extends Partial<Box> {
+  pt: Pt;
+  colRow: ColRow;
   gridId: string;
 }
 
@@ -118,4 +118,22 @@ export interface CircleDef {
 
 export interface Command {
   cmdType: string;
+}
+
+export interface CurvesKit {
+  start: Pt;
+  curves: Array<BezierStep>;
+}
+
+export interface BezierStep {
+  srcCtrl: Pt;
+  destCtrl: Pt;
+  dest: Pt;
+}
+
+export interface EffectDef {
+  name: string;
+  centers?: Array<[number, number]>;
+  strength?: number;
+  decayDist?: number;
 }

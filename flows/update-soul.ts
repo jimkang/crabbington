@@ -1,9 +1,9 @@
-import { Soul } from '../types';
+import { Soul, Grid, GridIntersection } from '../types';
 
 var findWhere = require('lodash.findwhere');
 import { getBoxAroundPosition } from '../tasks/box-ops';
 
-function updateSoul(grids, targetTree, soul: Soul) {
+function updateSoul(grids: Array<Grid>, targetTree, soul: Soul) {
   // Update position properties.
   var grid = findWhere(grids, { id: soul.gridContext.id });
   if (!grid) {
@@ -17,12 +17,12 @@ function updateSoul(grids, targetTree, soul: Soul) {
     return;
   }
 
-  var intersection =
-    grid.rows[soul.gridContext.rowOnGrid][soul.gridContext.colOnGrid];
-  soul.x = intersection.x;
-  soul.y = intersection.y;
+  var intersection: GridIntersection =
+    grid.rows[soul.gridContext.colRow[1]][soul.gridContext.colRow[0]];
+  soul.x = intersection.pt[0];
+  soul.y = intersection.pt[1];
   var box = getBoxAroundPosition({
-    center: [soul.gridContext.colOnGrid, soul.gridContext.rowOnGrid],
+    center: [soul.gridContext.colRow[0], soul.gridContext.colRow[1]],
     boxWidth: soul.sprite.width,
     boxHeight: soul.sprite.height
   });

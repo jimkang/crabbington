@@ -1,10 +1,12 @@
 var effectFns = require('../grid-effects/grid-effects');
 var applyToPointsInRows = require('../apply-to-points-in-rows');
 
+import { Grid, GridIntersection, EffectDef } from '../types';
+
 // Not really a radius: More like half a square.
 const gridIntersectionRadius = 10;
 
-function updateGrid(targetTree, grid) {
+function updateGrid(targetTree, grid: Grid) {
   var needToUpdateDerived = !gridHasDerivedProps(grid);
 
   if (grid.effects) {
@@ -20,16 +22,16 @@ function updateGrid(targetTree, grid) {
     applyToPointsInRows(grid.rows, targetTree.insert.bind(targetTree));
   }
 
-  function applyEffect(effectDef) {
+  function applyEffect(effectDef: EffectDef) {
     grid.rows = effectFns[effectDef.name](effectDef, grid.rows);
   }
 }
 
-function updateDerivedIntersectionProps(intersection) {
-  intersection.minX = intersection.x - gridIntersectionRadius;
-  intersection.maxX = intersection.x + gridIntersectionRadius;
-  intersection.minY = intersection.y - gridIntersectionRadius;
-  intersection.maxY = intersection.y + gridIntersectionRadius;
+function updateDerivedIntersectionProps(intersection: GridIntersection) {
+  intersection.minX = intersection.pt[0] - gridIntersectionRadius;
+  intersection.maxX = intersection.pt[0] + gridIntersectionRadius;
+  intersection.minY = intersection.pt[1] - gridIntersectionRadius;
+  intersection.maxY = intersection.pt[1] + gridIntersectionRadius;
 }
 
 // Cheap check: Assumes a non-empty grid, uniformity among grid points.

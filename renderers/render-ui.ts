@@ -1,5 +1,7 @@
 var d3 = require('d3-selection');
 
+import { Command, GameState } from '../types';
+
 // Get the various DOM roots.
 // var uiBoard = d3.select('#ui-board');
 var controlsLayer = d3.select('#controls-layer');
@@ -8,7 +10,7 @@ var helpLayer = d3.select('#help-layer');
 var closeHelpButton = d3.select('#close-help-button');
 var openHelpButton = d3.select('#open-help-button');
 
-var playerCommandQueue = [];
+var playerCommandQueue: Array<Command> = [];
 var concludeUI;
 blastButton.on('click.blast', onBlastClick);
 closeHelpButton.on('click.close-help', onCloseHelpClick);
@@ -31,10 +33,16 @@ function onOpenHelpClick() {
   concludeUI();
 }
 
-function renderUI({ gameState, onAdvance }) {
+function renderUI({
+  gameState,
+  onAdvance
+}: {
+  gameState: GameState;
+  onAdvance;
+}) {
   playerCommandQueue.length = 0;
 
-  console.log('uiActions', gameState.uiActions);
+  console.log('actionChoices', gameState.actionChoices);
   controlsLayer.classed('hidden', !gameState.uiOn);
 
   concludeUI = function advanceWithCommands() {

@@ -18,7 +18,9 @@ var theGameState: GameState = {
   ephemerals: {
     blasts: []
   },
-  gridsInit: false
+  gridsInit: false,
+  uiOn: false,
+  actionChoices: []
 };
 
 var routeState = RouteState({

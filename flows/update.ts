@@ -6,9 +6,20 @@ var findWhere = require('lodash.findwhere');
 var math = require('basic-2d-math');
 var pluck = require('lodash.pluck');
 var uniq = require('lodash.uniq');
+var isEqual = require('lodash.isequal');
 var callNextTick = require('call-next-tick');
 
-import { Pt, ColRow, MoveFn, Box, Filter, Soul, GridContext } from '../types';
+import {
+  ColRow,
+  MoveFn,
+  Box,
+  Filter,
+  Soul,
+  GridContext,
+  GameState,
+  Command,
+  GridIntersection
+} from '../types';
 import { getBoxAroundCenter } from '../tasks/box-ops';
 
 // Not really a radius: More like half a square.
@@ -17,7 +28,19 @@ import { getBoxAroundCenter } from '../tasks/box-ops';
 var targetTree = rbush(9);
 var turn = 0;
 
-function update({ gameState, recentClickX, recentClickY, commands, probable }) {
+function update({
+  gameState,
+  recentClickX,
+  recentClickY,
+  commands,
+  probable
+}: {
+  gameState: GameState;
+  recentClickX: number;
+  recentClickY: number;
+  commands?: Array<Command>;
+  probable;
+}) {
   if (commands) {
     commands.forEach(curry(runCommand)(gameState));
     return;
@@ -35,27 +58,25 @@ function update({ gameState, recentClickX, recentClickY, commands, probable }) {
     // there are so close that it doesn't matter which one we pick.
     // If it does matter, we can sort thingsHit by click distance.
     var player: Soul = gameState.player;
-    var selectedGridPoint = findWhere(thingsHit, {
+    // Things with gridIds are GridIntersections.
+    var selectedGridIntersection: GridIntersection = findWhere(thingsHit, {
       gridId: player.gridContext.id
     });
-    if (selectedGridPoint) {
-      if (
-        selectedGridPoint.col === player.gridContext.colOnGrid &&
-        selectedGridPoint.row === player.gridContext.rowOnGrid
-      ) {
+    if (selectedGridIntersection) {
+      if (isEqual(selectedGridIntersection.colRow, player.gridContext.colRow)) {
         gameState.uiOn = true;
         // This shouldn't increment the turn.
       } else if (
         pointsAreAdjacent(
-          [selectedGridPoint.col, selectedGridPoint.row],
-          [player.gridContext.colOnGrid, player.gridContext.rowOnGrid]
+          selectedGridIntersection.colRow,
+          player.gridContext.colRow
         )
       ) {
         if (player.getInteractionsWithThing) {
           var interactions: Array<string> = uniq(
             thingsHit.map(player.getInteractionsWithThing).flat()
           );
-          gameState.uiActions = interactions;
+          gameState.actionChoices = interactions;
           if (interactions.length > 0) {
             gameState.uiOn = true;
             // This shouldn't increment the turn.
@@ -64,7 +85,7 @@ function update({ gameState, recentClickX, recentClickY, commands, probable }) {
         }
         // Eventually, things other than clicking an adjacent space should
         // trigger interact().
-        interact(gameState, thingsHit, selectedGridPoint, probable);
+        interact(gameState, thingsHit, selectedGridIntersection, probable);
         incrementTurn();
       }
     }
@@ -82,19 +103,26 @@ function incrementTurn() {
   turn += 1;
 }
 
-function interact(gameState, thingsHit, selectedGridPoint, probable) {
-  movePlayer(gameState, selectedGridPoint);
+function interact(
+  gameState: GameState,
+  thingsHit,
+  selectedGridIntersection: GridIntersection,
+  probable
+) {
+  movePlayer(gameState, selectedGridIntersection);
   gameState.souls.forEach(curry(moveSoul)(gameState, probable));
 }
 
-function movePlayer(gameState, selectedGridPoint) {
+function movePlayer(
+  gameState: GameState,
+  selectedGridIntersection: GridIntersection
+) {
   var player: Soul = gameState.player;
-  player.facing = getFacingDir(player.gridContext, [
-    selectedGridPoint.col,
-    selectedGridPoint.row
-  ]);
-  player.gridContext.colOnGrid = selectedGridPoint.col;
-  player.gridContext.rowOnGrid = selectedGridPoint.row;
+  player.facing = getFacingDir(
+    player.gridContext,
+    selectedGridIntersection.colRow
+  );
+  player.gridContext.colRow = selectedGridIntersection.colRow;
 }
 
 function moveSoul(gameState, probable, soul: Soul) {
@@ -111,21 +139,17 @@ function moveSoul(gameState, probable, soul: Soul) {
     soul,
     findWhere(gameState.grids, { id: soul.gridContext.id })
   );
-  var dest: Pt = move({ soul, neighbors, probable, getTargetsAtColRow });
+  var dest: ColRow = move({ soul, neighbors, probable, getTargetsAtColRow });
   if (dest) {
     soul.facing = getFacingDir(soul.gridContext, dest);
-    soul.gridContext.colOnGrid = dest[0];
-    soul.gridContext.rowOnGrid = dest[1];
+    soul.gridContext.colRow = dest;
   }
 
   function getTargetsAtColRow({ colRow }: { colRow: ColRow }): Array<Soul> {
     return gameState.souls.filter(colRowMatches);
 
     function colRowMatches(soul: Soul) {
-      return (
-        soul.gridContext.colOnGrid === colRow[0] &&
-        soul.gridContext.rowOnGrid === colRow[1]
-      );
+      return isEqual(soul.gridContext.colRow, colRow);
     }
   }
 }
@@ -138,10 +162,10 @@ function pointsAreAdjacent(a, b) {
 
 function getNeighboringGridPoints(soul: Soul, grid) {
   var neighbors = [
-    [soul.gridContext.colOnGrid + 1, soul.gridContext.rowOnGrid],
-    [soul.gridContext.colOnGrid, soul.gridContext.rowOnGrid + 1],
-    [soul.gridContext.colOnGrid - 1, soul.gridContext.rowOnGrid],
-    [soul.gridContext.colOnGrid, soul.gridContext.rowOnGrid - 1]
+    [soul.gridContext.colRow[0] + 1, soul.gridContext.colRow[1]],
+    [soul.gridContext.colRow[0], soul.gridContext.colRow[1] + 1],
+    [soul.gridContext.colRow[0] - 1, soul.gridContext.colRow[1]],
+    [soul.gridContext.colRow[0], soul.gridContext.colRow[1] - 1]
   ];
   return neighbors.filter(isInGridBounds);
 
@@ -155,7 +179,7 @@ function getNeighboringGridPoints(soul: Soul, grid) {
   }
 }
 
-function runCommand(gameState, command) {
+function runCommand(gameState: GameState, command: Command) {
   var thingsHit;
 
   if (command.cmdType === 'blast') {
@@ -223,12 +247,9 @@ function getTargetsInBox({
 
 function getFacingDir(
   srcGridContext: GridContext,
-  dest: [number, number]
+  dest: ColRow
 ): [number, number] {
-  return math.subtractPairs(dest, [
-    srcGridContext.colOnGrid,
-    srcGridContext.rowOnGrid
-  ]);
+  return math.subtractPairs(dest, srcGridContext.colRow);
 }
 
 module.exports = update;

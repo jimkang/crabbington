@@ -10,7 +10,8 @@ module.exports = {
     "linebreak-style": ["error", "unix"],
     quotes: ["error", "single", { avoidEscape: true }],
     semi: ["error", "always"],
-    "no-console": "off"
+    "no-console": "off",
+    "prefer-spread": "off"
   },
   parserOptions: {
     sourceType: "module"
@@ -30,7 +31,8 @@ module.exports = {
         "@typescript-eslint/no-use-before-define": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "prefer-const": "off",
-        "@typescript-eslint/camelcase": "off"
+        "@typescript-eslint/camelcase": "off",
+        "prefer-spread": "off"
       }
     }
   ]
