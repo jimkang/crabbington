@@ -1,12 +1,20 @@
-import { ColRow, MoveParams, MoveFn } from '../types';
+import { ColRow, MoveParams, MoveFn, MoveDef } from '../types';
 
-export function RandomMove({
-  avoidAll,
-  avoid = []
-}: {
-  avoidAll?: boolean;
-  avoid?: Array<string>;
-}): MoveFn {
+// Singleton.
+var cachedMoveFns: Record<string, MoveFn> = {};
+
+export function getMoveFn(def: MoveDef): MoveFn {
+  var moveFnId: string = getMoveFnId(def);
+  var moveFn: MoveFn = cachedMoveFns[moveFnId];
+  if (!moveFn) {
+    // TODO: Other kinds of ctors.
+    moveFn = RandomMove(def);
+    cachedMoveFns[moveFnId] = moveFn;
+  }
+  return moveFn;
+}
+
+function RandomMove({ avoid }: MoveDef): MoveFn {
   return randomMove;
 
   function randomMove({
@@ -16,7 +24,8 @@ export function RandomMove({
   }: MoveParams): ColRow {
     // Assuming we're being passed the right neighbors,
     // calculated keeping the soul's sprite size in mind.
-    if (!avoidAll && avoid.length < 1) {
+    //if (!avoidAll && avoid.length < 1) {
+    if (avoid.length < 1) {
       return probable.pickFromArray(neighbors);
     }
     // TODO: Do this less stupidly.
@@ -37,13 +46,21 @@ export function RandomMove({
     if (thing.gridId) {
       return false;
     }
-    if (avoidAll) {
-      return true;
-    }
-    if (avoid && thing.category && avoid.includes(thing.category)) {
+    //if (avoidAll) {
+    //return true;
+    //}
+    if (avoid && thing.categories && avoid.find(isInCategories)) {
       return true;
     }
 
     return false;
+
+    function isInCategories(avoidCategory) {
+      return thing.categories.includes(avoidCategory);
+    }
   }
+}
+
+function getMoveFnId(def: MoveDef) {
+  return `movefn-${def.avoid.join('_')}`;
 }

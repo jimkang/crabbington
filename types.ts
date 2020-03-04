@@ -29,6 +29,10 @@ export interface MoveParams {
 
 export type MoveFn = (MoveParams) => Pt;
 
+export interface MoveDef {
+  avoid: Array<string>;
+}
+
 export interface SoulDef {
   type: string;
   categories: Array<string>;

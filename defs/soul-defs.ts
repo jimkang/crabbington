@@ -1,16 +1,13 @@
-import { RandomMove } from './moves';
+import { getMoveFn } from './moves';
 import { spriteSize } from '../sizes';
 import { SoulDef } from '../types';
-
-var randomMoveAvoidAll = RandomMove({ avoidAll: true });
-var randomMoveAvoidGuys = RandomMove({ avoid: ['guy'] });
 
 // New entry macro: @e
 var defList: Array<SoulDef> = [
   {
     type: 'avocado',
     categories: ['guy'],
-    move: randomMoveAvoidGuys,
+    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
     sprite: {
       col: 0,
       row: 0,
@@ -75,7 +72,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'bug',
     categories: ['guy'],
-    move: randomMoveAvoidGuys,
+    move: getMoveFn({ avoid: ['guy'] }),
     sprite: {
       col: 0,
       row: 5,
@@ -88,7 +85,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'cat',
     categories: ['guy'],
-    move: randomMoveAvoidGuys,
+    move: getMoveFn({ avoid: ['guy'] }),
     sprite: {
       col: 0,
       row: 6,
@@ -101,7 +98,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'cloud',
     categories: ['guy'],
-    move: randomMoveAvoidAll,
+    move: getMoveFn({ avoid: [] }),
     sprite: {
       col: 0,
       row: 7,
@@ -114,7 +111,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'corn',
     categories: ['guy'],
-    move: randomMoveAvoidGuys,
+    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
     sprite: {
       col: 0,
       row: 8,
@@ -154,7 +151,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'devil',
     categories: ['guy'],
-    move: randomMoveAvoidGuys,
+    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
     sprite: {
       col: 0,
       row: 13,
@@ -167,7 +164,6 @@ var defList: Array<SoulDef> = [
   {
     type: 'fancyShell',
     categories: ['item'],
-    move: randomMoveAvoidAll,
     sprite: {
       col: 0,
       row: 14,
@@ -285,7 +281,6 @@ var defList: Array<SoulDef> = [
   {
     type: 'shoe',
     categories: ['item'],
-    move: randomMoveAvoidAll,
     sprite: {
       col: 0,
       row: 23,
@@ -299,7 +294,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'skull',
     categories: ['item', 'guy'],
-    move: randomMoveAvoidAll,
+    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
     sprite: {
       col: 0,
       row: 24,
@@ -326,7 +321,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'SUV',
     categories: ['guy'],
-    move: randomMoveAvoidGuys,
+    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
     sprite: {
       col: 0,
       row: 26,
@@ -339,7 +334,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'tearDrop',
     categories: ['guy'],
-    move: randomMoveAvoidAll,
+    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
     sprite: {
       col: 0,
       row: 27,
@@ -366,7 +361,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'trike',
     categories: ['guy'],
-    move: randomMoveAvoidGuys,
+    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
     sprite: {
       col: 0,
       row: 29,
@@ -417,7 +412,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'worm',
     categories: ['guy'],
-    move: randomMoveAvoidAll,
+    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
     sprite: {
       col: 0,
       row: 33,
