@@ -24,6 +24,7 @@ Plan
 - Easier clicking - Done
 - Make action buttons easier to notice
 - Make figures slightly smaller when doing semantic zoom out
+- "Find me" HUD button
 
 Vague concepts to fit in if somehow the basics come together
 ---

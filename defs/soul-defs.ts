@@ -100,6 +100,7 @@ var defList: Array<SoulDef> = [
     type: 'cloud',
     categories: ['guy'],
     move: getMoveFn({ avoid: [] }),
+    facingsAllowed: [[1, 0], [-1, 0]],
     sprite: {
       col: 0,
       row: 7,

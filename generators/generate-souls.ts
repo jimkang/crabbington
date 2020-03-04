@@ -1,18 +1,25 @@
 var cloneDeep = require('lodash.clonedeep');
+var curry = require('lodash.curry');
+var pluck = require('lodash.pluck');
+var flatten = require('lodash.flatten');
 var RandomId = require('@jimkang/randomid');
 var Probable = require('probable').createProbable;
 var { Tablenest, r } = require('tablenest');
 
-import { SoulDef, Soul, Pt } from '../types';
+import { SoulDef, Soul, Pt, ColRow, Grid, GridIntersection } from '../types';
 import { soulDefs } from '../defs/soul-defs';
 
 // Sprites are assumed to face the right by default.
 var facingDirections: Array<Pt> = [[1, 0], [0, -1], [-1, 0], [0, 1]];
 
+var obstructionTypeTableDef = {
+  root: [[1, 'pointyRock'], [1, 'roundRock'], [1, 'twoPointRock']]
+};
+
 // Add item from soul-defs macro (assuming it's open in
 // the left pane and this is in the right): @i
-var soulTypeTableDef = {
-  root: [[3, r`guy`], [2, r`item`], [2, r`obstruction`]],
+var figureTypeTableDef = {
+  root: [[2, r`guy`], [1, r`item`]],
   guy: [
     [1, 'bug'],
     [1, 'cat'],
@@ -24,7 +31,6 @@ var soulTypeTableDef = {
     [1, 'trike'],
     [1, 'worm']
   ],
-  obstruction: [[1, 'pointyRock'], [1, 'roundRock'], [1, 'twoPointRock']],
   item: [
     [1, 'avocado'],
     [1, 'basicShell'],
@@ -53,7 +59,8 @@ function generateSouls({ random, grids }) {
   var randomId = RandomId({ random });
   var tablenest = Tablenest({ random });
 
-  var soulTypeTableRoll = tablenest(soulTypeTableDef);
+  var obstructionTypeTableRoll = tablenest(obstructionTypeTableDef);
+  var figureTypeTableRoll = tablenest(figureTypeTableDef);
 
   var player: Soul = instantiateFromDef({
     def: soulDefs.player,
@@ -63,35 +70,22 @@ function generateSouls({ random, grids }) {
   });
   var souls: Array<Soul> = [];
 
-  var numberOfSouls = probable.rollDie(16) + probable.roll(16);
-
-  for (var i = 0; i < numberOfSouls; ++i) {
-    let soul: Soul = instantiateFromDef({
-      def: soulDefs[soulTypeTableRoll()]
-    });
-    souls.push(soul);
-  }
+  // Add obstructions before guys.
+  instantiateSouls({
+    quantity: probable.rollDie(8) + probable.rollDie(8),
+    getType: obstructionTypeTableRoll
+  });
+  instantiateSouls({
+    quantity: probable.rollDie(16) + probable.roll(16),
+    getType: figureTypeTableRoll
+  });
 
   souls.push(player);
 
-  souls.forEach(setGridProps);
+  var emptySpotsForGrids = initEmptySpotsForGrids(grids);
+  souls.forEach(curry(setGridProps)(probable, grids, emptySpotsForGrids));
+
   return souls;
-
-  function setGridProps(soul: Soul) {
-    var allowedGrids = grids.filter(gridIsAllowed);
-    let grid = probable.pickFromArray(allowedGrids);
-    soul.gridContext = {
-      id: grid.id,
-      colRow: [
-        probable.roll(grid.rows[0].length),
-        probable.roll(grid.rows.length)
-      ]
-    };
-
-    function gridIsAllowed(grid) {
-      return soul.allowedGrids.includes(grid.id);
-    }
-  }
 
   function instantiateFromDef({
     def,
@@ -122,6 +116,61 @@ function generateSouls({ random, grids }) {
 
   function instantiateFromDefId(id: string) {
     return instantiateFromDef({ def: soulDefs[id] });
+  }
+
+  function instantiateSouls({
+    quantity,
+    getType
+  }: {
+    quantity: number;
+    getType: () => string;
+  }) {
+    for (var i = 0; i < quantity; ++i) {
+      let soul: Soul = instantiateFromDef({
+        def: soulDefs[getType()]
+      });
+      souls.push(soul);
+    }
+  }
+}
+
+// Mutates emptySpotsForGrids.
+function setGridProps(
+  probable,
+  grids,
+  emptySpotsForGrids: Record<string, Array<ColRow>>,
+  soul: Soul
+) {
+  var allowedGrids = grids.filter(gridIsAllowed);
+  let grid = probable.pickFromArray(allowedGrids);
+  var emptyGridSpots: Array<ColRow> = emptySpotsForGrids[grid.id];
+  const spotIndex = probable.roll(emptyGridSpots.length);
+  soul.gridContext = {
+    id: grid.id,
+    colRow: emptyGridSpots[spotIndex]
+  };
+  emptyGridSpots.splice(spotIndex, 1);
+
+  function gridIsAllowed(grid) {
+    return soul.allowedGrids.includes(grid.id);
+  }
+}
+
+function initEmptySpotsForGrids(
+  grids: Array<Grid>
+): Record<string, Array<ColRow>> {
+  var spotsForGrids = {};
+  grids.forEach(addSpotsForGrid);
+  return spotsForGrids;
+
+  function addSpotsForGrid(grid: Grid) {
+    if (grid.rows) {
+      spotsForGrids[grid.id] = flatten(grid.rows.map(spotsForRow));
+    }
+  }
+
+  function spotsForRow(row: Array<GridIntersection>): Array<ColRow> {
+    return pluck(row, 'colRow');
   }
 }
 
