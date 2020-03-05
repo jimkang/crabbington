@@ -25,7 +25,7 @@ Plan
 - Make action buttons easier to notice as button.
 - Make figures slightly smaller when doing semantic zoom out
 - "Find me" HUD button
-- Victory condition item
+- Victory condition item - Done
 - Make player character more obvious
 
 Vague concepts to fit in if somehow the basics come together

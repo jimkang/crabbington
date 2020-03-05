@@ -86,6 +86,8 @@ export interface GameState {
   souls?: Array<Soul>;
   player?: Soul;
   lastClickedThingIds: Array<string>;
+  displayMessage?: string;
+  gameWon: boolean;
 }
 
 export interface Grid {

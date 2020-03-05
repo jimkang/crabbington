@@ -67,6 +67,14 @@ function update({
     );
     return;
   }
+
+  if (!gameState.gameWon && gameWon(gameState)) {
+    gameState.displayMessage =
+      "With the grail to sleep in, you are assured as much safe, restful sleep as you'd like for the rest of your life. You have won! Feel free to hang out as long as you'd like, though.";
+    gameState.gameWon = true;
+    return;
+  }
+
   // Find out if something relevant got clicked.
   if (gameState.allowAdvance && !isNaN(recentClickX) && !isNaN(recentClickY)) {
     var clickBox: Box = getBoxAroundCenter({
@@ -98,9 +106,11 @@ function update({
   function reactAndIncrement(notifyAnimationDones) {
     haveSoulsReact(gameState, probable);
     incrementTurn();
-    notifyAnimationDones.forEach(notifyAnimationDone =>
-      notifyAnimationDone(null)
-    );
+    if (notifyAnimationDones) {
+      notifyAnimationDones.forEach(
+        notifyAnimationDone => notifyAnimationDone && notifyAnimationDone(null)
+      );
+    }
   }
 }
 
@@ -265,7 +275,7 @@ function runCommand(
       throw new Error('Somehow no item to take.');
     }
     console.log('Take it!');
-    callNextTick(doneWithAnimationCompletionCallback);
+    callNextTick(doneWithAnimationCompletionCallback, null);
   }
 
   function updateStatePostBlastAnimation(notifyAnimationDone: Done) {
@@ -345,6 +355,10 @@ function getFacingDir(
     dir = sortVectorsByCloseness(dir, facingsAllowed)[0];
   }
   return dir;
+}
+
+function gameWon(gameState: GameState): boolean {
+  return findWhere(gameState.player.items, { type: 'grail' }) !== undefined;
 }
 
 module.exports = update;

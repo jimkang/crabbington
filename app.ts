@@ -21,7 +21,8 @@ var theGameState: GameState = {
   gridsInit: false,
   uiOn: false,
   actionChoices: [],
-  lastClickedThingIds: []
+  lastClickedThingIds: [],
+  gameWon: false
 };
 
 var routeState = RouteState({
@@ -66,9 +67,14 @@ function followRoute({ seed }) {
         commands,
         probable
       });
-      render({ gameState, onAdvance: advance });
+      render({ gameState, onMessageDismiss, onAdvance: advance });
     }
   }
+}
+
+// Once it's displayed, get rid of it.
+function onMessageDismiss() {
+  theGameState.displayMessage = '';
 }
 
 function reportTopLevelError(msg, url, lineNo, columnNo, error) {

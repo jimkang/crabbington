@@ -4,10 +4,11 @@ var renderGrid = require('./render-grid');
 var renderSoul = require('./render-soul');
 var renderBlast = require('./render-blast');
 var renderUI = require('./render-ui');
+import { renderMessage } from './render-message';
 var renderAnimations = require('./render-animations');
 var Zoom = require('d3-zoom');
 
-import { Soul } from '../types';
+import { Soul, GameState } from '../types';
 
 // Get the various DOM roots.
 var canvasesContainer = d3.select('#canvases-container');
@@ -25,7 +26,15 @@ var { boardWidth, boardHeight } = resizeBoards();
 
 setUpZoom(draw);
 
-function render({ gameState, onAdvance, uiOn }) {
+function render({
+  gameState,
+  onAdvance,
+  onMessageDismiss
+}: {
+  gameState: GameState;
+  onAdvance;
+  onMessageDismiss: () => void;
+}) {
   lastGameState = gameState;
 
   if (gameState.animations.length > 0) {
@@ -46,7 +55,8 @@ function render({ gameState, onAdvance, uiOn }) {
   inputBoard.on('click.input', null);
   inputBoard.on('click.input', onInputBoardClick);
 
-  renderUI({ gameState, onAdvance, uiOn });
+  renderUI({ gameState, onAdvance });
+  renderMessage({ message: gameState.displayMessage, onMessageDismiss });
 
   function onInputBoardClick() {
     // Undo the zoom transforms before sending the clicks on.
