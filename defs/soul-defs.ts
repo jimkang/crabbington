@@ -1,4 +1,5 @@
-import { getMoveFn } from './moves';
+import { getCanMoveHereFn } from './can-move-fns';
+import { randomMove } from './moves';
 import { spriteSize } from '../sizes';
 import { SoulDef } from '../types';
 
@@ -7,7 +8,8 @@ var defList: Array<SoulDef> = [
   {
     type: 'avocado',
     categories: ['guy'],
-    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
+    canMoveHereFn: getCanMoveHereFn({ avoid: ['guy', 'obstruction'] }),
+    move: randomMove,
     sprite: {
       col: 0,
       row: 0,
@@ -72,7 +74,8 @@ var defList: Array<SoulDef> = [
   {
     type: 'bug',
     categories: ['guy'],
-    move: getMoveFn({ avoid: ['guy'] }),
+    canMoveHereFn: getCanMoveHereFn({ avoid: ['guy'] }),
+    move: randomMove,
     facingsAllowed: [[1, 0], [-1, 0]],
     sprite: {
       col: 0,
@@ -86,7 +89,8 @@ var defList: Array<SoulDef> = [
   {
     type: 'cat',
     categories: ['guy'],
-    move: getMoveFn({ avoid: ['guy'] }),
+    canMoveHereFn: getCanMoveHereFn({ avoid: ['guy'] }),
+    move: randomMove,
     sprite: {
       col: 0,
       row: 6,
@@ -99,7 +103,8 @@ var defList: Array<SoulDef> = [
   {
     type: 'cloud',
     categories: ['guy'],
-    move: getMoveFn({ avoid: [] }),
+    canMoveHereFn: getCanMoveHereFn({ avoid: [] }),
+    move: randomMove,
     facingsAllowed: [[1, 0], [-1, 0]],
     sprite: {
       col: 0,
@@ -113,7 +118,8 @@ var defList: Array<SoulDef> = [
   {
     type: 'corn',
     categories: ['guy'],
-    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
+    canMoveHereFn: getCanMoveHereFn({ avoid: ['guy', 'obstruction'] }),
+    move: randomMove,
     sprite: {
       col: 0,
       row: 8,
@@ -127,6 +133,7 @@ var defList: Array<SoulDef> = [
   {
     type: 'player',
     categories: ['guy'],
+    canMoveHereFn: getCanMoveHereFn({ avoid: ['guy', 'obstruction'] }),
     getInteractionsWithThing: getPlayerInteractionsWithThing,
     sprite: {
       col: 0,
@@ -153,7 +160,8 @@ var defList: Array<SoulDef> = [
   {
     type: 'devil',
     categories: ['guy'],
-    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
+    canMoveHereFn: getCanMoveHereFn({ avoid: ['guy', 'obstruction'] }),
+    move: randomMove,
     sprite: {
       col: 0,
       row: 13,
@@ -298,7 +306,8 @@ var defList: Array<SoulDef> = [
   {
     type: 'skull',
     categories: ['item', 'guy'],
-    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
+    canMoveHereFn: getCanMoveHereFn({ avoid: ['guy', 'obstruction'] }),
+    move: randomMove,
     sprite: {
       col: 0,
       row: 24,
@@ -325,7 +334,8 @@ var defList: Array<SoulDef> = [
   {
     type: 'SUV',
     categories: ['guy'],
-    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
+    canMoveHereFn: getCanMoveHereFn({ avoid: ['guy', 'obstruction'] }),
+    move: randomMove,
     sprite: {
       col: 0,
       row: 26,
@@ -338,7 +348,8 @@ var defList: Array<SoulDef> = [
   {
     type: 'tearDrop',
     categories: ['guy'],
-    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
+    canMoveHereFn: getCanMoveHereFn({ avoid: ['guy', 'obstruction'] }),
+    move: randomMove,
     sprite: {
       col: 0,
       row: 27,
@@ -366,7 +377,8 @@ var defList: Array<SoulDef> = [
   {
     type: 'trike',
     categories: ['guy'],
-    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
+    canMoveHereFn: getCanMoveHereFn({ avoid: ['guy', 'obstruction'] }),
+    move: randomMove,
     sprite: {
       col: 0,
       row: 29,
@@ -418,7 +430,8 @@ var defList: Array<SoulDef> = [
   {
     type: 'worm',
     categories: ['guy'],
-    move: getMoveFn({ avoid: ['guy', 'obstruction'] }),
+    canMoveHereFn: getCanMoveHereFn({ avoid: ['guy', 'obstruction'] }),
+    move: randomMove,
     sprite: {
       col: 0,
       row: 33,

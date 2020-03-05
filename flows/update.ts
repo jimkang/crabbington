@@ -149,12 +149,19 @@ function updateUsingGridSelection({
     gameState.uiOn = true;
   } else {
     if (!isPlayerIntersection) {
-      if (isAdjacent) {
+      if (
+        isAdjacent &&
+        gameState.player.canMoveHereFn({
+          getTargetsAtColRow: curry(getTargetsAtColRow)(gameState),
+          colRow: selectedIntersection.colRow
+        })
+      ) {
         movePlayer(gameState, selectedIntersection);
         haveSoulsReact(gameState, probable);
         shouldIncrementTurn = true;
       }
     }
+    // Else: Other interactions on player intersection?
   }
 
   if (shouldIncrementTurn) {
@@ -199,18 +206,16 @@ function moveSoul(gameState, probable, soul: Soul) {
     soul,
     findWhere(gameState.grids, { id: soul.gridContext.id })
   );
-  var dest: ColRow = move({ soul, neighbors, probable, getTargetsAtColRow });
+  var dest: ColRow = move({
+    soul,
+    neighbors,
+    probable,
+    getTargetsAtColRow: curry(getTargetsAtColRow)(gameState),
+    canMoveHereFn: soul.canMoveHereFn
+  });
   if (dest) {
     soul.facing = getFacingDir(soul.facingsAllowed, soul.gridContext, dest);
     soul.gridContext.colRow = dest;
-  }
-
-  function getTargetsAtColRow({ colRow }: { colRow: ColRow }): Array<Soul> {
-    return gameState.souls.filter(colRowMatches);
-
-    function colRowMatches(soul: Soul) {
-      return isEqual(soul.gridContext.colRow, colRow);
-    }
   }
 }
 
@@ -359,6 +364,17 @@ function getFacingDir(
 
 function gameWon(gameState: GameState): boolean {
   return findWhere(gameState.player.items, { type: 'grail' }) !== undefined;
+}
+
+function getTargetsAtColRow(
+  gameState: GameState,
+  { colRow }: { colRow: ColRow }
+): Array<Soul> {
+  return gameState.souls.filter(colRowMatches);
+
+  function colRowMatches(soul: Soul) {
+    return isEqual(soul.gridContext.colRow, colRow);
+  }
 }
 
 module.exports = update;

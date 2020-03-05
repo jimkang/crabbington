@@ -17,11 +17,18 @@ export interface MoveParams {
   neighbors: Array<Pt>;
   probable;
   getTargetsAtColRow: ColRowFindFn;
+  canMoveHereFn?: CanMoveHereFn;
+}
+
+export interface CanMoveHereParams {
+  getTargetsAtColRow: ColRowFindFn;
+  colRow: ColRow;
 }
 
 export type MoveFn = (MoveParams) => Pt;
+export type CanMoveHereFn = (CanMoveHereParams) => boolean;
 
-export interface MoveDef {
+export interface CanMoveHereDef {
   avoid: Array<string>;
 }
 
@@ -29,6 +36,7 @@ export interface SoulDef {
   type: string;
   categories: Array<string>;
   move?: MoveFn;
+  canMoveHereFn?: CanMoveHereFn;
   getInteractionsWithThing?: (any) => Array<string>;
   sprite: Sprite;
   allowedGrids: Array<string>;

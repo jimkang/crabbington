@@ -15,7 +15,7 @@ Plan
   - Allow complex drawing code that does a lot on its own instead of trying to model everything
 - Make all grids cover most of board - Done
 - Characters facing specific directions - Done
-- Impassable souls (walls)
+- Impassable souls (walls) - Done
 - Passable souls (floor tiles)
 - Item pickup - Done
 - Hide most of grid?
