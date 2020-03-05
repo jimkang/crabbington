@@ -1,5 +1,6 @@
 include config.mk
 
+HOMEDIR = $(shell pwd)
 BROWSERIFY = ./node_modules/.bin/browserify
 UGLIFY = ./node_modules/uglify-es/bin/uglifyjs
 TRANSFORM_SWITCH = -t [ babelify --presets [ es2015 ] --extensions ['.ts'] ]
@@ -29,7 +30,7 @@ sync:
 	scp index.html $(USER)@$(SERVER):$(APPDIR)
 	scp index.js $(USER)@$(SERVER):$(APPDIR)
 	scp app.css $(USER)@$(SERVER):$(APPDIR)
-	rsync -a $(HOMEDIR)/static/ $(USER)@$(SERVER):/$(APPDIR) \
+	rsync -a $(HOMEDIR)/static/ $(USER)@$(SERVER):$(APPDIR) \
     --exclude source-images \
 		--exclude .git \
     --omit-dir-times \
