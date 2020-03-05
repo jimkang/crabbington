@@ -30,7 +30,7 @@ sync:
 	scp index.html $(USER)@$(SERVER):$(APPDIR)
 	scp index.js $(USER)@$(SERVER):$(APPDIR)
 	scp app.css $(USER)@$(SERVER):$(APPDIR)
-	rsync -a $(HOMEDIR)/static/ $(USER)@$(SERVER):$(APPDIR) \
+	rsync -a $(HOMEDIR)/static/ $(USER)@$(SERVER):$(APPDIR)/static \
     --exclude source-images \
 		--exclude .git \
     --omit-dir-times \
