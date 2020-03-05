@@ -7,6 +7,9 @@ var math = require('basic-2d-math');
 var pluck = require('lodash.pluck');
 var uniq = require('lodash.uniq');
 var isEqual = require('lodash.isequal');
+var queue = require('d3-queue').queue;
+var oknok = require('oknok');
+var handleError = require('handle-error-web');
 var callNextTick = require('call-next-tick');
 
 import {
@@ -19,7 +22,8 @@ import {
   GameState,
   Command,
   GridIntersection,
-  Pt
+  Pt,
+  Done
 } from '../types';
 
 import { spriteSize } from '../sizes';
@@ -52,8 +56,15 @@ function update({
     gameState.grids.forEach(curry(updateGrid)(targetTree));
     gameState.gridsInit = true;
   }
-  if (commands) {
-    commands.forEach(curry(runCommand)(gameState));
+  if (commands && commands.length > 0) {
+    // This passes back animation completion callbacks
+    // which must be called in order to let render()
+    // know it can move on.
+    runCommands(
+      commands,
+      gameState,
+      oknok({ ok: reactAndIncrement, nok: handleError })
+    );
     return;
   }
   // Find out if something relevant got clicked.
@@ -82,8 +93,19 @@ function update({
       });
     }
   }
+  // This is apparently not legal TypeScript, but
+  // notifyAnimationDones: Array<(Error, Array<Done>) => void>)
+  function reactAndIncrement(notifyAnimationDones) {
+    haveSoulsReact(gameState, probable);
+    incrementTurn();
+    notifyAnimationDones.forEach(notifyAnimationDone =>
+      notifyAnimationDone(null)
+    );
+  }
 }
 
+// Early returns in this function will skip incrementing the turn
+// and updating the souls.
 function updateUsingGridSelection({
   selectedIntersection,
   gameState,
@@ -117,16 +139,13 @@ function updateUsingGridSelection({
     gameState.uiOn = true;
   } else {
     if (!isPlayerIntersection) {
-      // Eventually, things other than clicking an adjacent space should
-      // trigger interact().
       if (isAdjacent) {
-        interact(gameState, thingsHit, selectedIntersection, probable);
+        movePlayer(gameState, selectedIntersection);
+        haveSoulsReact(gameState, probable);
         shouldIncrementTurn = true;
       }
     }
   }
-
-  gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
 
   if (shouldIncrementTurn) {
     incrementTurn();
@@ -138,21 +157,10 @@ function incrementTurn() {
   turn += 1;
 }
 
-function interact(
-  gameState: GameState,
-  thingsHit,
-  selectedGridIntersection: GridIntersection,
-  probable
-) {
-  if (
-    pointsAreAdjacent(
-      selectedGridIntersection.colRow,
-      gameState.player.gridContext.colRow
-    )
-  ) {
-    movePlayer(gameState, selectedGridIntersection);
-  }
+function haveSoulsReact(gameState: GameState, probable) {
+  // TODO: Stuff other than moving.
   gameState.souls.forEach(curry(moveSoul)(gameState, probable));
+  gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
 }
 
 function movePlayer(
@@ -169,7 +177,6 @@ function movePlayer(
 }
 
 function moveSoul(gameState, probable, soul: Soul) {
-  // TODO: Moving for an actual reason.
   if (soul.id === 'player') {
     return;
   }
@@ -222,7 +229,12 @@ function getNeighboringGridPoints(soul: Soul, grid) {
   }
 }
 
-function runCommand(gameState: GameState, command: Command) {
+// All execution paths in this function must call the callback.
+function runCommand(
+  gameState: GameState,
+  command: Command,
+  doneWithAnimationCompletionCallback: Done
+) {
   var thingsToRemove = [];
 
   if (command.cmdType === 'blast') {
@@ -241,27 +253,46 @@ function runCommand(gameState: GameState, command: Command) {
       cy: gameState.player.y,
       r: 3 * gameState.player.sprite.width,
       duration: 1000,
-      postAnimationGameStateUpdater: doSoulRemoval
+      postAnimationGameStateUpdater: updateStatePostBlastAnimation
     });
   } else if (command.cmdType === 'take') {
     var item: Soul = gameState.souls.find(isALastClickedItem);
     if (item) {
       gameState.player.items.push(item);
       thingsToRemove.push(item);
-      doSoulRemoval(noOp);
+      doSoulRemoval();
     } else {
       throw new Error('Somehow no item to take.');
     }
     console.log('Take it!');
+    callNextTick(doneWithAnimationCompletionCallback);
   }
 
-  function doSoulRemoval(done) {
+  function updateStatePostBlastAnimation(notifyAnimationDone: Done) {
+    doSoulRemoval();
+    doneWithAnimationCompletionCallback(null, notifyAnimationDone);
+  }
+
+  function doSoulRemoval() {
     removeSouls(gameState, thingsToRemove);
-    callNextTick(done);
   }
 
   function isALastClickedItem(soul: Soul) {
     return gameState.lastClickedThingIds.includes(soul.id);
+  }
+}
+
+function runCommands(
+  commands: Array<Command>,
+  gameState: GameState,
+  doneWithAnimationCompletionCallbacks: Done
+) {
+  var q = queue(1);
+  commands.forEach(queueRun);
+  q.awaitAll(doneWithAnimationCompletionCallbacks);
+
+  function queueRun(command: Command) {
+    q.defer(runCommand, gameState, command);
   }
 }
 
@@ -315,7 +346,5 @@ function getFacingDir(
   }
   return dir;
 }
-
-function noOp() {}
 
 module.exports = update;
