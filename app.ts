@@ -7,6 +7,7 @@ var findWhere = require('lodash.findwhere');
 var generateGrids = require('./generators/generate-grids');
 var generateSouls = require('./generators/generate-souls');
 var seedrandom = require('seedrandom');
+var { version } = require('./package.json');
 
 import { GameState, Command } from './types';
 
@@ -32,6 +33,7 @@ var routeState = RouteState({
 
 (function go() {
   window.onerror = reportTopLevelError;
+  renderVersion();
   routeState.routeFromHash();
 })();
 
@@ -79,4 +81,9 @@ function onMessageDismiss() {
 
 function reportTopLevelError(msg, url, lineNo, columnNo, error) {
   handleError(error);
+}
+
+function renderVersion() {
+  var versionInfo = document.getElementById('version-info');
+  versionInfo.textContent = version;
 }
