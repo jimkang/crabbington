@@ -8,7 +8,7 @@ PLUGIN_SWITCH = -p [tsify]
 SRCIMGDIR = static/source-images
 RESIZEDDIR = $(SRCIMGDIR)/resized
 
-pushall:
+pushall: sync
 	git push origin master
 
 run:
