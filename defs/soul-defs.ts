@@ -469,8 +469,13 @@ function getPlayerInteractionsWithThing(thing): Array<string> {
   if (thing.type && thing.type === 'player') {
     return ['blast'];
   }
-  if (thing.categories && thing.categories.includes('item')) {
-    return ['take'];
+  if (thing.categories) {
+    if (thing.categories.includes('item')) {
+      return ['take'];
+    }
+    if (thing.categories.includes('guy')) {
+      return ['bonk'];
+    }
   }
   return [];
 }

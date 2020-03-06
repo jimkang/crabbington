@@ -30,11 +30,13 @@ import { getBoxAroundCenter } from '../tasks/box-ops';
 import { sortVectorsByCloseness } from '../tasks/dist-ops';
 import { blastCmd } from './commands/blast-command';
 import { takeCmd } from './commands/take-command';
+import { bonkCmd } from './commands/bonk-command';
 
 // TODO: Just put CmdFns in Command objects.
 var cmdFnsForCmdTypes: Record<string, CmdFn> = {
   blast: blastCmd,
-  take: takeCmd
+  take: takeCmd,
+  bonk: bonkCmd
 };
 
 // Not really a radius: More like half a square.
