@@ -16,7 +16,6 @@ import {
   ColRow,
   MoveFn,
   Box,
-  Filter,
   Soul,
   GridContext,
   GameState,
@@ -29,6 +28,7 @@ import {
 import { spriteSize } from '../sizes';
 import { getBoxAroundCenter } from '../tasks/box-ops';
 import { sortVectorsByCloseness } from '../tasks/dist-ops';
+import { blastCmd } from './commands/blast-command';
 
 // Not really a radius: More like half a square.
 const clickRadius = spriteSize / 3;
@@ -251,45 +251,25 @@ function runCommand(
   command: Command,
   doneWithAnimationCompletionCallback: Done
 ) {
-  var thingsToRemove = [];
-
   if (command.cmdType === 'blast') {
-    // This probably should be based on something other than the sprite size.
-    var blastBox = {
-      minX: gameState.player.x - 3 * gameState.player.sprite.width,
-      maxX: gameState.player.x + 3 * gameState.player.sprite.width,
-      minY: gameState.player.y - 3 * gameState.player.sprite.height,
-      maxY: gameState.player.y + 3 * gameState.player.sprite.height
-    };
-    thingsToRemove = getTargetsInBox({ filter: isBlastable, box: blastBox });
-    console.log('blasting:', thingsToRemove);
-    gameState.animations.push({
-      type: 'blast',
-      cx: gameState.player.x,
-      cy: gameState.player.y,
-      r: 3 * gameState.player.sprite.width,
-      duration: 1000,
-      postAnimationGameStateUpdater: updateStatePostBlastAnimation
-    });
+    blastCmd(
+      { gameState, targetTree, doSoulRemoval },
+      doneWithAnimationCompletionCallback
+    );
   } else if (command.cmdType === 'take') {
     var item: Soul = gameState.souls.find(isALastClickedItem);
     if (item) {
+      let thingsToRemove = [];
       gameState.player.items.push(item);
       thingsToRemove.push(item);
-      doSoulRemoval();
+      doSoulRemoval(thingsToRemove);
     } else {
       throw new Error('Somehow no item to take.');
     }
-    console.log('Take it!');
     callNextTick(doneWithAnimationCompletionCallback, null);
   }
 
-  function updateStatePostBlastAnimation(notifyAnimationDone: Done) {
-    doSoulRemoval();
-    doneWithAnimationCompletionCallback(null, notifyAnimationDone);
-  }
-
-  function doSoulRemoval() {
+  function doSoulRemoval(thingsToRemove) {
     removeSouls(gameState, thingsToRemove);
   }
 
@@ -312,11 +292,6 @@ function runCommands(
   }
 }
 
-function isBlastable(thing) {
-  // For now, only blast other souls.
-  return thing.type && thing.type !== 'player';
-}
-
 function removeSouls(gameState, souls) {
   var ids = pluck(souls, 'id');
   souls.forEach(removeFromTargetTree);
@@ -332,23 +307,6 @@ function removeSouls(gameState, souls) {
 function removeFromTargetTree(soul: Soul) {
   targetTree.remove(soul);
 }
-
-function getTargetsInBox({
-  box,
-  filter
-}: {
-  box: Box;
-  filter?: Filter;
-}): Array<Soul> {
-  var targets = targetTree.search(box);
-  // TODO: Further check that these are actually in a circle, rather than just
-  // in a box circumscribing it.
-  if (filter) {
-    targets = targets.filter(filter);
-  }
-  return targets;
-}
-
 function getFacingDir(
   facingsAllowed: Array<Pt>,
   srcGridContext: GridContext,

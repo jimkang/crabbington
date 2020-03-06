@@ -32,6 +32,25 @@ export interface CanMoveHereDef {
   avoid: Array<string>;
 }
 
+export interface Command {
+  cmdType: string;
+}
+
+// Done should be called when the command is completely
+// done updating state. If it has animations, it should
+// usually wait until those are done before calling done().
+export interface CmdFn {
+  (CmdParams, done: Done): void;
+}
+
+export interface CmdParams {
+  gameState: GameState;
+  targetTree;
+  // TODO: Define type that encompassing all the
+  // things that can come from the targetTree.
+  doSoulRemoval: (Array) => void;
+}
+
 export interface SoulDef {
   type: string;
   categories: Array<string>;
@@ -127,10 +146,6 @@ export interface CircleDef {
   cx: number;
   cy: number;
   r: number;
-}
-
-export interface Command {
-  cmdType: string;
 }
 
 export interface CurvesKit {
