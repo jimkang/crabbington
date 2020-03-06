@@ -2,6 +2,7 @@ export type Pt = [number, number];
 export type ColRow = [number, number]; // Wish I could specific integers here.
 
 export interface Box {
+  id?: string;
   minX: number;
   maxX: number;
   minY: number;
@@ -68,7 +69,7 @@ export interface SoulDef {
   facingsAllowed?: Array<Pt>;
 }
 
-export interface Soul extends SoulDef {
+export interface Soul extends SoulDef, Partial<Box> {
   id: string;
   facing: Pt;
   // TODO: Replace x and y with Pt.
@@ -140,6 +141,7 @@ export interface GridIntersection extends Partial<Box> {
   pt: Pt;
   colRow: ColRow;
   gridId: string;
+  id: string;
 }
 
 export interface BlastDef extends CircleDef {
@@ -168,4 +170,13 @@ export interface EffectDef {
   centers?: Array<[number, number]>;
   strength?: number;
   decayDist?: number;
+}
+
+export interface TargetTree {
+  insert: (Box) => void;
+  remove: (Box) => void;
+  updateItemBox: (item: Box, newBox: Box) => void;
+  search: (Box) => Array<Box>;
+  raw;
+  getIdsOfThingsInTree: () => Set<string>;
 }

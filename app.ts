@@ -44,7 +44,7 @@ function followRoute({ seed }) {
   }
   var random = seedrandom(seed);
   var probable = Probable({ random });
-  theGameState.grids = generateGrids({ probable });
+  theGameState.grids = generateGrids({ probable, random });
   theGameState.souls = generateSouls({ random, grids: theGameState.grids });
   theGameState.player = findWhere(theGameState.souls, { id: 'player' });
 

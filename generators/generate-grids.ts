@@ -1,9 +1,11 @@
 var generateGravityWarp = require('./effects/generate-gravity-warp');
+var RandomId = require('@jimkang/randomid');
 
 import { spriteSize, gridWidthSprites, gridHeightSprites } from '../sizes';
 import { Grid, GridIntersection } from '../types';
 
-function generateGrids({ probable }): Array<Grid> {
+function generateGrids({ probable, random }): Array<Grid> {
+  var randomId = RandomId({ random });
   var numberOfEffectsTable = probable.createTableFromSizes([
     [3, 1],
     [2, 2],
@@ -69,27 +71,28 @@ function generateGrids({ probable }): Array<Grid> {
     grid.rows = getIntersectionRows(grid);
     return grid;
   }
-}
 
-function getIntersectionRows(grid: Grid): Array<Array<GridIntersection>> {
-  var rows = [];
-  for (var rowIndex = 0; rowIndex < grid.numberOfRows; ++rowIndex) {
-    let row: Array<GridIntersection> = [];
-    for (var colIndex = 0; colIndex < grid.numberOfCols; ++colIndex) {
-      row.push({
-        pt: [
-          grid.xOffset + colIndex * grid.unitWidth,
-          grid.yOffset + rowIndex * grid.unitHeight
-        ],
-        colRow: [colIndex, rowIndex],
-        gridId: grid.id
-      });
-      // Random warp:
-      // row.push([x + (-20 + probable.roll(40)), y + (-20 + probable.roll(40))])
+  function getIntersectionRows(grid: Grid): Array<Array<GridIntersection>> {
+    var rows = [];
+    for (var rowIndex = 0; rowIndex < grid.numberOfRows; ++rowIndex) {
+      let row: Array<GridIntersection> = [];
+      for (var colIndex = 0; colIndex < grid.numberOfCols; ++colIndex) {
+        row.push({
+          id: `intersection-${randomId(4)}`,
+          pt: [
+            grid.xOffset + colIndex * grid.unitWidth,
+            grid.yOffset + rowIndex * grid.unitHeight
+          ],
+          colRow: [colIndex, rowIndex],
+          gridId: grid.id
+        });
+        // Random warp:
+        // row.push([x + (-20 + probable.roll(40)), y + (-20 + probable.roll(40))])
+      }
+      rows.push(row);
     }
-    rows.push(row);
+    return rows;
   }
-  return rows;
 }
 
 module.exports = generateGrids;

@@ -1,7 +1,6 @@
 var curry = require('lodash.curry');
 var updateGrid = require('./update-grid');
 var updateSoul = require('./update-soul');
-var rbush = require('rbush');
 var findWhere = require('lodash.findwhere');
 var math = require('basic-2d-math');
 var pluck = require('lodash.pluck');
@@ -22,7 +21,8 @@ import {
   GridIntersection,
   Pt,
   Done,
-  CmdFn
+  CmdFn,
+  TargetTree
 } from '../types';
 
 import { spriteSize } from '../sizes';
@@ -31,6 +31,9 @@ import { sortVectorsByCloseness } from '../tasks/dist-ops';
 import { blastCmd } from './commands/blast-command';
 import { takeCmd } from './commands/take-command';
 import { bonkCmd } from './commands/bonk-command';
+import { createTargetTree } from '../target-tree';
+
+var targetTree: TargetTree = createTargetTree();
 
 // TODO: Just put CmdFns in Command objects.
 var cmdFnsForCmdTypes: Record<string, CmdFn> = {
@@ -42,7 +45,6 @@ var cmdFnsForCmdTypes: Record<string, CmdFn> = {
 // Not really a radius: More like half a square.
 const clickRadius = spriteSize / 3;
 
-var targetTree = rbush(9);
 var turn = 0;
 
 function update({
@@ -289,8 +291,9 @@ function removeSouls(gameState: GameState, souls: Array<Soul>): void {
 }
 
 function removeFromTargetTree(soul: Soul) {
-  targetTree.remove(soul);
+  targetTree.remove(soul as Box);
 }
+
 function getFacingDir(
   facingsAllowed: Array<Pt>,
   srcGridContext: GridContext,

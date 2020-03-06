@@ -7,10 +7,8 @@ export function takeCmd({ gameState, removeSouls }: CmdParams, done: Done) {
   var item: Soul = getLastClickedSoul(gameState);
 
   if (item) {
-    let thingsToRemove = [];
     gameState.player.items.push(item);
-    thingsToRemove.push(item);
-    removeSouls(gameState, thingsToRemove);
+    removeSouls(gameState, [item]);
   } else {
     throw new Error('Somehow no item to take.');
   }

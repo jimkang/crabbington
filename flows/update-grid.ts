@@ -1,16 +1,16 @@
 var effectFns = require('../grid-effects/grid-effects');
 var applyToPointsInRows = require('../apply-to-points-in-rows');
 
-import { Grid, GridIntersection, EffectDef } from '../types';
+import { Grid, GridIntersection, EffectDef, TargetTree } from '../types';
 
 // Not really a radius: More like half a square.
 const gridIntersectionRadius = 10;
 
-function updateGrid(targetTree, grid: Grid) {
+function updateGrid(targetTree: TargetTree, grid: Grid) {
   var needToUpdateDerived = !gridHasDerivedProps(grid);
 
   if (grid.effects) {
-    applyToPointsInRows(grid.rows, targetTree.remove.bind(targetTree));
+    applyToPointsInRows(grid.rows, targetTree.remove);
     grid.effects.forEach(applyEffect);
     needToUpdateDerived = true;
   }
@@ -19,7 +19,7 @@ function updateGrid(targetTree, grid: Grid) {
     applyToPointsInRows(grid.rows, updateDerivedIntersectionProps);
     // Derived properties need to be up-to-date before putting them in the tree.
     // And points with updated properties, need to be (re)added to the tree.
-    applyToPointsInRows(grid.rows, targetTree.insert.bind(targetTree));
+    applyToPointsInRows(grid.rows, targetTree.insert);
   }
 
   function applyEffect(effectDef: EffectDef) {

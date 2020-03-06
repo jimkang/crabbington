@@ -1,9 +1,9 @@
-import { Soul, Grid, GridIntersection } from '../types';
+import { Soul, Grid, GridIntersection, TargetTree, Box } from '../types';
 
 var findWhere = require('lodash.findwhere');
 import { getBoxAroundPosition } from '../tasks/box-ops';
 
-function updateSoul(grids: Array<Grid>, targetTree, soul: Soul) {
+function updateSoul(grids: Array<Grid>, targetTree: TargetTree, soul: Soul) {
   // Update position properties.
   var grid = findWhere(grids, { id: soul.gridContext.id });
   if (!grid) {
@@ -26,12 +26,9 @@ function updateSoul(grids: Array<Grid>, targetTree, soul: Soul) {
     boxWidth: soul.sprite.width,
     boxHeight: soul.sprite.height
   });
-  Object.assign(soul, box);
 
-  // Update it the search tree.
-  // Someday always removing and inserting may be a performance issue?
-  targetTree.remove(soul);
-  targetTree.insert(soul);
+  // Update it in the search tree.
+  targetTree.updateItemBox(soul as Box, box);
 }
 
 module.exports = updateSoul;

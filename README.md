@@ -28,6 +28,7 @@ Plan
 - Victory condition item - Done
 - Make player character more obvious
 - Seeking movement
+- Fix bug in which intersection at which soul died still has action options for when that soul lived. - Done
 
 Vague concepts to fit in if somehow the basics come together
 ---
