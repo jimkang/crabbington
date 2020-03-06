@@ -1,7 +1,7 @@
 import { Box, Done, CmdParams, Filter, Soul } from '../../types';
 
 export function blastCmd(
-  { gameState, targetTree, doSoulRemoval }: CmdParams,
+  { gameState, targetTree, removeSouls }: CmdParams,
   doneWithAnimationCompletionCallback: Done
 ) {
   // This probably should be based on something other than the sprite size.
@@ -27,7 +27,7 @@ export function blastCmd(
   });
 
   function updateStatePostBlastAnimation(notifyAnimationDone: Done) {
-    doSoulRemoval(thingsToRemove);
+    removeSouls(gameState, thingsToRemove);
     doneWithAnimationCompletionCallback(null, notifyAnimationDone);
   }
 }

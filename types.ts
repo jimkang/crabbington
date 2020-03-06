@@ -48,7 +48,11 @@ export interface CmdParams {
   targetTree;
   // TODO: Define type that encompassing all the
   // things that can come from the targetTree.
-  doSoulRemoval: (Array) => void;
+  removeSouls: SoulProcessor;
+}
+
+export interface SoulProcessor {
+  (gameState: GameState, souls: Array<Soul>): void;
 }
 
 export interface SoulDef {

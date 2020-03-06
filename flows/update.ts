@@ -10,7 +10,6 @@ var isEqual = require('lodash.isequal');
 var queue = require('d3-queue').queue;
 var oknok = require('oknok');
 var handleError = require('handle-error-web');
-var callNextTick = require('call-next-tick');
 
 import {
   ColRow,
@@ -22,13 +21,21 @@ import {
   Command,
   GridIntersection,
   Pt,
-  Done
+  Done,
+  CmdFn
 } from '../types';
 
 import { spriteSize } from '../sizes';
 import { getBoxAroundCenter } from '../tasks/box-ops';
 import { sortVectorsByCloseness } from '../tasks/dist-ops';
 import { blastCmd } from './commands/blast-command';
+import { takeCmd } from './commands/take-command';
+
+// TODO: Just put CmdFns in Command objects.
+var cmdFnsForCmdTypes: Record<string, CmdFn> = {
+  blast: blastCmd,
+  take: takeCmd
+};
 
 // Not really a radius: More like half a square.
 const clickRadius = spriteSize / 3;
@@ -246,35 +253,10 @@ function getNeighboringGridPoints(soul: Soul, grid) {
 }
 
 // All execution paths in this function must call the callback.
-function runCommand(
-  gameState: GameState,
-  command: Command,
-  doneWithAnimationCompletionCallback: Done
-) {
-  if (command.cmdType === 'blast') {
-    blastCmd(
-      { gameState, targetTree, doSoulRemoval },
-      doneWithAnimationCompletionCallback
-    );
-  } else if (command.cmdType === 'take') {
-    var item: Soul = gameState.souls.find(isALastClickedItem);
-    if (item) {
-      let thingsToRemove = [];
-      gameState.player.items.push(item);
-      thingsToRemove.push(item);
-      doSoulRemoval(thingsToRemove);
-    } else {
-      throw new Error('Somehow no item to take.');
-    }
-    callNextTick(doneWithAnimationCompletionCallback, null);
-  }
-
-  function doSoulRemoval(thingsToRemove) {
-    removeSouls(gameState, thingsToRemove);
-  }
-
-  function isALastClickedItem(soul: Soul) {
-    return gameState.lastClickedThingIds.includes(soul.id);
+function runCommand(gameState: GameState, command: Command, done: Done) {
+  var cmd: CmdFn = cmdFnsForCmdTypes[command.cmdType];
+  if (cmd) {
+    cmd({ gameState, targetTree, removeSouls }, done);
   }
 }
 
@@ -292,7 +274,7 @@ function runCommands(
   }
 }
 
-function removeSouls(gameState, souls) {
+function removeSouls(gameState: GameState, souls: Array<Soul>): void {
   var ids = pluck(souls, 'id');
   souls.forEach(removeFromTargetTree);
 
