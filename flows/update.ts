@@ -101,9 +101,10 @@ function update({
       });
     }
   }
-  // This is apparently not legal TypeScript, but
-  // notifyAnimationDones: Array<(Error, Array<Done>) => void>)
-  function reactAndIncrement(notifyAnimationDones) {
+
+  // Gets called by runCommands with an array of
+  // postAnimationGameStateUpdater results.
+  function reactAndIncrement(notifyAnimationDones: Array<Done>) {
     haveSoulsReact(gameState, probable);
     incrementTurn();
     if (notifyAnimationDones) {

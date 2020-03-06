@@ -27,6 +27,7 @@ Plan
 - "Find me" HUD button
 - Victory condition item - Done
 - Make player character more obvious
+- Seeking movement
 
 Vague concepts to fit in if somehow the basics come together
 ---
