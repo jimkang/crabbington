@@ -19,8 +19,13 @@ export function bonkCmd(
   });
 
   function updateStatePostBonkAnimation(notifyAnimationDone: Done) {
-    // TODO: Subtract hp instead of killing the guy.
-    removeSouls(gameState, [soul]);
+    if (!isNaN(soul.hp)) {
+      soul.hp -= 3;
+      console.log('New hp for', soul.id, soul.hp, '/', soul.maxHP);
+    }
+    if (soul.hp < 1) {
+      removeSouls(gameState, [soul]);
+    }
     doneWithAnimationCompletionCallback(null, notifyAnimationDone);
   }
 }

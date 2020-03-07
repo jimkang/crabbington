@@ -17,7 +17,8 @@ var defList: Array<SoulDef> = [
       height: spriteSize,
       hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
   },
   {
     type: 'basicShell',
@@ -30,6 +31,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -43,6 +45,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell', offset: [0, -64] }
   },
   {
@@ -56,6 +59,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -69,6 +73,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -84,7 +89,8 @@ var defList: Array<SoulDef> = [
       height: spriteSize,
       hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
   },
   {
     type: 'cat',
@@ -98,7 +104,8 @@ var defList: Array<SoulDef> = [
       height: spriteSize,
       hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
   },
   {
     type: 'cloud',
@@ -113,7 +120,8 @@ var defList: Array<SoulDef> = [
       height: spriteSize,
       hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-air']
+    allowedGrids: ['grid-air'],
+    hitDice: '1d8',
   },
   {
     type: 'corn',
@@ -127,7 +135,8 @@ var defList: Array<SoulDef> = [
       height: spriteSize,
       hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
   },
   // TODO: Get sleep, other animation in.
   {
@@ -142,7 +151,8 @@ var defList: Array<SoulDef> = [
       height: spriteSize,
       hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
   },
   {
     type: 'cup',
@@ -155,6 +165,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -169,7 +180,8 @@ var defList: Array<SoulDef> = [
       height: spriteSize,
       hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
   },
   {
     type: 'fancyShell',
@@ -182,6 +194,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -195,6 +208,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -208,6 +222,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -221,6 +236,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -234,6 +250,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -247,6 +264,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -260,6 +278,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -301,6 +320,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -316,6 +336,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -329,6 +350,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -343,7 +365,8 @@ var defList: Array<SoulDef> = [
       height: spriteSize,
       hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
   },
   {
     type: 'tearDrop',
@@ -358,6 +381,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     facingsAllowed: [[1, 0], [-1, 0]],
     itemRole: { itemPositioningStyle: 'shell' }
   },
@@ -372,6 +396,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -386,7 +411,8 @@ var defList: Array<SoulDef> = [
       height: spriteSize,
       hitRadius: spriteSize * 0.75
     },
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
   },
   {
     type: 'trilby',
@@ -399,6 +425,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -412,6 +439,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -425,7 +453,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     facingsAllowed: [[1, 0]],
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
   },
   {
     type: 'worm',
@@ -440,6 +468,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-air'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -453,6 +482,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
   }
 ];

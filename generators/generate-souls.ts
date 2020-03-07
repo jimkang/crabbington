@@ -5,6 +5,8 @@ var flatten = require('lodash.flatten');
 var RandomId = require('@jimkang/randomid');
 var Probable = require('probable').createProbable;
 var { Tablenest, r } = require('tablenest');
+var DiceCup = require('dicecup');
+var handleError = require('handle-error-web');
 
 import { SoulDef, Soul, Pt, ColRow, Grid, GridIntersection } from '../types';
 import { soulDefs } from '../defs/soul-defs';
@@ -58,6 +60,7 @@ function generateSouls({ random, grids }) {
   var probable = Probable({ random });
   var randomId = RandomId({ random });
   var tablenest = Tablenest({ random });
+  var cup = DiceCup({ probable });
 
   var obstructionTypeTableRoll = tablenest(obstructionTypeTableDef);
   var figureTypeTableRoll = tablenest(figureTypeTableDef);
@@ -116,6 +119,11 @@ function generateSouls({ random, grids }) {
       instance.items = def.startingItemIds.map(instantiateFromDefId);
     } else {
       instance.items = [];
+    }
+
+    if (def.hitDice) {
+      instance.maxHP = easyRoll(cup, def.hitDice);
+      instance.hp = instance.maxHP;
     }
     return instance;
   }
@@ -178,6 +186,20 @@ function initEmptySpotsForGrids(
   function spotsForRow(row: Array<GridIntersection>): Array<ColRow> {
     return pluck(row, 'colRow');
   }
+}
+
+function easyRoll(cup, dieSpec: string) {
+  var results = cup.roll(dieSpec);
+  return results.reduce(addTotalFromResult, 0);
+}
+
+function addTotalFromResult(sum, { error, total }) {
+  if (error) {
+    handleError(error);
+  } else {
+    sum += total;
+  }
+  return total;
 }
 
 module.exports = generateSouls;

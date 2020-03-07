@@ -39,7 +39,7 @@ export function animateBonk(animation: AnimationDef, gameState: GameState, draw,
       const proportion: number = ease.easeBackIn(t);
       const xDelta = (proportion * xDist);
       const yDelta = (proportion * yDist);
-      console.log('t', t, 'proportion', proportion, 'xDelta', xDelta, 'yDelta', yDelta);
+      //console.log('t', t, 'proportion', proportion, 'xDelta', xDelta, 'yDelta', yDelta);
       bonker.x = origX + xDelta;
       bonker.y = origY + yDelta;
       draw();

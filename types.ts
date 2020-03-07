@@ -67,6 +67,7 @@ export interface SoulDef {
   startingItemIds?: Array<string>;
   itemRole?: ItemRole;
   facingsAllowed?: Array<Pt>;
+  hitDice?: string;
 }
 
 export interface Soul extends SoulDef, Partial<Box> {
@@ -77,6 +78,8 @@ export interface Soul extends SoulDef, Partial<Box> {
   y?: number;
   gridContext?: GridContext;
   items?: Array<Soul>;
+  hp?: number;
+  maxHP?: number;
 }
 
 export interface ItemRole {
