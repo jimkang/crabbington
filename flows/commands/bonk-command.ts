@@ -14,7 +14,7 @@ export function bonkCmd(
       bonkerSoul: gameState.player,
       bonkeeSoul: soul
     },
-    duration: 5000,
+    duration: 900,
     postAnimationGameStateUpdater: updateStatePostBonkAnimation
   });
 
