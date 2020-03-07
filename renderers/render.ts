@@ -5,7 +5,7 @@ var renderSoul = require('./render-soul');
 var renderBlast = require('./render-blast');
 var renderUI = require('./render-ui');
 import { renderMessage } from './render-message';
-var renderAnimations = require('./render-animations');
+import { renderAnimations } from './render-animations';
 var Zoom = require('d3-zoom');
 
 import { Soul, GameState } from '../types';

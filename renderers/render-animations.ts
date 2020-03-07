@@ -3,11 +3,13 @@ var timer = require('d3-timer').timer;
 var randomId = require('idmaker').randomId;
 var callNextTick = require('call-next-tick');
 
+import { GameState } from '../types';
+
 var animationProcsForTypes = {
   blast: animateBlast
 };
 
-function renderAnimations({ gameState, onAdvance, draw }) {
+export function renderAnimations({ gameState, onAdvance, draw }: { gameState: GameState, onAdvance, draw }) {
   gameState.allowAdvance = false;
   var q = queue(1);
   gameState.animations.forEach(queueAnimation);
@@ -79,5 +81,3 @@ function removeFromArray(array, id) {
     }
   }
 }
-
-module.exports = renderAnimations;

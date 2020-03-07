@@ -1,7 +1,7 @@
 crabbington
 ==================
 
-This is my 2020 DRL attempt!
+This is my 2020 7DRL attempt!
 
 Plan
 ---
@@ -29,6 +29,8 @@ Plan
 - Make player character more obvious
 - Seeking movement
 - Fix bug in which intersection at which soul died still has action options for when that soul lived. - Done
+- Other guys hitting
+- hp
 
 Vague concepts to fit in if somehow the basics come together
 ---
