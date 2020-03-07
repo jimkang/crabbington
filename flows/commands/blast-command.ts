@@ -19,9 +19,12 @@ export function blastCmd(
   console.log('blasting:', thingsToRemove);
   gameState.animations.push({
     type: 'blast',
-    cx: gameState.player.x,
-    cy: gameState.player.y,
-    r: 3 * gameState.player.sprite.width,
+    custom: {
+      cx: gameState.player.x,
+      cy: gameState.player.y,
+      r: 3 * gameState.player.sprite.width,
+      color: 'yellow'
+    },
     duration: 1000,
     postAnimationGameStateUpdater: updateStatePostBlastAnimation
   });

@@ -99,10 +99,11 @@ export interface Sprite {
 
 export type Done = (Error, any?) => void;
 
-export interface AnimationDef extends CircleDef {
+export interface AnimationDef {
   type: string;
   duration: number;
   postAnimationGameStateUpdater: Done;
+  custom;
 }
 
 export interface GameState {

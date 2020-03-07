@@ -9,11 +9,12 @@ export function bonkCmd(
   var soul: Soul = getLastClickedSoul(gameState);
   console.log('bonking:', soul.id);
   gameState.animations.push({
-    type: 'blast', // TODO: Actual bonking animation
-    cx: gameState.player.x,
-    cy: gameState.player.y,
-    r: gameState.player.sprite.width,
-    duration: 500,
+    type: 'bonk',
+    custom: {
+      bonkerSoul: gameState.player,
+      bonkeeSoul: soul
+    },
+    duration: 5000,
     postAnimationGameStateUpdater: updateStatePostBonkAnimation
   });
 

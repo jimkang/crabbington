@@ -20,6 +20,9 @@ run:
 build:
 	$(BROWSERIFY) $(PLUGIN_SWITCH) app.ts | $(UGLIFY) -c -m -o index.js
 
+check-build:
+	$(BROWSERIFY) $(PLUGIN_SWITCH) app.ts
+
 deploy:
 	npm version patch && make build && git commit -a -m"Build" && make pushall
 
