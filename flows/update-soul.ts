@@ -1,7 +1,7 @@
 import { Soul, Grid, GridIntersection, TargetTree, Box } from '../types';
 
 var findWhere = require('lodash.findwhere');
-import { getBoxAroundPosition } from '../tasks/box-ops';
+import { getBoxAroundPosition } from '../ops/box-ops';
 
 function updateSoul(grids: Array<Grid>, targetTree: TargetTree, soul: Soul) {
   // Update position properties.

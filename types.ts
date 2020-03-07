@@ -33,8 +33,16 @@ export interface CanMoveHereDef {
   avoid: Array<string>;
 }
 
-export interface Command {
-  cmdType: string;
+export interface CommandDef {
+  id: string;
+  name: string;
+  cmdFn: CmdFn;
+}
+
+export interface Command extends CommandDef {
+  actor?: Soul;
+  targets?: Array<Soul>;
+  params?;
 }
 
 // Done should be called when the command is completely
@@ -50,6 +58,7 @@ export interface CmdParams {
   // TODO: Define type that encompassing all the
   // things that can come from the targetTree.
   removeSouls: SoulProcessor;
+  cmd: Command;
 }
 
 export interface SoulProcessor {
@@ -61,7 +70,7 @@ export interface SoulDef {
   categories: Array<string>;
   move?: MoveFn;
   canMoveHereFn?: CanMoveHereFn;
-  getInteractionsWithThing?: (any) => Array<string>;
+  getInteractionsWithThing?: (any) => Array<CommandDef>;
   sprite: Sprite;
   allowedGrids: Array<string>;
   startingItemIds?: Array<string>;
@@ -101,6 +110,18 @@ export interface Sprite {
 }
 
 export type Done = (Error, any?) => void;
+export interface UpdateDone {
+  (
+    error: Error,
+    {
+      shouldAdvanceToNextSoul,
+      renderShouldWaitToAdvanceToNextUpdate
+    }: {
+      shouldAdvanceToNextSoul: boolean;
+      renderShouldWaitToAdvanceToNextUpdate: boolean;
+    }
+  ): void;
+}
 
 export interface AnimationDef {
   type: string;
@@ -112,7 +133,7 @@ export interface AnimationDef {
 export interface GameState {
   allowAdvance: boolean;
   uiOn: boolean;
-  actionChoices: Array<string>;
+  cmdChoices: Array<Command>;
   animations: Array<AnimationDef>;
   ephemerals: {
     blasts: Array<BlastDef>;
@@ -120,10 +141,12 @@ export interface GameState {
   gridsInit: boolean;
   grids?: Array<Grid>;
   souls?: Array<Soul>;
+  currentActingSoulIndex: number;
   player?: Soul;
   lastClickedThingIds: Array<string>;
   displayMessage?: string;
   gameWon: boolean;
+  turn: number;
 }
 
 export interface Grid {

@@ -1,15 +1,15 @@
 import { Box, Done, CmdParams, Filter, Soul } from '../../types';
 
 export function blastCmd(
-  { gameState, targetTree, removeSouls }: CmdParams,
+  { gameState, targetTree, removeSouls, cmd }: CmdParams,
   doneWithAnimationCompletionCallback: Done
 ) {
   // This probably should be based on something other than the sprite size.
   var blastBox: Box = {
-    minX: gameState.player.x - 3 * gameState.player.sprite.width,
-    maxX: gameState.player.x + 3 * gameState.player.sprite.width,
-    minY: gameState.player.y - 3 * gameState.player.sprite.height,
-    maxY: gameState.player.y + 3 * gameState.player.sprite.height
+    minX: cmd.actor.x - 3 * cmd.actor.sprite.width,
+    maxX: cmd.actor.x + 3 * cmd.actor.sprite.width,
+    minY: cmd.actor.y - 3 * cmd.actor.sprite.height,
+    maxY: cmd.actor.y + 3 * cmd.actor.sprite.height
   };
   var thingsToRemove = getTargetsInBox({
     targetTree,
@@ -20,9 +20,9 @@ export function blastCmd(
   gameState.animations.push({
     type: 'blast',
     custom: {
-      cx: gameState.player.x,
-      cy: gameState.player.y,
-      r: 3 * gameState.player.sprite.width,
+      cx: cmd.actor.x,
+      cy: cmd.actor.y,
+      r: 3 * cmd.actor.sprite.width,
       color: 'yellow'
     },
     duration: 1000,

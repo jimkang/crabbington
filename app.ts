@@ -9,7 +9,9 @@ var generateSouls = require('./generators/generate-souls');
 var seedrandom = require('seedrandom');
 var { version } = require('./package.json');
 
-import { GameState, Command } from './types';
+import { GameState, Command, TargetTree } from './types';
+import { createTargetTree } from './target-tree';
+import { init } from './flows/init';
 
 var randomid = require('@jimkang/randomid')();
 
@@ -21,10 +23,15 @@ var theGameState: GameState = {
   },
   gridsInit: false,
   uiOn: false,
-  actionChoices: [],
+  cmdChoices: [],
   lastClickedThingIds: [],
-  gameWon: false
+  gameWon: false,
+  souls: [],
+  currentActingSoulIndex: undefined,
+  turn: 0
 };
+
+var targetTree: TargetTree = createTargetTree();
 
 var routeState = RouteState({
   followRoute,
@@ -47,6 +54,8 @@ function followRoute({ seed }) {
   theGameState.grids = generateGrids({ probable, random });
   theGameState.souls = generateSouls({ random, grids: theGameState.grids });
   theGameState.player = findWhere(theGameState.souls, { id: 'player' });
+  init(theGameState, targetTree);
+  incrementActorIndex(theGameState);
 
   advance({ gameState: theGameState });
 
@@ -61,16 +70,45 @@ function followRoute({ seed }) {
     recentClickY?: number;
     commands?: Array<Command>;
   }) {
+    incrementTurn(gameState);
     if (gameState.allowAdvance) {
       resetGameStateForNewTurn(gameState);
-      update({
+      update(
+        {
+          actor: getActingSoul(gameState),
+          gameState,
+          recentClickX,
+          recentClickY,
+          commands,
+          probable,
+          targetTree
+        },
+        onUpdateDone
+      );
+    }
+    function onUpdateDone(
+      error: Error,
+      {
+        shouldAdvanceToNextSoul,
+        renderShouldWaitToAdvanceToNextUpdate
+      }: {
+        shouldAdvanceToNextSoul: boolean;
+        renderShouldWaitToAdvanceToNextUpdate: boolean;
+      }
+    ) {
+      console.log(getActingSoul(gameState).id, 'update done.');
+      if (error) {
+        handleError(error);
+      } else if (shouldAdvanceToNextSoul) {
+        incrementActorIndex(gameState);
+      }
+      // Try to keep going even if there is an error.
+      render({
         gameState,
-        recentClickX,
-        recentClickY,
-        commands,
-        probable
+        onMessageDismiss,
+        onAdvance: advance,
+        shouldWaitForInteraction: renderShouldWaitToAdvanceToNextUpdate
       });
-      render({ gameState, onMessageDismiss, onAdvance: advance });
     }
   }
 }
@@ -81,7 +119,29 @@ function onMessageDismiss() {
 }
 
 function resetGameStateForNewTurn(gameState: GameState) {
-  gameState.actionChoices.length = 0;
+  gameState.cmdChoices.length = 0;
+}
+
+function incrementActorIndex(gameState: GameState) {
+  if (gameState.currentActingSoulIndex === undefined) {
+    gameState.currentActingSoulIndex = gameState.souls.findIndex(
+      soul => soul.id === gameState.player.id
+    );
+  } else {
+    gameState.currentActingSoulIndex += 1;
+  }
+  if (gameState.currentActingSoulIndex >= gameState.souls.length) {
+    gameState.currentActingSoulIndex = 0;
+  }
+}
+
+function getActingSoul(gameState: GameState) {
+  return gameState.souls[gameState.currentActingSoulIndex];
+}
+
+function incrementTurn(gameState: GameState) {
+  gameState.turn += 1;
+  console.log('Advancing to turn', gameState.turn);
 }
 
 function reportTopLevelError(msg, url, lineNo, columnNo, error) {

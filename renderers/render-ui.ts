@@ -37,9 +37,10 @@ function renderUI({
 }) {
   playerCommandQueue.length = 0;
 
+  // Should the key actually be a new id prop?
   var actionButtons = buttonRoot
     .selectAll('.action-button')
-    .data(gameState.actionChoices, accessor('identity'));
+    .data(gameState.cmdChoices, accessor());
   actionButtons.exit().remove();
   actionButtons
     .enter()
@@ -47,14 +48,14 @@ function renderUI({
     .classed('action-button', true)
     .classed('clickable', true)
     .merge(actionButtons)
-    .text(accessor('identity'))
-    .on('click', onClickAction);
+    .text(accessor('name'))
+    .on('click', onClickChoice);
 
-  console.log('actionChoices', gameState.actionChoices);
+  console.log('cmdChoices', gameState.cmdChoices);
   controlsLayer.classed('hidden', !gameState.uiOn);
 
-  function onClickAction(action: string) {
-    playerCommandQueue.push({ cmdType: action });
+  function onClickChoice(cmd: Command) {
+    playerCommandQueue.push(cmd);
     concludeUI();
   }
 

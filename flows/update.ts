@@ -1,14 +1,17 @@
 var curry = require('lodash.curry');
-var updateGrid = require('./update-grid');
 var updateSoul = require('./update-soul');
 var findWhere = require('lodash.findwhere');
 var math = require('basic-2d-math');
 var pluck = require('lodash.pluck');
-var uniq = require('lodash.uniq');
+var flatten = require('lodash.flatten');
+//var uniq = require('lodash.uniq');
 var isEqual = require('lodash.isequal');
+//var compact = require('lodash.compact');
 var queue = require('d3-queue').queue;
 var oknok = require('oknok');
 var handleError = require('handle-error-web');
+//var ep = require('errorback-promise');
+var callNextTick = require('call-next-tick');
 
 import {
   ColRow,
@@ -18,78 +21,132 @@ import {
   GridContext,
   GameState,
   Command,
+  CommandDef,
   GridIntersection,
   Pt,
+  UpdateDone,
   Done,
-  CmdFn,
   TargetTree
 } from '../types';
 
 import { spriteSize } from '../sizes';
-import { getBoxAroundCenter } from '../tasks/box-ops';
-import { sortVectorsByCloseness } from '../tasks/dist-ops';
-import { blastCmd } from './commands/blast-command';
-import { takeCmd } from './commands/take-command';
-import { bonkCmd } from './commands/bonk-command';
-import { createTargetTree } from '../target-tree';
-
-var targetTree: TargetTree = createTargetTree();
-
-// TODO: Just put CmdFns in Command objects.
-var cmdFnsForCmdTypes: Record<string, CmdFn> = {
-  blast: blastCmd,
-  take: takeCmd,
-  bonk: bonkCmd
-};
+import { getBoxAroundCenter, getBoxAroundPosition } from '../ops/box-ops';
+import { sortVectorsByCloseness } from '../ops/dist-ops';
+import { instantiateCmdFromDef } from './commands/commands';
+import { getNeighboringColRows } from '../ops/grid-ops';
+import { getLastClickedSoul } from '../ops/game-state-ops';
 
 // Not really a radius: More like half a square.
 const clickRadius = spriteSize / 3;
 
 const diagonalUnitLength = Math.sqrt(2);
 
-var turn = 0;
+function update(
+  {
+    actor,
+    gameState,
+    recentClickX,
+    recentClickY,
+    incomingCommands,
+    probable,
+    targetTree
+  }: {
+    actor: Soul;
+    gameState: GameState;
+    recentClickX: number;
+    recentClickY: number;
+    incomingCommands?: Array<Command>;
+    probable;
+    targetTree: TargetTree;
+  },
+  updateDone: UpdateDone
+) {
+  // directly from app.ts.
 
-function update({
-  gameState,
-  recentClickX,
-  recentClickY,
-  commands,
-  probable
-}: {
-  gameState: GameState;
-  recentClickX: number;
-  recentClickY: number;
-  commands?: Array<Command>;
-  probable;
-}) {
-  if (!gameState.gridsInit) {
-    // It's important to call updateSoul during
-    // init because it gets the souls into the targetTree.
-    gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
-    gameState.grids.forEach(curry(updateGrid)(targetTree));
-    gameState.gridsInit = true;
-  }
-  if (commands && commands.length > 0) {
+  if (incomingCommands && incomingCommands.length > 0) {
     // This passes back animation completion callbacks
     // which must be called in order to let render()
     // know it can move on.
     runCommands(
-      commands,
+      incomingCommands,
       gameState,
-      oknok({ ok: reactAndIncrement, nok: handleError })
+      oknok({
+        ok: () =>
+          updateDone(null, {
+            shouldAdvanceToNextSoul: true,
+            renderShouldWaitToAdvanceToNextUpdate: false
+          }),
+        nok: handleError
+      })
     );
     return;
   }
 
+  if (actor.id === 'player') {
+    specificToPlayerUpdate(
+      { actor, gameState, recentClickX, recentClickY, probable, targetTree },
+      updateDone
+    );
+  } else {
+    // TODO: NPC needs to decide what to do, then do it.
+    callNextTick(updateDone, null, {
+      shouldAdvanceToNextSoul: true,
+      renderShouldWaitToAdvanceToNextUpdate: false
+    });
+  }
+
+  // Gets called by runCommands with an array of
+  // postAnimationGameStateUpdater results.
+  /*
+  async function reactAndIncrement(
+    notifyAnimationUpdateDones: Array<UpdateDone>
+  ) {
+    var { error } = await ep(haveSoulsReact, gameState, probable);
+    if (error) {
+      handleError(error);
+    }
+    tellAnimationsReactionUpdatesAreUpdateDone(notifyAnimationUpdateDones);
+}
+*/
+}
+
+function specificToPlayerUpdate(
+  {
+    actor,
+    gameState,
+    recentClickX,
+    recentClickY,
+    probable,
+    targetTree
+  }: {
+    actor: Soul;
+    gameState: GameState;
+    recentClickX: number;
+    recentClickY: number;
+    probable;
+    targetTree: TargetTree;
+  },
+  done: UpdateDone
+) {
   if (!gameState.gameWon && gameWon(gameState)) {
     gameState.displayMessage =
       "With the grail to sleep in, you are assured as much safe, restful sleep as you'd like for the rest of your life. You have won! Feel free to hang out as long as you'd like, though.";
     gameState.gameWon = true;
+    callNextTick(done, null, {
+      shouldAdvanceToNextSoul: true,
+      renderShouldWaitToAdvanceToNextUpdate: false
+    });
     return;
   }
 
   // Find out if something relevant got clicked.
-  if (gameState.allowAdvance && !isNaN(recentClickX) && !isNaN(recentClickY)) {
+  // Things getting clicked are a player-specific thing.
+  if (
+    actor.id === 'player' &&
+    gameState.allowAdvance &&
+    !isNaN(recentClickX) &&
+    !isNaN(recentClickY)
+  ) {
     var clickBox: Box = getBoxAroundCenter({
       center: [recentClickX, recentClickY],
       boxWidth: clickRadius,
@@ -103,105 +160,239 @@ function update({
     // If it does matter, we can sort thingsHit by click distance.
     // Things with gridIds are GridIntersections.
     var selectedIntersection: GridIntersection = findWhere(thingsHit, {
-      gridId: gameState.player.gridContext.id
+      gridId: actor.gridContext.id
     });
     if (selectedIntersection) {
-      updateUsingGridSelection({
-        selectedIntersection,
-        gameState,
-        thingsHit,
-        probable
+      updateUsingClickedIntersection(
+        {
+          actor,
+          selectedIntersection,
+          gameState,
+          thingsHit,
+          probable,
+          targetTree
+        },
+        done
+      );
+    } else {
+      callNextTick(done, null, {
+        shouldAdvanceToNextSoul: false,
+        renderShouldWaitToAdvanceToNextUpdate: true
       });
     }
-  }
-
-  // Gets called by runCommands with an array of
-  // postAnimationGameStateUpdater results.
-  function reactAndIncrement(notifyAnimationDones: Array<Done>) {
-    haveSoulsReact(gameState, probable);
-    incrementTurn();
-    if (notifyAnimationDones) {
-      notifyAnimationDones.forEach(
-        notifyAnimationDone => notifyAnimationDone && notifyAnimationDone(null)
-      );
-    }
+  } else {
+    // It's still the player's turn.
+    callNextTick(done, null, {
+      shouldAdvanceToNextSoul: false,
+      renderShouldWaitToAdvanceToNextUpdate: true
+    });
   }
 }
 
 // Early returns in this function will skip incrementing the turn
 // and updating the souls.
-function updateUsingGridSelection({
-  selectedIntersection,
-  gameState,
-  thingsHit,
-  probable
-}: {
-  selectedIntersection: GridIntersection;
-  gameState: GameState;
-  thingsHit;
-  probable;
-}) {
-  var shouldIncrementTurn = false;
-  var player: Soul = gameState.player;
-  var isPlayerIntersection: boolean = isEqual(
+async function updateUsingClickedIntersection(
+  {
+    actor,
+    selectedIntersection,
+    gameState,
+    thingsHit,
+    probable,
+    targetTree
+  }: {
+    actor: Soul;
+    selectedIntersection: GridIntersection;
+    gameState: GameState;
+    thingsHit;
+    probable;
+    targetTree: TargetTree;
+  },
+  done: UpdateDone
+) {
+  // TODO: Call done.
+  var isActorIntersection: boolean = isEqual(
     selectedIntersection.colRow,
-    player.gridContext.colRow
+    actor.gridContext.colRow
   );
   // TODO: Long-range bonk item that passes a much
   // higher value that diagonalUnitLength here.
   var isAdjacent: boolean = intersectionsAreAdjacent(
     diagonalUnitLength,
     selectedIntersection.colRow,
-    player.gridContext.colRow
+    actor.gridContext.colRow
   );
 
-  if (isPlayerIntersection || isAdjacent) {
-    gameState.actionChoices = uniq(
-      thingsHit.map(player.getInteractionsWithThing).flat()
+  var cmdChoices: Array<Command> = [];
+  if (isActorIntersection || isAdjacent) {
+    let cmdDefs: Array<CommandDef> = thingsHit
+      .map(actor.getInteractionsWithThing)
+      .flat();
+    // TODO: Figure out how to handle commands that
+    // need custom params.
+    // TODO: Pick appropriate targets; using getLastClickedSoul
+    // is the cause of the bug in which there's sometimes
+    // nothing to take.
+    cmdChoices = cmdDefs.map(
+      curry(instantiateCmdFromDef)(actor, [getLastClickedSoul(gameState)], null)
     );
   }
 
-  if (gameState.actionChoices.length > 0) {
+  if (cmdChoices.length > 0) {
+    gameState.cmdChoices = cmdChoices;
     // This shouldn't increment the turn.
     gameState.uiOn = true;
+    callNextTick(done, null, {
+      shouldAdvanceToNextSoul: false,
+      renderShouldWaitToAdvanceToNextUpdate: true
+    });
   } else {
-    if (!isPlayerIntersection) {
+    if (!isActorIntersection) {
       const isCardinallyAdjacent: boolean = intersectionsAreAdjacent(
         1,
         selectedIntersection.colRow,
-        player.gridContext.colRow
+        actor.gridContext.colRow
       );
       if (
         isCardinallyAdjacent &&
-        gameState.player.canMoveHereFn({
+        actor.canMoveHereFn({
           getTargetsAtColRow: curry(getTargetsAtColRow)(gameState),
           colRow: selectedIntersection.colRow
         })
       ) {
+        // TODO: Moving the player should be a Command.
         movePlayer(gameState, selectedIntersection);
-        haveSoulsReact(gameState, probable);
-        shouldIncrementTurn = true;
+        updateSoul(gameState.grids, targetTree, actor);
+        //let { error } = await ep(haveSoulsReact, gameState, probable);
+        //if (error) {
+        //  handleError(error);
+        //}
       }
     }
     // Else: Other interactions on player intersection?
+
+    callNextTick(done, null, {
+      shouldAdvanceToNextSoul: true,
+      renderShouldWaitToAdvanceToNextUpdate: false
+    });
+  }
+}
+/*
+function haveSoulsReact(gameState: GameState, probable, done: UpdateDone) {
+  var q = queue(1);
+  gameState.souls.forEach(queueHaveSoulReact);
+  q.awaitAll(oknok({ ok: complete, nok: done }));
+
+  function queueHaveSoulReact(soul: Soul) {
+    q.defer(haveSoulReact, gameState, probable, soul);
   }
 
-  if (shouldIncrementTurn) {
-    incrementTurn();
+  function complete() {
+    gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
+    done(null, true);
+  }
+}
+*/
+
+// Scrap this, go to a system in which there is one
+// actor per update().
+/*
+function haveSoulReact(
+  gameState: GameState,
+  probable,
+  soul: Soul,
+  advance,
+  done: UpdateDone
+) {
+  var reaction: Command = getSoulReaction(gameState, probable, soul);
+  if (!reaction) {
+    callNextTick(done);
+    return;
+  }
+  runCommand(
+    gameState,
+    reaction,
+    oknok({ ok: letAnimationKnowWeAreDone, nok: done })
+  );
+  // Need to trigger a render?
+
+  function letAnimationKnowWeAreDone(notifyAnimationDone: Done) {
+    notifyAnimationDone(null);
+    done(null, true);
   }
 }
 
-function incrementTurn() {
-  console.log('Turn', turn, 'complete.');
-  turn += 1;
+function tellAnimationsReactionUpdatesAreUpdateDone(
+  notifyAnimationUpdateDones: Array<Done>
+) {
+  if (notifyAnimationUpdateDones) {
+    notifyAnimationUpdateDones.forEach(
+      notifyAnimationUpdateDone =>
+        notifyAnimationUpdateDone && notifyAnimationUpdateDone(null)
+    );
+  }
 }
 
-function haveSoulsReact(gameState: GameState, probable) {
-  // TODO: Stuff other than moving.
-  gameState.souls.forEach(curry(moveSoul)(gameState, probable));
-  gameState.souls.forEach(curry(updateSoul)(gameState.grids, targetTree));
+function getSoulReaction(gameState: GameState, probable, soul: Soul): Command {
+  if (!soul.getInteractionsWithThing) {
+    // TODO: Return a moveSoul cmd.
+    moveSoul(gameState, probable, soul);
+    return;
+  }
+
+  // Get adjacent tiles, then get action choices.
+  var neighbors: Array<ColRow> = getNeighboringColRows(
+    soul,
+    findWhere(gameState.grids, { id: soul.gridContext.id })
+  );
+  var colRowCmds: Array<Command> = flatten(
+    neighbors.map(curry(getColRowCommands)(gameState, probable, soul))
+  );
+  // TODO: The soul def should define how to choose between
+  // these actions, and moving should be a normal action.
+  if (colRowCmds.length < 1 || probable.roll(3) === 0) {
+    moveSoul(gameState, probable, soul);
+    return;
+  }
+
+  return probable.pick(colRowCmds);
 }
 
+function getColRowCommands(
+  gameState: GameState,
+  probable,
+  soul: Soul,
+  colRow: ColRow,
+  targetTree: TargetTree
+): Array<Command> {
+  var box = getBoxAroundPosition({
+    center: colRow,
+    boxWidth: soul.sprite.width,
+    boxHeight: soul.sprite.height
+  });
+  var thingsInColRow = targetTree.search(box);
+  if (thingsInColRow.length < 1) {
+    return [];
+  }
+
+  // TODO: Some day be able to do stuff with anything
+  // the stack at this colRow instead of just the top?
+  // For now, filter out things that aren't on the same grid.
+  thingsInColRow = thingsInColRow.filter(
+    thing =>
+      (thing as Soul).gridContext &&
+      (thing as Soul).gridContext.id === soul.gridContext.id
+  );
+  if (thingsInColRow.length < 1) {
+    return [];
+  }
+
+  var cmdDefs: Array<CommandDef> = gameState.player.getInteractionsWithThing(
+    thingsInColRow[0]
+  );
+  return cmdDefs.map(curry(instantiateCmdFromDef)(soul, thingsInColRow, null));
+}
+
+*/
 function movePlayer(
   gameState: GameState,
   selectedGridIntersection: GridIntersection
@@ -215,6 +406,7 @@ function movePlayer(
   player.gridContext.colRow = selectedGridIntersection.colRow;
 }
 
+/*
 function moveSoul(gameState, probable, soul: Soul) {
   if (soul.id === 'player') {
     return;
@@ -224,7 +416,7 @@ function moveSoul(gameState, probable, soul: Soul) {
     return;
   }
 
-  var neighbors = getNeighboringGridPoints(
+  var neighbors = getNeighboringColRows(
     soul,
     findWhere(gameState.grids, { id: soul.gridContext.id })
   );
@@ -240,7 +432,7 @@ function moveSoul(gameState, probable, soul: Soul) {
     soul.gridContext.colRow = dest;
   }
 }
-
+*/
 // If maxDist === 1, this finds cardinally adjacent points.
 // If maxDist === Math.sqrt(2), this finds diagonally and cardinally
 // adjacent points.
@@ -249,37 +441,20 @@ function intersectionsAreAdjacent(maxDist: number, a: ColRow, b: ColRow) {
   return dist <= maxDist;
 }
 
-function getNeighboringGridPoints(soul: Soul, grid) {
-  var neighbors = [
-    [soul.gridContext.colRow[0] + 1, soul.gridContext.colRow[1]],
-    [soul.gridContext.colRow[0], soul.gridContext.colRow[1] + 1],
-    [soul.gridContext.colRow[0] - 1, soul.gridContext.colRow[1]],
-    [soul.gridContext.colRow[0], soul.gridContext.colRow[1] - 1]
-  ];
-  return neighbors.filter(isInGridBounds);
-
-  function isInGridBounds(neighbor) {
-    return (
-      neighbor[0] >= 0 &&
-      neighbor[0] < grid.rows[0].length &&
-      neighbor[1] >= 0 &&
-      neighbor[1] < grid.rows.length
-    );
-  }
+function runCommand(
+  gameState: GameState,
+  command: Command,
+  targetTree: TargetTree,
+  done: UpdateDone
+) {
+  command.cmdFn({ gameState, targetTree, removeSouls, cmd: command }, done);
 }
 
 // All execution paths in this function must call the callback.
-function runCommand(gameState: GameState, command: Command, done: Done) {
-  var cmd: CmdFn = cmdFnsForCmdTypes[command.cmdType];
-  if (cmd) {
-    cmd({ gameState, targetTree, removeSouls }, done);
-  }
-}
-
 function runCommands(
   commands: Array<Command>,
   gameState: GameState,
-  doneWithAnimationCompletionCallbacks: Done
+  doneWithAnimationCompletionCallbacks: UpdateDone
 ) {
   var q = queue(1);
   commands.forEach(queueRun);
@@ -290,9 +465,13 @@ function runCommands(
   }
 }
 
-function removeSouls(gameState: GameState, souls: Array<Soul>): void {
+function removeSouls(
+  gameState: GameState,
+  targetTree: TargetTree,
+  souls: Array<Soul>
+): void {
   var ids = pluck(souls, 'id');
-  souls.forEach(removeFromTargetTree);
+  souls.forEach(curry(removeFromTargetTree)(targetTree));
 
   // Find souls that match these ids, then splice them out of the array.
   for (var i = gameState.souls.length - 1; i >= 0; --i) {
@@ -302,7 +481,7 @@ function removeSouls(gameState: GameState, souls: Array<Soul>): void {
   }
 }
 
-function removeFromTargetTree(soul: Soul) {
+function removeFromTargetTree(targetTree: TargetTree, soul: Soul) {
   targetTree.remove(soul as Box);
 }
 

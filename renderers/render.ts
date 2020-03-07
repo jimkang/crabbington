@@ -4,9 +4,11 @@ var renderGrid = require('./render-grid');
 var renderSoul = require('./render-soul');
 var renderBlast = require('./render-blast');
 var renderUI = require('./render-ui');
+var Zoom = require('d3-zoom');
+var callNextTick = require('call-next-tick');
+
 import { renderMessage } from './render-message';
 import { renderAnimations } from './render-animations';
-var Zoom = require('d3-zoom');
 
 import { Soul, GameState } from '../types';
 
@@ -29,11 +31,13 @@ setUpZoom(draw);
 function render({
   gameState,
   onAdvance,
-  onMessageDismiss
+  onMessageDismiss,
+  shouldWaitForInteraction = true
 }: {
   gameState: GameState;
   onAdvance;
   onMessageDismiss: () => void;
+  shouldWaitForInteraction: boolean;
 }) {
   lastGameState = gameState;
 
@@ -57,6 +61,10 @@ function render({
 
   renderUI({ gameState, onAdvance });
   renderMessage({ message: gameState.displayMessage, onMessageDismiss });
+
+  if (!shouldWaitForInteraction) {
+    callNextTick(onAdvance, { gameState });
+  }
 
   function onInputBoardClick() {
     // Undo the zoom transforms before sending the clicks on.
