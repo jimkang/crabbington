@@ -30,7 +30,8 @@ Plan
 - Seeking movement
 - Fix bug in which intersection at which soul died still has action options for when that soul lived. - Done
 - Other guys hitting
-- hp
+- hp - Done
+- Diagonal bonk, diagonal take - Done
 
 Vague concepts to fit in if somehow the basics come together
 ---

@@ -45,6 +45,8 @@ var cmdFnsForCmdTypes: Record<string, CmdFn> = {
 // Not really a radius: More like half a square.
 const clickRadius = spriteSize / 3;
 
+const diagonalUnitLength = Math.sqrt(2);
+
 var turn = 0;
 
 function update({
@@ -145,7 +147,10 @@ function updateUsingGridSelection({
     selectedIntersection.colRow,
     player.gridContext.colRow
   );
-  var isAdjacent: boolean = pointsAreAdjacent(
+  // TODO: Long-range bonk item that passes a much
+  // higher value that diagonalUnitLength here.
+  var isAdjacent: boolean = intersectionsAreAdjacent(
+    diagonalUnitLength,
     selectedIntersection.colRow,
     player.gridContext.colRow
   );
@@ -161,8 +166,13 @@ function updateUsingGridSelection({
     gameState.uiOn = true;
   } else {
     if (!isPlayerIntersection) {
+      const isCardinallyAdjacent: boolean = intersectionsAreAdjacent(
+        1,
+        selectedIntersection.colRow,
+        player.gridContext.colRow
+      );
       if (
-        isAdjacent &&
+        isCardinallyAdjacent &&
         gameState.player.canMoveHereFn({
           getTargetsAtColRow: curry(getTargetsAtColRow)(gameState),
           colRow: selectedIntersection.colRow
@@ -231,10 +241,12 @@ function moveSoul(gameState, probable, soul: Soul) {
   }
 }
 
-// Cardinally adjacent, that is.
-function pointsAreAdjacent(a, b) {
+// If maxDist === 1, this finds cardinally adjacent points.
+// If maxDist === Math.sqrt(2), this finds diagonally and cardinally
+// adjacent points.
+function intersectionsAreAdjacent(maxDist: number, a: ColRow, b: ColRow) {
   var dist = math.getVectorMagnitude(math.subtractPairs(a, b));
-  return dist === 1;
+  return dist <= maxDist;
 }
 
 function getNeighboringGridPoints(soul: Soul, grid) {

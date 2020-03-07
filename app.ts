@@ -62,6 +62,7 @@ function followRoute({ seed }) {
     commands?: Array<Command>;
   }) {
     if (gameState.allowAdvance) {
+      resetGameStateForNewTurn(gameState);
       update({
         gameState,
         recentClickX,
@@ -77,6 +78,10 @@ function followRoute({ seed }) {
 // Once it's displayed, get rid of it.
 function onMessageDismiss() {
   theGameState.displayMessage = '';
+}
+
+function resetGameStateForNewTurn(gameState: GameState) {
+  gameState.actionChoices.length = 0;
 }
 
 function reportTopLevelError(msg, url, lineNo, columnNo, error) {
