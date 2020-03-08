@@ -22,7 +22,7 @@ Plan
 - Hitting
 - Sleeping
 - Easier clicking - Done
-- Make action buttons easier to notice as button.
+- Make action buttons easier to notice as button. -Done-ish
 - Make figures slightly smaller when doing semantic zoom out
 - "Find me" HUD button
 - Victory condition item - Done

@@ -32,11 +32,13 @@ function render({
   gameState,
   onAdvance,
   onMessageDismiss,
+  onNewGame,
   shouldWaitForInteraction = true
 }: {
   gameState: GameState;
   onAdvance;
   onMessageDismiss: () => void;
+  onNewGame: () => void;
   shouldWaitForInteraction: boolean;
 }) {
   lastGameState = gameState;
@@ -59,7 +61,7 @@ function render({
   inputBoard.on('click.input', null);
   inputBoard.on('click.input', onInputBoardClick);
 
-  renderUI({ gameState, onAdvance });
+  renderUI({ gameState, onAdvance, onNewGame });
   renderMessage({ message: gameState.displayMessage, onMessageDismiss });
 
   if (!shouldWaitForInteraction) {

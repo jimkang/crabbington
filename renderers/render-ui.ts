@@ -9,6 +9,7 @@ var controlsLayer = d3.select('#controls-layer');
 var helpLayer = d3.select('#help-layer');
 var closeHelpButton = d3.select('#close-help-button');
 var openHelpButton = d3.select('#open-help-button');
+var newGameButton = d3.select('#new-game-button');
 var buttonRoot = controlsLayer.select('.button-list');
 
 var playerCommandQueue: Array<Command> = [];
@@ -19,21 +20,25 @@ openHelpButton.on('click.open-help', onOpenHelpClick);
 function onCloseHelpClick() {
   helpLayer.classed('hidden', true);
   openHelpButton.classed('hidden', false);
+  newGameButton.classed('hidden', false);
   concludeUI();
 }
 
 function onOpenHelpClick() {
   helpLayer.classed('hidden', false);
   openHelpButton.classed('hidden', true);
+  newGameButton.classed('hidden', true);
   concludeUI();
 }
 
 function renderUI({
   gameState,
-  onAdvance
+  onAdvance,
+  onNewGame
 }: {
   gameState: GameState;
   onAdvance;
+  onNewGame;
 }) {
   playerCommandQueue.length = 0;
 
@@ -51,7 +56,8 @@ function renderUI({
     .text(accessor('name'))
     .on('click', onClickChoice);
 
-  console.log('cmdChoices', gameState.cmdChoices);
+  newGameButton.on('click', onNewGame);
+
   controlsLayer.classed('hidden', !gameState.uiOn);
 
   function onClickChoice(cmd: Command) {

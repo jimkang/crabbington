@@ -82,6 +82,12 @@ body {
   min-width: 44px;
 }
 
+#ui-board #controls-layer button {
+  font-size: 2em;
+  border-width: 4px;
+  animation: glow 2s infinite;
+}
+
 #ui-board button.close-message-button {
   margin-top: 0.5em;
   margin-bottom: 0;
@@ -115,4 +121,12 @@ body {
   font-size: 0.5em;
   color: #888;
   z-index: 1;
+}
+
+@keyframes glow {
+  0% { box-shadow: #fa7147 0 0 2px; }
+  33% { box-shadow: #fa7147 0 0 20px; }
+  50% { box-shadow: #fa7147 0 0 25px; }
+  67% { box-shadow: #fa7147 0 0 20px; }
+  100% { box-shadow: #fa7147 0 0 2px; }
 }

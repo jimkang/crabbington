@@ -99,10 +99,32 @@ function followRoute({ seed }) {
         gameState,
         onMessageDismiss,
         onAdvance: advance,
+        onNewGame: restartGame,
         shouldWaitForInteraction: renderShouldWaitToAdvanceToNextUpdate
       });
     }
   }
+}
+
+function restartGame() {
+  theGameState.allowAdvance = true;
+  theGameState.animations = [];
+  theGameState.ephemerals = { blasts: [] };
+  theGameState.gridsInit = false;
+  theGameState.uiOn = false;
+  theGameState.cmdChoices.length = 0;
+  theGameState.cmdQueue.length = 0;
+  theGameState.lastClickedThingIds.length = 0;
+  theGameState.gameWon = false;
+  theGameState.deathNoticeSent = false;
+  theGameState.turn = 0;
+
+  theGameState.soulTracker.removeSouls(
+    targetTree,
+    theGameState.soulTracker.getSouls()
+  );
+
+  routeState.removeFromRoute('seed');
 }
 
 // Once it's displayed, get rid of it.
