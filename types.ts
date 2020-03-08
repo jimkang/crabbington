@@ -45,24 +45,20 @@ export interface Command extends CommandDef {
   params?;
 }
 
-// Done should be called when the command is completely
-// done updating state. If it has animations, it should
-// usually wait until those are done before calling done().
 export interface CmdFn {
-  (CmdParams, done: Done): void;
+  (CmdParams): void;
 }
 
 export interface CmdParams {
   gameState: GameState;
-  targetTree;
+  targetTree: TargetTree;
   // TODO: Define type that encompassing all the
   // things that can come from the targetTree.
-  removeSouls: SoulProcessor;
   cmd: Command;
 }
 
 export interface SoulProcessor {
-  (gameState: GameState, souls: Array<Soul>): void;
+  (targetTree: TargetTree, souls: Array<Soul>): void;
 }
 
 export interface SoulDef {
@@ -110,17 +106,10 @@ export interface Sprite {
 }
 
 export type Done = (Error, any?) => void;
-export interface UpdateDone {
-  (
-    error: Error,
-    {
-      shouldAdvanceToNextSoul,
-      renderShouldWaitToAdvanceToNextUpdate
-    }: {
-      shouldAdvanceToNextSoul: boolean;
-      renderShouldWaitToAdvanceToNextUpdate: boolean;
-    }
-  ): void;
+
+export interface UpdateResult {
+  shouldAdvanceToNextSoul: boolean;
+  renderShouldWaitToAdvanceToNextUpdate: boolean;
 }
 
 export interface AnimationDef {
@@ -134,19 +123,31 @@ export interface GameState {
   allowAdvance: boolean;
   uiOn: boolean;
   cmdChoices: Array<Command>;
+  cmdQueue: Array<Command>;
   animations: Array<AnimationDef>;
   ephemerals: {
     blasts: Array<BlastDef>;
   };
   gridsInit: boolean;
   grids?: Array<Grid>;
-  souls?: Array<Soul>;
-  currentActingSoulIndex: number;
+  soulTracker: SoulTracker;
   player?: Soul;
   lastClickedThingIds: Array<string>;
   displayMessage?: string;
   gameWon: boolean;
   turn: number;
+}
+
+interface AddSouls {
+  (grids: Array<Grid>, targetTree: TargetTree, souls: Array<Soul>): void;
+}
+
+export interface SoulTracker {
+  addSouls: AddSouls;
+  removeSouls: SoulProcessor;
+  getSouls: () => Array<Soul>;
+  getActingSoul: () => Soul;
+  incrementActorIndex: () => void;
 }
 
 export interface Grid {

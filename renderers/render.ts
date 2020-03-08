@@ -20,7 +20,7 @@ var inputBoard = d3.select('#input-board');
 // var labelLayer = d3.select('#labels-layer');
 var imageContext = imageBoard.node().getContext('2d', { alpha: false });
 
-var lastGameState;
+var lastGameState: GameState;
 var currentTransform = Zoom.zoomIdentity;
 // If changing window size means that board size needs to change, consider
 // putting this in render();
@@ -84,9 +84,9 @@ function draw() {
       playerGridId: player.gridContext.id
     })
   );
-  lastGameState.souls.forEach(
-    curry(renderSoul)({ imageContext, transform: currentTransform })
-  );
+  lastGameState.soulTracker
+    .getSouls()
+    .forEach(curry(renderSoul)({ imageContext, transform: currentTransform }));
   lastGameState.ephemerals.blasts.forEach(
     curry(renderBlast)({ imageContext, transform: currentTransform })
   );

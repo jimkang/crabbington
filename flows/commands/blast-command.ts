@@ -1,9 +1,7 @@
+var callNextTick = require('call-next-tick');
 import { Box, Done, CmdParams, Filter, Soul } from '../../types';
 
-export function blastCmd(
-  { gameState, targetTree, removeSouls, cmd }: CmdParams,
-  doneWithAnimationCompletionCallback: Done
-) {
+export function blastCmd({ gameState, targetTree, cmd }: CmdParams) {
   // This probably should be based on something other than the sprite size.
   var blastBox: Box = {
     minX: cmd.actor.x - 3 * cmd.actor.sprite.width,
@@ -30,8 +28,8 @@ export function blastCmd(
   });
 
   function updateStatePostBlastAnimation(notifyAnimationDone: Done) {
-    removeSouls(gameState, thingsToRemove);
-    doneWithAnimationCompletionCallback(null, notifyAnimationDone);
+    gameState.soulTracker.removeSouls(targetTree, thingsToRemove);
+    callNextTick(notifyAnimationDone);
   }
 }
 

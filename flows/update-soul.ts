@@ -3,7 +3,11 @@ import { Soul, Grid, GridIntersection, TargetTree, Box } from '../types';
 var findWhere = require('lodash.findwhere');
 import { getBoxAroundPosition } from '../ops/box-ops';
 
-function updateSoul(grids: Array<Grid>, targetTree: TargetTree, soul: Soul) {
+export function updateSoul(
+  grids: Array<Grid>,
+  targetTree: TargetTree,
+  soul: Soul
+) {
   // Update position properties.
   var grid = findWhere(grids, { id: soul.gridContext.id });
   if (!grid) {
@@ -30,5 +34,3 @@ function updateSoul(grids: Array<Grid>, targetTree: TargetTree, soul: Soul) {
   // Update it in the search tree.
   targetTree.updateItemBox(soul as Box, box);
 }
-
-module.exports = updateSoul;

@@ -61,7 +61,8 @@ function renderUI({
 
   concludeUI = function advanceWithCommands() {
     gameState.uiOn = false;
-    onAdvance({ gameState, commands: playerCommandQueue });
+    gameState.cmdQueue = playerCommandQueue;
+    onAdvance({ gameState });
   };
 
   // Hidden by default so that it can't be clicked before

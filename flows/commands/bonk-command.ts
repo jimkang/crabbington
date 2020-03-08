@@ -1,9 +1,7 @@
-import { Done, CmdParams, Soul } from '../../types';
+import { CmdParams, Soul, Done } from '../../types';
+var callNextTick = require('call-next-tick');
 
-export function bonkCmd(
-  { gameState, removeSouls, cmd }: CmdParams,
-  doneWithAnimationCompletionCallback: Done
-) {
+export function bonkCmd({ gameState, targetTree, cmd }: CmdParams) {
   var target: Soul = cmd.targets[0];
   gameState.animations.push({
     type: 'bonk',
@@ -21,8 +19,8 @@ export function bonkCmd(
       console.log('New hp for', target.id, target.hp, '/', target.maxHP);
     }
     if (target.hp < 1) {
-      removeSouls(gameState, [target]);
+      gameState.soulTracker.removeSouls(targetTree, [target]);
     }
-    doneWithAnimationCompletionCallback(null, notifyAnimationDone);
+    callNextTick(notifyAnimationDone);
   }
 }
