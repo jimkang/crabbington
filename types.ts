@@ -135,6 +135,7 @@ export interface GameState {
   lastClickedThingIds: Array<string>;
   displayMessage?: string;
   gameWon: boolean;
+  deathNoticeSent: boolean;
   turn: number;
 }
 

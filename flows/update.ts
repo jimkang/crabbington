@@ -53,6 +53,25 @@ export function update({
   probable;
   targetTree: TargetTree;
 }): UpdateResult {
+  if (!gameState.gameWon && gameWon(gameState)) {
+    gameState.displayMessage =
+      "With the grail to sleep in, you are assured as much safe, restful sleep as you'd like for the rest of your life. You have won! Feel free to hang out as long as you'd like, though.";
+    gameState.gameWon = true;
+    return {
+      shouldAdvanceToNextSoul: true,
+      renderShouldWaitToAdvanceToNextUpdate: false
+    };
+  }
+  if (!gameState.deathNoticeSent && gameState.player.hp < 1) {
+    gameState.displayMessage =
+      'You have died without finding the shell of your dreams.<p>Hit New Game to play another game or reload the page to play this exact game again. (Or just close the tab if this all makes you feel sad.)</p>';
+    gameState.deathNoticeSent = true;
+    return {
+      shouldAdvanceToNextSoul: true,
+      renderShouldWaitToAdvanceToNextUpdate: true
+    };
+  }
+
   // If there are commands on the queue, run them
   // all (one per update call) until they're all run.
   // TODO: Actually test that multiple cmds case.
@@ -113,16 +132,6 @@ function specificToPlayerUpdate({
   recentClickY: number;
   targetTree: TargetTree;
 }): UpdateResult {
-  if (!gameState.gameWon && gameWon(gameState)) {
-    gameState.displayMessage =
-      "With the grail to sleep in, you are assured as much safe, restful sleep as you'd like for the rest of your life. You have won! Feel free to hang out as long as you'd like, though.";
-    gameState.gameWon = true;
-    return {
-      shouldAdvanceToNextSoul: true,
-      renderShouldWaitToAdvanceToNextUpdate: false
-    };
-  }
-
   // Find out if something relevant got clicked.
   // Things getting clicked are a player-specific thing.
   if (

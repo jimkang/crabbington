@@ -28,6 +28,7 @@ var theGameState: GameState = {
   cmdQueue: [],
   lastClickedThingIds: [],
   gameWon: false,
+  deathNoticeSent: false,
   soulTracker: createSoulTracker(),
   turn: 0
 };

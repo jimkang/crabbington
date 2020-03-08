@@ -9,7 +9,7 @@ export function blastCmd({ gameState, targetTree, cmd }: CmdParams) {
     minY: cmd.actor.y - cmd.params.blastSize * cmd.actor.sprite.height,
     maxY: cmd.actor.y + cmd.params.blastSize * cmd.actor.sprite.height
   };
-  var thingsToRemove = getTargetsInBox({
+  var thingsToHit = getTargetsInBox({
     targetTree,
     filter: isBlastable,
     box: blastBox
@@ -27,13 +27,20 @@ export function blastCmd({ gameState, targetTree, cmd }: CmdParams) {
   });
 
   function updateStatePostBlastAnimation(notifyAnimationDone: Done) {
-    gameState.soulTracker.removeSouls(targetTree, thingsToRemove);
+    thingsToHit.forEach(damage);
+    gameState.soulTracker.removeSouls(targetTree, thingsToHit.filter(isDead));
     callNextTick(notifyAnimationDone);
   }
 
   function isBlastable(thing) {
     // For now, only blast other souls.
     return thing.id !== cmd.actor.id;
+  }
+
+  function damage(thing) {
+    if (thing.hp !== undefined) {
+      thing.hp -= 5;
+    }
   }
 }
 
@@ -53,4 +60,8 @@ function getTargetsInBox({
     targets = targets.filter(filter);
   }
   return targets;
+}
+
+function isDead(thing) {
+  return thing.hp !== undefined && thing.hp < 1;
 }
