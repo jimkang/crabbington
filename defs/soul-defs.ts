@@ -423,7 +423,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    getInteractionsWithThing: getMeanGuyInteractionsWithThing
+    getInteractionsWithThing: getGuyInteractionsWithThing
   },
   {
     type: 'trilby',
