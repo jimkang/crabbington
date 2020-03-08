@@ -61,7 +61,7 @@ function renderUI({
 
   concludeUI = function advanceWithCommands() {
     gameState.uiOn = false;
-    gameState.cmdQueue = playerCommandQueue;
+    gameState.cmdQueue = gameState.cmdQueue.concat(playerCommandQueue);
     onAdvance({ gameState });
   };
 

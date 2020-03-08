@@ -26,8 +26,8 @@ import {
 
 import { spriteSize } from '../sizes';
 import { getBoxAroundCenter, getBoxAroundPosition } from '../ops/box-ops';
-import { sortVectorsByCloseness } from '../ops/dist-ops';
 import { instantiateCmdFromDef } from './commands/commands';
+import { moveCmd } from './commands/move-command';
 import { getNeighboringColRows } from '../ops/grid-ops';
 import { getLastClickedSoul } from '../ops/game-state-ops';
 
@@ -35,6 +35,12 @@ import { getLastClickedSoul } from '../ops/game-state-ops';
 const clickRadius = spriteSize / 3;
 
 const diagonalUnitLength = Math.sqrt(2);
+
+var moveCmdDef: CommandDef = {
+  id: 'move',
+  name: 'Move',
+  cmdFn: moveCmd
+};
 
 // update() will stop and call back any time
 // a render is needed.
@@ -242,13 +248,13 @@ function updateUsingClickedIntersection({
           colRow: selectedIntersection.colRow
         })
       ) {
-        // TODO: Moving the player should be a Command.
-        movePlayer(gameState, selectedIntersection);
-        updateSoul(gameState.grids, targetTree, actor);
-        //let { error } = await ep(haveSoulsReact, gameState, probable);
-        //if (error) {
-        //  handleError(error);
-        //}
+        var moveCmd: Command = instantiateCmdFromDef(
+          actor,
+          [],
+          { destColRow: selectedIntersection.colRow },
+          moveCmdDef
+        );
+        gameState.cmdQueue.push(moveCmd);
       }
     }
     // Else: Other interactions on player intersection?
@@ -364,7 +370,6 @@ function getColRowCommands(
   return cmdDefs.map(curry(instantiateCmdFromDef)(soul, thingsInColRow, null));
 }
 
-*/
 function movePlayer(
   gameState: GameState,
   selectedGridIntersection: GridIntersection
@@ -378,7 +383,6 @@ function movePlayer(
   player.gridContext.colRow = selectedGridIntersection.colRow;
 }
 
-/*
 function moveSoul(gameState, probable, soul: Soul) {
   if (soul.id === 'player') {
     return;
@@ -411,20 +415,6 @@ function moveSoul(gameState, probable, soul: Soul) {
 function intersectionsAreAdjacent(maxDist: number, a: ColRow, b: ColRow) {
   var dist = math.getVectorMagnitude(math.subtractPairs(a, b));
   return dist <= maxDist;
-}
-
-function getFacingDir(
-  facingsAllowed: Array<Pt>,
-  srcGridContext: GridContext,
-  dest: ColRow
-): [number, number] {
-  var dir: [number, number] = math.subtractPairs(dest, srcGridContext.colRow);
-  if (facingsAllowed) {
-    // Is it really worth doing this much work to make
-    // the guy face the right way?
-    dir = sortVectorsByCloseness(dir, facingsAllowed)[0];
-  }
-  return dir;
 }
 
 function gameWon(gameState: GameState): boolean {
