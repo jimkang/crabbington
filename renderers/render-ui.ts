@@ -7,10 +7,13 @@ import { Command, GameState } from '../types';
 // var uiBoard = d3.select('#ui-board');
 var controlsLayer = d3.select('#controls-layer');
 var helpLayer = d3.select('#help-layer');
+var hudLayer = d3.select('#hud-layer');
 var closeHelpButton = d3.select('#close-help-button');
 var openHelpButton = d3.select('#open-help-button');
 var newGameButton = d3.select('#new-game-button');
 var buttonRoot = controlsLayer.select('.button-list');
+var currentHPSpan = hudLayer.select('#current-hp');
+var maxHPSpan = hudLayer.select('#max-hp');
 
 var playerCommandQueue: Array<Command> = [];
 var concludeUI;
@@ -20,14 +23,14 @@ openHelpButton.on('click.open-help', onOpenHelpClick);
 function onCloseHelpClick() {
   helpLayer.classed('hidden', true);
   openHelpButton.classed('hidden', false);
-  newGameButton.classed('hidden', false);
+  hudLayer.classed('hidden', false);
   concludeUI();
 }
 
 function onOpenHelpClick() {
   helpLayer.classed('hidden', false);
   openHelpButton.classed('hidden', true);
-  newGameButton.classed('hidden', true);
+  hudLayer.classed('hidden', true);
   concludeUI();
 }
 
@@ -57,6 +60,9 @@ function renderUI({
     .on('click', onClickChoice);
 
   newGameButton.on('click', onNewGame);
+
+  currentHPSpan.text(gameState.player.hp);
+  maxHPSpan.text(gameState.player.maxHP);
 
   controlsLayer.classed('hidden', !gameState.uiOn);
 

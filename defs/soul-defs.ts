@@ -158,7 +158,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
-    hitDice: '1d8'
+    hitDice: '3d6'
   },
   {
     type: 'cup',

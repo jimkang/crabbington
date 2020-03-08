@@ -18,9 +18,10 @@
       </section>
 
       <section id="ui-board" class="centered-col">
-        <section id="hud-layer">
-          <button id="open-help-button" class="clickable hidden">Help</button>
-          <button id="new-game-button" class="clickable hidden">New Game</button>
+        <section id="hud-layer" class="hidden">
+          <button id="open-help-button" class="clickable">Help</button>
+          <button id="new-game-button" class="clickable">New Game</button>
+          <span class="hp-container">Health: <span id="current-hp"></span> out of <span id="max-hp"></span> hit points.</span>
         </section>
         <div id="controls-layer" class="hidden">
           <ul class="button-list"></ul>
@@ -40,13 +41,11 @@
             <p><strong>Pan around</strong> by clicking and dragging.</p>
             <p><strong>Move</strong> by clicking spaces adjacent to yourself.</p>
             <p>
-              <strong>Click yourself</strong> to see action options. Currently,
-              there is only one: blast. Blast will kill any enemies in the blast
-              radius.
-            </p>
+              <strong>Click</strong> neighboring spots to see what your options are. If there are any, they'll come up in the form of buttons like "Take" and "Bonk".</p>
+            <p>You are trying to get the Grail because you have heard it is the greatest possible shell a hermit crab could have.</p>
             <p>
-              (Some levels may not be winnable. Just
-              <strong>reload the browser</strong> if you don't like the level.)
+              Some levels may not be winnable. Just
+              <strong>reload the browser</strong> if you don't like the level. Good luck!
             </p>
           </div>
           <button id="close-help-button" class="clickable hidden">OK!</button>

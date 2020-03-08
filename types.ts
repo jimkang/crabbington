@@ -55,6 +55,7 @@ export interface CmdParams {
   // TODO: Define type that encompassing all the
   // things that can come from the targetTree.
   cmd: Command;
+  probable;
 }
 
 export interface SoulProcessor {

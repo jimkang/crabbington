@@ -34,7 +34,7 @@ Plan
 - Diagonal bonk, diagonal take - Done
 - Death check - Done
 - Guys should drop items when they die
-- Explain goal
+- Explain goal - Done
 
 Vague concepts to fit in if somehow the basics come together
 ---

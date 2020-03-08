@@ -86,7 +86,7 @@ export function update({
     // any animations it does during the render phase completes.
     // So, updates can sometimes happen during the render run
     // following this update run.
-    cmd.cmdFn({ gameState, targetTree, cmd });
+    cmd.cmdFn({ gameState, targetTree, cmd, probable });
     return {
       shouldAdvanceToNextSoul: false,
       renderShouldWaitToAdvanceToNextUpdate: false
@@ -109,7 +109,7 @@ export function update({
       targetTree
     );
     if (actionCmd) {
-      actionCmd.cmdFn({ gameState, targetTree, cmd: actionCmd });
+      actionCmd.cmdFn({ gameState, targetTree, cmd: actionCmd, probable });
     }
 
     return {
