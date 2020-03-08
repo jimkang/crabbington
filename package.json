@@ -1,6 +1,6 @@
 {
   "name": "crabbington",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "This is my 2020 7DRL attempt!",
   "main": "index.js",
   "private": true,
