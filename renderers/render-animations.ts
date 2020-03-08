@@ -10,7 +10,15 @@ var animationProcsForTypes = {
   bonk: animateBonk
 };
 
-export function renderAnimations({ gameState, onAdvance, draw }: { gameState: GameState, onAdvance, draw }) {
+export function renderAnimations({
+  gameState,
+  onAdvance,
+  draw
+}: {
+  gameState: GameState;
+  onAdvance;
+  draw;
+}) {
   gameState.allowAdvance = false;
   var q = queue(1);
   gameState.animations.forEach(queueAnimation);

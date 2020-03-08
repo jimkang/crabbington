@@ -1,7 +1,8 @@
 import { getCanMoveHereFn } from './can-move-fns';
 import { randomMove } from './moves';
 import { spriteSize } from '../sizes';
-import { SoulDef } from '../types';
+import { SoulDef, CommandDef } from '../types';
+import { cmdDefsById } from '../flows/commands/commands';
 
 // New entry macro: @e
 var defList: Array<SoulDef> = [
@@ -19,6 +20,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
+    getInteractionsWithThing: getGuyInteractionsWithThing
   },
   {
     type: 'basicShell',
@@ -91,6 +93,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
+    getInteractionsWithThing: getGuyInteractionsWithThing
   },
   {
     type: 'cat',
@@ -106,6 +109,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
+    getInteractionsWithThing: getGuyInteractionsWithThing
   },
   {
     type: 'cloud',
@@ -122,6 +126,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-air'],
     hitDice: '1d8',
+    getInteractionsWithThing: getGuyInteractionsWithThing
   },
   {
     type: 'corn',
@@ -137,6 +142,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
+    getInteractionsWithThing: getGuyInteractionsWithThing
   },
   // TODO: Get sleep, other animation in.
   {
@@ -152,7 +158,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     allowedGrids: ['grid-figures'],
-    hitDice: '1d8',
+    hitDice: '1d8'
   },
   {
     type: 'cup',
@@ -182,6 +188,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
+    getInteractionsWithThing: getMeanGuyInteractionsWithThing
   },
   {
     type: 'fancyShell',
@@ -337,6 +344,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
+    getInteractionsWithThing: getGuyInteractionsWithThing,
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -367,6 +375,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
+    getInteractionsWithThing: getGuyInteractionsWithThing
   },
   {
     type: 'tearDrop',
@@ -382,6 +391,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
+    getInteractionsWithThing: getGuyInteractionsWithThing,
     facingsAllowed: [[1, 0], [-1, 0]],
     itemRole: { itemPositioningStyle: 'shell' }
   },
@@ -413,6 +423,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
+    getInteractionsWithThing: getMeanGuyInteractionsWithThing
   },
   {
     type: 'trilby',
@@ -453,7 +464,7 @@ var defList: Array<SoulDef> = [
       hitRadius: spriteSize * 0.75
     },
     facingsAllowed: [[1, 0]],
-    allowedGrids: ['grid-figures'],
+    allowedGrids: ['grid-figures']
   },
   {
     type: 'worm',
@@ -469,6 +480,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-air'],
     hitDice: '1d8',
+    getInteractionsWithThing: getGuyInteractionsWithThing,
     itemRole: { itemPositioningStyle: 'shell' }
   },
   {
@@ -495,17 +507,41 @@ function addToDict(def: SoulDef) {
   soulDefs[def.type] = def;
 }
 
-function getPlayerInteractionsWithThing(thing): Array<string> {
+function getPlayerInteractionsWithThing(thing): Array<CommandDef> {
   if (thing.type && thing.type === 'player') {
-    return ['blast'];
+    return [cmdDefsById.blast];
   }
   if (thing.categories) {
     if (thing.categories.includes('item')) {
-      return ['take'];
+      return [cmdDefsById.take];
     }
     if (thing.categories.includes('guy')) {
-      return ['bonk'];
+      return [cmdDefsById.bonk];
     }
   }
   return [];
+}
+
+function getGuyInteractionsWithThing(thing): Array<CommandDef> {
+  if (thing.categories) {
+    if (thing.categories.includes('item')) {
+      return [cmdDefsById.take];
+    }
+    if (thing.categories.includes('guy')) {
+      return [cmdDefsById.bonk];
+    }
+  }
+  return [];
+}
+
+function getMeanGuyInteractionsWithThing(thing): Array<CommandDef> {
+  if (thing.categories) {
+    if (thing.categories.includes('item')) {
+      return [cmdDefsById.take];
+    }
+    if (thing.categories.includes('guy')) {
+      return [cmdDefsById.bonk, cmdDefsById.take];
+    }
+  }
+  return [cmdDefsById.smallBlast];
 }

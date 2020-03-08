@@ -1,31 +1,26 @@
-import { Done, CmdParams, Soul } from '../../types';
-import { getLastClickedSoul } from '../../tasks/game-state-ops';
+import { CmdParams, Soul, Done } from '../../types';
+var callNextTick = require('call-next-tick');
 
-// TODO: Make this work symmetrically.
-export function bonkCmd(
-  { gameState, removeSouls }: CmdParams,
-  doneWithAnimationCompletionCallback: Done
-) {
-  var soul: Soul = getLastClickedSoul(gameState);
-  console.log('bonking:', soul.id);
+export function bonkCmd({ gameState, targetTree, cmd }: CmdParams) {
+  var target: Soul = cmd.targets[0];
   gameState.animations.push({
     type: 'bonk',
     custom: {
-      bonkerSoul: gameState.player,
-      bonkeeSoul: soul
+      bonkerSoul: cmd.actor,
+      bonkeeSoul: target
     },
     duration: 900,
     postAnimationGameStateUpdater: updateStatePostBonkAnimation
   });
 
   function updateStatePostBonkAnimation(notifyAnimationDone: Done) {
-    if (!isNaN(soul.hp)) {
-      soul.hp -= 3;
-      console.log('New hp for', soul.id, soul.hp, '/', soul.maxHP);
+    if (!isNaN(target.hp)) {
+      target.hp -= 3;
+      console.log('New hp for', target.id, target.hp, '/', target.maxHP);
     }
-    if (soul.hp < 1) {
-      removeSouls(gameState, [soul]);
+    if (target.hp < 1) {
+      gameState.soulTracker.removeSouls(targetTree, [target]);
     }
-    doneWithAnimationCompletionCallback(null, notifyAnimationDone);
+    callNextTick(notifyAnimationDone);
   }
 }

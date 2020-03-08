@@ -4,9 +4,11 @@ var renderGrid = require('./render-grid');
 var renderSoul = require('./render-soul');
 var renderBlast = require('./render-blast');
 var renderUI = require('./render-ui');
+var Zoom = require('d3-zoom');
+var callNextTick = require('call-next-tick');
+
 import { renderMessage } from './render-message';
 import { renderAnimations } from './render-animations';
-var Zoom = require('d3-zoom');
 
 import { Soul, GameState } from '../types';
 
@@ -18,7 +20,7 @@ var inputBoard = d3.select('#input-board');
 // var labelLayer = d3.select('#labels-layer');
 var imageContext = imageBoard.node().getContext('2d', { alpha: false });
 
-var lastGameState;
+var lastGameState: GameState;
 var currentTransform = Zoom.zoomIdentity;
 // If changing window size means that board size needs to change, consider
 // putting this in render();
@@ -29,11 +31,13 @@ setUpZoom(draw);
 function render({
   gameState,
   onAdvance,
-  onMessageDismiss
+  onMessageDismiss,
+  shouldWaitForInteraction = true
 }: {
   gameState: GameState;
   onAdvance;
   onMessageDismiss: () => void;
+  shouldWaitForInteraction: boolean;
 }) {
   lastGameState = gameState;
 
@@ -58,6 +62,10 @@ function render({
   renderUI({ gameState, onAdvance });
   renderMessage({ message: gameState.displayMessage, onMessageDismiss });
 
+  if (!shouldWaitForInteraction) {
+    callNextTick(onAdvance, { gameState });
+  }
+
   function onInputBoardClick() {
     // Undo the zoom transforms before sending the clicks on.
     var recentClickX = currentTransform.invertX(d3.event.layerX);
@@ -76,9 +84,9 @@ function draw() {
       playerGridId: player.gridContext.id
     })
   );
-  lastGameState.souls.forEach(
-    curry(renderSoul)({ imageContext, transform: currentTransform })
-  );
+  lastGameState.soulTracker
+    .getSouls()
+    .forEach(curry(renderSoul)({ imageContext, transform: currentTransform }));
   lastGameState.ephemerals.blasts.forEach(
     curry(renderBlast)({ imageContext, transform: currentTransform })
   );

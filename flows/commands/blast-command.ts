@@ -1,37 +1,39 @@
+var callNextTick = require('call-next-tick');
 import { Box, Done, CmdParams, Filter, Soul } from '../../types';
 
-export function blastCmd(
-  { gameState, targetTree, removeSouls }: CmdParams,
-  doneWithAnimationCompletionCallback: Done
-) {
+export function blastCmd({ gameState, targetTree, cmd }: CmdParams) {
   // This probably should be based on something other than the sprite size.
   var blastBox: Box = {
-    minX: gameState.player.x - 3 * gameState.player.sprite.width,
-    maxX: gameState.player.x + 3 * gameState.player.sprite.width,
-    minY: gameState.player.y - 3 * gameState.player.sprite.height,
-    maxY: gameState.player.y + 3 * gameState.player.sprite.height
+    minX: cmd.actor.x - cmd.params.blastSize * cmd.actor.sprite.width,
+    maxX: cmd.actor.x + cmd.params.blastSize * cmd.actor.sprite.width,
+    minY: cmd.actor.y - cmd.params.blastSize * cmd.actor.sprite.height,
+    maxY: cmd.actor.y + cmd.params.blastSize * cmd.actor.sprite.height
   };
   var thingsToRemove = getTargetsInBox({
     targetTree,
     filter: isBlastable,
     box: blastBox
   });
-  console.log('blasting:', thingsToRemove);
   gameState.animations.push({
     type: 'blast',
     custom: {
-      cx: gameState.player.x,
-      cy: gameState.player.y,
-      r: 3 * gameState.player.sprite.width,
-      color: 'yellow'
+      cx: cmd.actor.x,
+      cy: cmd.actor.y,
+      r: cmd.params.blastSize * cmd.actor.sprite.width,
+      color: cmd.params.color
     },
     duration: 1000,
     postAnimationGameStateUpdater: updateStatePostBlastAnimation
   });
 
   function updateStatePostBlastAnimation(notifyAnimationDone: Done) {
-    removeSouls(gameState, thingsToRemove);
-    doneWithAnimationCompletionCallback(null, notifyAnimationDone);
+    gameState.soulTracker.removeSouls(targetTree, thingsToRemove);
+    callNextTick(notifyAnimationDone);
+  }
+
+  function isBlastable(thing) {
+    // For now, only blast other souls.
+    return thing.id !== cmd.actor.id;
   }
 }
 
@@ -51,9 +53,4 @@ function getTargetsInBox({
     targets = targets.filter(filter);
   }
   return targets;
-}
-
-function isBlastable(thing) {
-  // For now, only blast other souls.
-  return thing.type && thing.type !== 'player';
 }

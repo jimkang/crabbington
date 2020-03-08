@@ -1,16 +1,12 @@
-var callNextTick = require('call-next-tick');
+import { CmdParams, Soul } from '../../types';
 
-import { Done, CmdParams, Soul } from '../../types';
-import { getLastClickedSoul } from '../../tasks/game-state-ops';
+export function takeCmd({ gameState, targetTree, cmd }: CmdParams) {
+  var items: Array<Soul> = cmd.targets;
 
-export function takeCmd({ gameState, removeSouls }: CmdParams, done: Done) {
-  var item: Soul = getLastClickedSoul(gameState);
-
-  if (item) {
-    gameState.player.items.push(item);
-    removeSouls(gameState, [item]);
+  if (items) {
+    cmd.actor.items = cmd.actor.items.concat(items);
+    gameState.soulTracker.removeSouls(targetTree, items);
   } else {
     throw new Error('Somehow no item to take.');
   }
-  callNextTick(done);
 }
