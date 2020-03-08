@@ -203,7 +203,7 @@ function updateUsingClickedIntersection({
   var cmdChoices: Array<Command> = [];
   if (isActorIntersection || isAdjacent) {
     let cmdDefs: Array<CommandDef> = thingsHit
-      .map(actor.getInteractionsWithThing)
+      .map(curry(actor.getInteractionsWithThing)(actor))
       .flat();
     // TODO: Pick appropriate targets; using getLastClickedSoul
     // is the cause of the bug in which there's sometimes
@@ -314,6 +314,7 @@ function getColRowCommands(
   }
 
   var cmdDefs: Array<CommandDef> = soul.getInteractionsWithThing(
+    soul,
     thingsInColRow[0]
   );
   return cmdDefs.map(curry(instantiateCmdFromDef)(soul, thingsInColRow, null));

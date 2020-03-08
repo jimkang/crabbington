@@ -29,6 +29,12 @@ export function blastCmd({ gameState, targetTree, cmd }: CmdParams) {
   function updateStatePostBlastAnimation(notifyAnimationDone: Done) {
     thingsToHit.forEach(damage);
     gameState.soulTracker.removeSouls(targetTree, thingsToHit.filter(isDead));
+
+    // TODO: Include actual bomb source in cmd.
+    var bombIndex = cmd.actor.items.findIndex(
+      item => item.type === 'redBomb' || item.type === 'blueBomb'
+    );
+    cmd.actor.items.splice(bombIndex, 1);
     callNextTick(notifyAnimationDone);
   }
 

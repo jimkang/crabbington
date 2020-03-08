@@ -67,7 +67,7 @@ export interface SoulDef {
   categories: Array<string>;
   move?: MoveFn;
   canMoveHereFn?: CanMoveHereFn;
-  getInteractionsWithThing?: (any) => Array<CommandDef>;
+  getInteractionsWithThing?: (Soul, any) => Array<CommandDef>;
   sprite: Sprite;
   allowedGrids: Array<string>;
   startingItemIds?: Array<string>;

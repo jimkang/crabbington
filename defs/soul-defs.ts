@@ -1,7 +1,7 @@
 import { getCanMoveHereFn } from './can-move-fns';
 import { randomMove } from './moves';
 import { spriteSize } from '../sizes';
-import { SoulDef, CommandDef } from '../types';
+import { Soul, SoulDef, CommandDef } from '../types';
 import { cmdDefsById } from '../flows/commands/commands';
 
 // New entry macro: @e
@@ -496,6 +496,34 @@ var defList: Array<SoulDef> = [
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
     itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'blueBomb',
+    categories: ['item'],
+    sprite: {
+      col: 0,
+      row: 35,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
+    itemRole: { itemPositioningStyle: 'shell' }
+  },
+  {
+    type: 'redBomb',
+    categories: ['item'],
+    sprite: {
+      col: 0,
+      row: 36,
+      width: spriteSize,
+      height: spriteSize,
+      hitRadius: spriteSize * 0.75
+    },
+    allowedGrids: ['grid-figures'],
+    hitDice: '1d8',
+    itemRole: { itemPositioningStyle: 'shell' }
   }
 ];
 
@@ -507,9 +535,16 @@ function addToDict(def: SoulDef) {
   soulDefs[def.type] = def;
 }
 
-function getPlayerInteractionsWithThing(thing): Array<CommandDef> {
+function getPlayerInteractionsWithThing(actor: Soul, thing): Array<CommandDef> {
   if (thing.type && thing.type === 'player') {
-    return [cmdDefsById.blast];
+    let interactions = [];
+    if (actor.items.some(isRedBomb)) {
+      interactions.push(cmdDefsById.smallBlast);
+    }
+    if (actor.items.some(isBlueBomb)) {
+      interactions.push(cmdDefsById.blast);
+    }
+    return interactions;
   }
   if (thing.categories) {
     if (thing.categories.includes('item')) {
@@ -522,7 +557,7 @@ function getPlayerInteractionsWithThing(thing): Array<CommandDef> {
   return [];
 }
 
-function getGuyInteractionsWithThing(thing): Array<CommandDef> {
+function getGuyInteractionsWithThing(actor: Soul, thing): Array<CommandDef> {
   if (thing.categories) {
     if (thing.categories.includes('item')) {
       return [cmdDefsById.take];
@@ -534,14 +569,34 @@ function getGuyInteractionsWithThing(thing): Array<CommandDef> {
   return [];
 }
 
-function getMeanGuyInteractionsWithThing(thing): Array<CommandDef> {
+function getMeanGuyInteractionsWithThing(
+  actor: Soul,
+  thing
+): Array<CommandDef> {
+  let interactions = [];
+  if (actor.items.some(isRedBomb)) {
+    interactions.push(cmdDefsById.smallBlast);
+  }
+  if (actor.items.some(isBlueBomb)) {
+    interactions.push(cmdDefsById.blast);
+  }
+
   if (thing.categories) {
     if (thing.categories.includes('item')) {
-      return [cmdDefsById.take];
+      interactions.push(cmdDefsById.take);
     }
     if (thing.categories.includes('guy')) {
-      return [cmdDefsById.bonk, cmdDefsById.take];
+      interactions.push(cmdDefsById.bonk);
+      interactions.push(cmdDefsById.take);
     }
   }
-  return [cmdDefsById.smallBlast];
+  return interactions;
+}
+
+function isRedBomb({ type }: Soul) {
+  return type === 'redBomb';
+}
+
+function isBlueBomb({ type }: Soul) {
+  return type === 'blueBomb';
 }

@@ -52,7 +52,9 @@ var figureTypeTableDef = {
     [1, 'soupCan'],
     [1, 'tinyShell'],
     [1, 'trilby'],
-    [1, 'twistyShell']
+    [1, 'twistyShell'],
+    [20, 'redBomb'],
+    [1, 'blueBomb']
   ]
 };
 
