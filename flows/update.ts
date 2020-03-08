@@ -26,7 +26,7 @@ import { getNeighboringColRows } from '../ops/grid-ops';
 import { getLastClickedSoul } from '../ops/game-state-ops';
 
 // Not really a radius: More like half a square.
-const clickRadius = spriteSize / 3;
+const clickRadius = spriteSize / 2;
 
 const diagonalUnitLength = Math.sqrt(2);
 
