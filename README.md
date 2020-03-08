@@ -35,6 +35,8 @@ Plan
 - Death check - Done
 - Guys should drop items when they die
 - Explain goal - Done
+- Don't trigger turns when an empty diagonal space is clicked.
+- Speed up time between turns.
 
 Vague concepts to fit in if somehow the basics come together
 ---
