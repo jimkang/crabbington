@@ -188,7 +188,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    getInteractionsWithThing: getGuyInteractionsWithThing
+    getInteractionsWithThing: getMeanGuyInteractionsWithThing
   },
   {
     type: 'fancyShell',
@@ -423,7 +423,7 @@ var defList: Array<SoulDef> = [
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    getInteractionsWithThing: getGuyInteractionsWithThing
+    getInteractionsWithThing: getMeanGuyInteractionsWithThing
   },
   {
     type: 'trilby',
@@ -532,4 +532,16 @@ function getGuyInteractionsWithThing(thing): Array<CommandDef> {
     }
   }
   return [];
+}
+
+function getMeanGuyInteractionsWithThing(thing): Array<CommandDef> {
+  if (thing.categories) {
+    if (thing.categories.includes('item')) {
+      return [cmdDefsById.take];
+    }
+    if (thing.categories.includes('guy')) {
+      return [cmdDefsById.bonk, cmdDefsById.take];
+    }
+  }
+  return [cmdDefsById.smallBlast];
 }

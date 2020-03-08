@@ -37,12 +37,12 @@ export interface CommandDef {
   id: string;
   name: string;
   cmdFn: CmdFn;
+  params?;
 }
 
 export interface Command extends CommandDef {
   actor?: Soul;
   targets?: Array<Soul>;
-  params?;
 }
 
 export interface CmdFn {

@@ -8,7 +8,18 @@ import { bonkCmd } from './bonk-command';
 import { moveCmd } from './move-command';
 
 export var cmdDefsById: Record<string, CommandDef> = {
-  blast: { id: 'blast', name: 'Blast', cmdFn: blastCmd },
+  blast: {
+    id: 'blast',
+    name: 'Blast',
+    cmdFn: blastCmd,
+    params: { blastSize: 3, color: 'yellow' }
+  },
+  smallBlast: {
+    id: 'smallBlast',
+    name: 'Blast',
+    cmdFn: blastCmd,
+    params: { blastSize: 1.5, color: 'red' }
+  },
   take: { id: 'take', name: 'Take', cmdFn: takeCmd },
   bonk: { id: 'bonk', name: 'Bonk', cmdFn: bonkCmd },
   move: { id: 'move', name: 'Move', cmdFn: moveCmd }
@@ -23,6 +34,11 @@ export function instantiateCmdFromDef(
   var instance: Command = cloneDeep(def);
   instance.actor = actor;
   instance.targets = targets;
-  instance.params = params;
+  if (params) {
+    if (!instance.params) {
+      instance.params = {};
+    }
+    Object.assign(instance.params, params);
+  }
   return instance;
 }
