@@ -53,8 +53,8 @@ var figureTypeTableDef = {
     [1, 'tinyShell'],
     [1, 'trilby'],
     [1, 'twistyShell'],
-    [20, 'redBomb'],
-    [1, 'blueBomb']
+    [10, 'redBomb'],
+    [5, 'blueBomb']
   ]
 };
 

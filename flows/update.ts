@@ -88,7 +88,7 @@ export function update({
     // following this update run.
     cmd.cmdFn({ gameState, targetTree, cmd, probable });
     return {
-      shouldAdvanceToNextSoul: false,
+      shouldAdvanceToNextSoul: true,
       renderShouldWaitToAdvanceToNextUpdate: false
     };
   }
