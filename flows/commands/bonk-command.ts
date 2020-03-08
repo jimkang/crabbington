@@ -1,5 +1,6 @@
 import { CmdParams, Soul, Done } from '../../types';
 var callNextTick = require('call-next-tick');
+import { killSouls } from '../../ops/kill-ops';
 
 export function bonkCmd({ gameState, targetTree, cmd, probable }: CmdParams) {
   var target: Soul = cmd.targets[0];
@@ -20,6 +21,7 @@ export function bonkCmd({ gameState, targetTree, cmd, probable }: CmdParams) {
     }
     if (target.hp < 1) {
       gameState.soulTracker.removeSouls(targetTree, [target]);
+      killSouls(gameState, targetTree, [target]);
     }
     callNextTick(notifyAnimationDone);
   }

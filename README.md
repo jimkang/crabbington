@@ -33,7 +33,7 @@ Plan
 - hp - Done
 - Diagonal bonk, diagonal take - Done
 - Death check - Done
-- Guys should drop items when they die
+- Guys should drop items when they die - Done
 - Explain goal - Done
 - Don't trigger turns when an empty diagonal space is clicked.
 - Speed up time between turns.

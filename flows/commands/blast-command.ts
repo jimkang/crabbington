@@ -1,5 +1,6 @@
 var callNextTick = require('call-next-tick');
 import { Box, Done, CmdParams, Filter, Soul } from '../../types';
+import { killSouls } from '../../ops/kill-ops';
 
 export function blastCmd({ gameState, targetTree, cmd }: CmdParams) {
   // This probably should be based on something other than the sprite size.
@@ -28,7 +29,7 @@ export function blastCmd({ gameState, targetTree, cmd }: CmdParams) {
 
   function updateStatePostBlastAnimation(notifyAnimationDone: Done) {
     thingsToHit.forEach(damage);
-    gameState.soulTracker.removeSouls(targetTree, thingsToHit.filter(isDead));
+    killSouls(gameState, targetTree, thingsToHit.filter(isDead));
 
     // TODO: Include actual bomb source in cmd.
     var bombIndex = cmd.actor.items.findIndex(
