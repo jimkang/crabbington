@@ -266,10 +266,11 @@ function getSoulAction(
   }
 
   // Get adjacent tiles, then get action choices.
-  var neighbors: Array<ColRow> = getNeighboringColRows(
+  var neighbors: Array<ColRow> = getNeighboringColRows({
     soul,
-    findWhere(gameState.grids, { id: soul.gridContext.id })
-  );
+    grid: findWhere(gameState.grids, { id: soul.gridContext.id }),
+    includeCorners: true
+  });
   var colRowCmds: Array<Command> = flatten(
     neighbors.map(
       curry(getColRowCommands)(gameState, probable, soul, targetTree)
@@ -326,10 +327,11 @@ function haveSoulPickMove(gameState, probable, soul: Soul): Command {
     return;
   }
 
-  var neighbors = getNeighboringColRows(
+  var neighbors = getNeighboringColRows({
     soul,
-    findWhere(gameState.grids, { id: soul.gridContext.id })
-  );
+    grid: findWhere(gameState.grids, { id: soul.gridContext.id }),
+    includeCorners: false // TODO: Souls that can cut corners.
+  });
   var destColRow: ColRow = move({
     soul,
     neighbors,

@@ -77,24 +77,30 @@ function followRoute({ seed }) {
     recentClickY?: number;
   }) {
     incrementTurn(gameState);
-    if (gameState.allowAdvance) {
-      let actor: Soul = gameState.soulTracker.getActingSoul();
-      let {
-        shouldAdvanceToNextSoul,
-        renderShouldWaitToAdvanceToNextUpdate
-      }: UpdateResult = update({
-        actor,
-        gameState,
-        recentClickX,
-        recentClickY,
-        probable,
-        targetTree
-      });
-      console.log(actor.id, 'update done.');
-      if (shouldAdvanceToNextSoul) {
-        gameState.soulTracker.incrementActorIndex();
-      }
+    if (!gameState.allowAdvance) {
+      return;
+    }
 
+    let actor: Soul = gameState.soulTracker.getActingSoul();
+    let {
+      shouldAdvanceToNextSoul,
+      renderShouldWaitToAdvanceToNextUpdate
+    }: UpdateResult = update({
+      actor,
+      gameState,
+      recentClickX,
+      recentClickY,
+      probable,
+      targetTree
+    });
+    //console.log(actor.id, 'update done.');
+    if (shouldAdvanceToNextSoul) {
+      gameState.soulTracker.incrementActorIndex();
+    }
+
+    window.requestAnimationFrame(callRender);
+
+    function callRender() {
       render({
         gameState,
         onMessageDismiss,

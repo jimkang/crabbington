@@ -1,12 +1,28 @@
 import { Soul, Grid, ColRow } from '../types';
 
-export function getNeighboringColRows(soul: Soul, grid: Grid): Array<ColRow> {
+export function getNeighboringColRows({
+  soul,
+  grid,
+  includeCorners = false
+}: {
+  soul: Soul;
+  grid: Grid;
+  includeCorners: boolean;
+}): Array<ColRow> {
   var neighbors: Array<ColRow> = [
     [soul.gridContext.colRow[0] + 1, soul.gridContext.colRow[1]],
     [soul.gridContext.colRow[0], soul.gridContext.colRow[1] + 1],
     [soul.gridContext.colRow[0] - 1, soul.gridContext.colRow[1]],
     [soul.gridContext.colRow[0], soul.gridContext.colRow[1] - 1]
   ];
+  if (includeCorners) {
+    neighbors = neighbors.concat([
+      [soul.gridContext.colRow[0] + 1, soul.gridContext.colRow[1] + 1],
+      [soul.gridContext.colRow[0] + 1, soul.gridContext.colRow[1] - 1],
+      [soul.gridContext.colRow[0] - 1, soul.gridContext.colRow[1] - 1],
+      [soul.gridContext.colRow[0] - 1, soul.gridContext.colRow[1] + 1]
+    ]);
+  }
   return neighbors.filter(isInGridBounds);
 
   function isInGridBounds(neighbor: ColRow) {
