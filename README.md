@@ -37,6 +37,10 @@ Plan
 - Explain goal - Done
 - Don't trigger turns when an empty diagonal space is clicked.
 - Speed up time between turns.
+- Actually provide protection via shells.
+- Player's turn/Other guys' turns message
+- Log
+- Soul descriptions
 
 Vague concepts to fit in if somehow the basics come together
 ---
