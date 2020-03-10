@@ -118,6 +118,20 @@ body {
   border-radius: 0.5em;
 }
 
+.turn-label {
+  color: hsl(60, 100%, 50%);
+  border: dashed 2px;
+  padding: 0.2em;
+  border-radius: 0.25em;
+  font-weight: bold;
+  animation: text-blink 2s infinite;
+}
+
+.turn-label.player-turn {
+  color: hsl(140.6, 81.8%, 49.6%);
+  animation: none;
+}
+
 .centered-col {
   display: flex;
   flex-direction: column;
@@ -139,4 +153,10 @@ body {
   50% { box-shadow: #fa7147 0 0 25px; }
   67% { box-shadow: #fa7147 0 0 20px; }
   100% { box-shadow: #fa7147 0 0 2px; }
+}
+
+@keyframes text-blink {
+  0% { opacity: 1.0; }
+  50% { opacity: 0.0; }
+  100% { opacity: 1.0; }
 }

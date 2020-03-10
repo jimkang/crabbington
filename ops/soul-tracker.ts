@@ -13,7 +13,8 @@ export function createSoulTracker(): SoulTracker {
     getActingSoul,
     addSouls,
     removeSouls,
-    incrementActorIndex
+    incrementActorIndex,
+    actingSoulGoesRightAfterPlayer
   };
 
   // It's important to call updateSoul
@@ -88,6 +89,15 @@ export function createSoulTracker(): SoulTracker {
     if (currentActingSoulIndex >= souls.length) {
       currentActingSoulIndex = 0;
     }
+  }
+
+  // Possibly unnecessary.
+  function actingSoulGoesRightAfterPlayer(): boolean {
+    var prevIndex = currentActingSoulIndex - 1;
+    if (prevIndex < 0) {
+      prevIndex = souls.length - 1;
+    }
+    return souls[prevIndex].type === 'player';
   }
 }
 

@@ -38,7 +38,7 @@ Plan
 - Don't trigger turns when an empty diagonal space is clicked.
 - Speed up time between turns.
 - Actually provide protection via shells.
-- Player's turn/Other guys' turns message
+- Player's turn/Other guys' turns message - Done
 - Log
 - Soul descriptions
 

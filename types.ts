@@ -150,6 +150,7 @@ export interface SoulTracker {
   getSouls: () => Array<Soul>;
   getActingSoul: () => Soul;
   incrementActorIndex: () => void;
+  actingSoulGoesRightAfterPlayer: () => boolean;
 }
 
 export interface Grid {

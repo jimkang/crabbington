@@ -14,6 +14,7 @@ var newGameButton = d3.select('#new-game-button');
 var buttonRoot = controlsLayer.select('.button-list');
 var currentHPSpan = hudLayer.select('#current-hp');
 var maxHPSpan = hudLayer.select('#max-hp');
+var turnLabel = hudLayer.select('.turn-label');
 
 var playerCommandQueue: Array<Command> = [];
 var concludeUI;
@@ -65,6 +66,12 @@ function renderUI({
   maxHPSpan.text(gameState.player.maxHP);
 
   controlsLayer.classed('hidden', !gameState.uiOn);
+
+  const isPlayerTurn = gameState.soulTracker.getActingSoul().type === 'player';
+  turnLabel.text(
+    isPlayerTurn ? "It's your turn!" : "It's the other guys' turn!"
+  );
+  turnLabel.classed('player-turn', isPlayerTurn);
 
   function onClickChoice(cmd: Command) {
     playerCommandQueue.push(cmd);
