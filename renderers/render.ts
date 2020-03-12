@@ -33,13 +33,17 @@ function render({
   onAdvance,
   onMessageDismiss,
   onNewGame,
-  shouldWaitForInteraction = true
+  onFindPlayer,
+  shouldWaitForInteraction = true,
+  shouldPanToPlayer = false
 }: {
   gameState: GameState;
   onAdvance;
   onMessageDismiss: () => void;
   onNewGame: () => void;
+  onFindPlayer: () => void;
   shouldWaitForInteraction: boolean;
+  shouldPanToPlayer: boolean;
 }) {
   lastGameState = gameState;
 
@@ -48,6 +52,10 @@ function render({
     // and their postAnimationGameStateUpdaters before returning to normal.
     renderAnimations({ gameState, onAdvance, draw });
     return;
+  }
+
+  if (shouldPanToPlayer) {
+    panToPlayer();
   }
 
   draw();
@@ -61,7 +69,7 @@ function render({
   inputBoard.on('click.input', null);
   inputBoard.on('click.input', onInputBoardClick);
 
-  renderUI({ gameState, onAdvance, onNewGame });
+  renderUI({ gameState, onAdvance, onNewGame, onFindPlayer });
   renderMessage({ message: gameState.displayMessage, onMessageDismiss });
 
   if (!shouldWaitForInteraction) {
@@ -73,6 +81,14 @@ function render({
     var recentClickX = currentTransform.invertX(d3.event.layerX);
     var recentClickY = currentTransform.invertY(d3.event.layerY);
     onAdvance({ gameState, recentClickX, recentClickY });
+  }
+
+  function panToPlayer() {
+    // currentTransform has a translate() method.
+    // Zoom.zoomIdentity has methods that can be used to create a new transform.
+    // How do I set the transform on a behavior?
+    var transform = Zoom.zoomIdentity.scale(2).translate(1, 1);
+    setUpZoom(draw, transform);
   }
 }
 
@@ -114,15 +130,19 @@ function resizeBoards() {
   return { boardWidth, boardHeight };
 }
 
-function setUpZoom(draw) {
+function setUpZoom(draw, initialTransform = undefined) {
   var zoom = Zoom.zoom()
     .scaleExtent([0.03, 2])
     .on('zoom', zoomed);
 
   inputBoard.call(zoom);
 
+  if (initialTransform) {
+    inputBoard.call(zoom.transform, initialTransform);
+  }
+
   function zoomed() {
-    // Warning: This is reference. Is d3 going to change it unexpectedly?
+    // Warning: This is a reference. Is d3 going to change it unexpectedly?
     currentTransform = d3.event.transform;
     //console.log('transform', currentTransform);
     draw(currentTransform);

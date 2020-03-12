@@ -41,6 +41,7 @@ Plan
 - Player's turn/Other guys' turns message - Done
 - Log
 - Soul descriptions
+- Disc
 
 Vague concepts to fit in if somehow the basics come together
 ---

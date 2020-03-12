@@ -11,6 +11,7 @@ var hudLayer = d3.select('#hud-layer');
 var closeHelpButton = d3.select('#close-help-button');
 var openHelpButton = d3.select('#open-help-button');
 var newGameButton = d3.select('#new-game-button');
+var findPlayerButton = d3.select('#find-player-button');
 var buttonRoot = controlsLayer.select('.button-list');
 var currentHPSpan = hudLayer.select('#current-hp');
 var maxHPSpan = hudLayer.select('#max-hp');
@@ -38,11 +39,13 @@ function onOpenHelpClick() {
 function renderUI({
   gameState,
   onAdvance,
-  onNewGame
+  onNewGame,
+  onFindPlayer
 }: {
   gameState: GameState;
   onAdvance;
   onNewGame;
+  onFindPlayer;
 }) {
   playerCommandQueue.length = 0;
 
@@ -64,6 +67,8 @@ function renderUI({
 
   currentHPSpan.text(gameState.player.hp);
   maxHPSpan.text(gameState.player.maxHP);
+
+  findPlayerButton.on('click.find-player', onFindPlayer);
 
   controlsLayer.classed('hidden', !gameState.uiOn);
 

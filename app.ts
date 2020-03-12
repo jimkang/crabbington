@@ -100,14 +100,24 @@ function followRoute({ seed }) {
 
     window.requestAnimationFrame(callRender);
 
-    function callRender() {
-      render({
-        gameState,
-        onMessageDismiss,
-        onAdvance: advance,
-        onNewGame: restartGame,
-        shouldWaitForInteraction: renderShouldWaitToAdvanceToNextUpdate
-      });
+    function callRender(overrides = {}) {
+      render(
+        Object.assign(
+          {
+            gameState,
+            onMessageDismiss,
+            onAdvance: advance,
+            onNewGame: restartGame,
+            onFindPlayer: findPlayer,
+            shouldWaitForInteraction: renderShouldWaitToAdvanceToNextUpdate
+          },
+          overrides
+        )
+      );
+    }
+
+    function findPlayer() {
+      callRender({ shouldPanToPlayer: true });
     }
   }
 }
