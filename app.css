@@ -109,21 +109,44 @@ body {
   text-transform: uppercase;
 }
 
+#hud-layer {
+  font-size: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /*! width: 100%; */
+}
+
+#hud-layer > div {
+  padding: 0;
+  margin-bottom: 0.8em;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#hud-layer button {
+  margin-bottom: 0;
+}
+
+.status-container > span {
+  padding: 0.2em;
+}
+
 .hp-container {
   color: #fff;
   font-size: 1.2em;
   font-weight: bold;
   background-color: hsla(0, 0%, 0%, 0.8);
-  padding: 0.5em;
   border-radius: 0.5em;
 }
 
 .turn-label {
   color: hsl(60, 100%, 50%);
   border: dashed 2px;
-  padding: 0.2em;
   border-radius: 0.25em;
   font-weight: bold;
+  background-color: hsla(0, 0%, 0%, 0.8);
   animation: text-blink 2s infinite;
 }
 

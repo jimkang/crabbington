@@ -10,7 +10,12 @@ var callNextTick = require('call-next-tick');
 import { renderMessage } from './render-message';
 import { renderAnimations } from './render-animations';
 
-import { Soul, GameState } from '../types';
+import { Soul, GameState, ColRow } from '../types';
+import {
+  spriteSize /*, gridWidthSprites, gridHeightSprites */
+} from '../sizes';
+
+const focusScale = 1;
 
 // Get the various DOM roots.
 var canvasesContainer = d3.select('#canvases-container');
@@ -35,7 +40,7 @@ function render({
   onNewGame,
   onFindPlayer,
   shouldWaitForInteraction = true,
-  shouldPanToPlayer = false
+  soulToFocusOn = undefined
 }: {
   gameState: GameState;
   onAdvance;
@@ -43,7 +48,7 @@ function render({
   onNewGame: () => void;
   onFindPlayer: () => void;
   shouldWaitForInteraction: boolean;
-  shouldPanToPlayer: boolean;
+  soulToFocusOn: Soul;
 }) {
   lastGameState = gameState;
 
@@ -54,8 +59,8 @@ function render({
     return;
   }
 
-  if (shouldPanToPlayer) {
-    panToPlayer();
+  if (soulToFocusOn) {
+    focusOnSoul(soulToFocusOn);
   }
 
   draw();
@@ -83,11 +88,24 @@ function render({
     onAdvance({ gameState, recentClickX, recentClickY });
   }
 
-  function panToPlayer() {
-    // currentTransform has a translate() method.
-    // Zoom.zoomIdentity has methods that can be used to create a new transform.
-    // How do I set the transform on a behavior?
-    var transform = Zoom.zoomIdentity.scale(2).translate(1, 1);
+  function focusOnSoul(soul: Soul) {
+    // Deriving from Zoom.zoomIdentity is the recommended way
+    // to create a new transform.
+    var soulColRow: ColRow = soul.gridContext.colRow;
+    const soulCenterX: number = soulColRow[0] * spriteSize;
+    const soulCenterY: number = soulColRow[1] * spriteSize;
+    // At zoomIdentity (scale 1, translate 0, 0), the center of the view is at viewWidth/2, viewHeight/2.
+    const viewWidth = imageBoard.attr('width');
+    const viewHeight = imageBoard.attr('height');
+    const unscaledCenterX = viewWidth / 2;
+    const unscaledCenterY = viewHeight / 2;
+    const unscaledCenteringVectorX = unscaledCenterX - soulCenterX;
+    const unscaledCenteringVectorY = unscaledCenterY - soulCenterY;
+    // TODO: Fix so that this works with a focusScale other than 1.
+    var transform = Zoom.zoomIdentity.translate(
+      unscaledCenteringVectorX / focusScale,
+      unscaledCenteringVectorY / focusScale
+    );
     setUpZoom(draw, transform);
   }
 }
@@ -111,11 +129,13 @@ function draw() {
 }
 
 function resizeBoards() {
-  var boardWidth = document.body.getBoundingClientRect().width;
-  var boardHeight = document.body.getBoundingClientRect().height;
-  if (boardHeight < 400) {
-    boardHeight = boardWidth;
-  }
+  //var boardWidth = document.body.getBoundingClientRect().width;
+  //var boardHeight = document.body.getBoundingClientRect().height;
+  var boardWidth = window.innerWidth;
+  var boardHeight = window.innerHeight;
+  //if (boardHeight < 400) {
+  //  boardHeight = boardWidth;
+  //}
 
   canvasesContainer.style('width', boardWidth);
   canvasesContainer.style('height', boardHeight);
@@ -138,6 +158,8 @@ function setUpZoom(draw, initialTransform = undefined) {
   inputBoard.call(zoom);
 
   if (initialTransform) {
+    // Trying to call zoom.transform() directly causes a d3
+    // error because it can't find a selection.
     inputBoard.call(zoom.transform, initialTransform);
   }
 

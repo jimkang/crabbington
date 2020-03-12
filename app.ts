@@ -65,16 +65,19 @@ function followRoute({ seed }) {
   init(theGameState, targetTree);
   theGameState.soulTracker.incrementActorIndex();
 
-  advance({ gameState: theGameState });
+  // On first advance and render, move the camera to the player.
+  advance({ gameState: theGameState, shouldMoveFocusToPlayer: true });
 
   function advance({
     gameState,
     recentClickX,
-    recentClickY
+    recentClickY,
+    shouldMoveFocusToPlayer = false
   }: {
     gameState: GameState;
     recentClickX?: number;
     recentClickY?: number;
+    shouldMoveFocusToPlayer?: boolean;
   }) {
     incrementTurn(gameState);
     if (!gameState.allowAdvance) {
@@ -98,7 +101,11 @@ function followRoute({ seed }) {
       gameState.soulTracker.incrementActorIndex();
     }
 
-    window.requestAnimationFrame(callRender);
+    if (shouldMoveFocusToPlayer) {
+      findPlayer();
+    } else {
+      window.requestAnimationFrame(callRender);
+    }
 
     function callRender(overrides = {}) {
       render(
@@ -117,7 +124,7 @@ function followRoute({ seed }) {
     }
 
     function findPlayer() {
-      callRender({ shouldPanToPlayer: true });
+      callRender({ soulToFocusOn: gameState.player });
     }
   }
 }

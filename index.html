@@ -31,14 +31,20 @@
 
       <section id="ui-board" class="centered-col">
         <section id="hud-layer" class="hidden">
-          <button id="open-help-button" class="clickable">Help</button>
-          <button id="new-game-button" class="clickable">New Game</button>
-          <button id="find-player-button" class="clickable">Find Your Crab</button>
-          <span class="hp-container"
-            >Health: <span id="current-hp"></span> out of
-            <span id="max-hp"></span> hit points.</span
-          >
-          <span class="turn-label"></span>
+          <div class="hud-controls-container">
+            <button id="new-game-button" class="clickable">New Game</button>
+            <button id="open-help-button" class="clickable">Help</button>
+            <button id="find-player-button" class="clickable">
+              Find Your Crab
+            </button>
+          </div>
+          <div class="status-container">
+            <span class="hp-container"
+              >Health: <span id="current-hp"></span>/<span id="max-hp"></span>
+              hit points.</span
+            >
+            <span class="turn-label"></span>
+          </div>
         </section>
         <div id="controls-layer" class="hidden">
           <ul class="button-list"></ul>
@@ -78,7 +84,7 @@
             <p>
               Art by Katt and design and code by Jim.
               <a href="https://crabbington.substack.com/">Sign up here</a> to
-              get notified when there's updates on this game.
+              get notified when there's updates to this game.
             </p>
           </div>
           <button id="close-help-button" class="clickable hidden">OK!</button>
