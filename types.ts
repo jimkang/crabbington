@@ -149,6 +149,7 @@ export interface SoulTracker {
   removeSouls: SoulProcessor;
   getSouls: () => Array<Soul>;
   getActingSoul: () => Soul;
+  setActingSoul: (string) => void;
   incrementActorIndex: () => void;
   actingSoulGoesRightAfterPlayer: () => boolean;
 }

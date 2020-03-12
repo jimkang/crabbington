@@ -6,11 +6,12 @@ import { updateSoul } from '../flows/update-soul';
 
 export function createSoulTracker(): SoulTracker {
   var souls: Array<Soul> = [];
-  var currentActingSoulIndex: number;
+  var currentActingSoulIndex = 0;
 
   return {
     getSouls,
     getActingSoul,
+    setActingSoul,
     addSouls,
     removeSouls,
     incrementActorIndex,
@@ -51,9 +52,12 @@ export function createSoulTracker(): SoulTracker {
       }
     }
 
+    const soulsLengthAfterDeletion = souls.length - indexesToDelete.length;
+
     if (indexNeedsReplacement) {
       for (let j = 1; j < souls.length; ++j) {
-        let wrapAroundIndex = (currentActingSoulIndex + j) % souls.length;
+        let wrapAroundIndex =
+          (currentActingSoulIndex + j) % soulsLengthAfterDeletion;
         if (!indexesToDelete.includes(wrapAroundIndex)) {
           currentActingSoulIndex = wrapAroundIndex;
           break;
@@ -77,7 +81,15 @@ export function createSoulTracker(): SoulTracker {
   }
 
   function getActingSoul(): Soul {
-    return souls[currentActingSoulIndex];
+    var soul: Soul = souls[currentActingSoulIndex];
+    //if (!soul) {
+    //debugger;
+    //}
+    return soul;
+  }
+
+  function setActingSoul(soulId: string): void {
+    currentActingSoulIndex = souls.findIndex(soul => soul.id === soulId);
   }
 
   function incrementActorIndex() {
@@ -88,6 +100,9 @@ export function createSoulTracker(): SoulTracker {
     }
     if (currentActingSoulIndex >= souls.length) {
       currentActingSoulIndex = 0;
+    }
+    if (isNaN(currentActingSoulIndex)) {
+      debugger;
     }
   }
 

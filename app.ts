@@ -63,7 +63,7 @@ function followRoute({ seed }) {
     id: 'player'
   });
   init(theGameState, targetTree);
-  theGameState.soulTracker.incrementActorIndex();
+  theGameState.soulTracker.setActingSoul('player');
 
   // On first advance and render, move the camera to the player.
   advance({ gameState: theGameState, shouldMoveFocusToPlayer: true });
