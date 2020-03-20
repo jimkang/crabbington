@@ -10,12 +10,9 @@ var callNextTick = require('call-next-tick');
 import { renderMessage } from './render-message';
 import { renderAnimations } from './render-animations';
 
-import { Soul, GameState, ColRow } from '../types';
-import {
-  spriteSize /*, gridWidthSprites, gridHeightSprites */
-} from '../sizes';
+import { Soul, GameState, Pt } from '../types';
 
-const focusScale = 1;
+const focusScale = 2;
 
 // Get the various DOM roots.
 var canvasesContainer = d3.select('#canvases-container');
@@ -91,23 +88,36 @@ function render({
   function focusOnSoul(soul: Soul) {
     // Deriving from Zoom.zoomIdentity is the recommended way
     // to create a new transform.
-    var soulColRow: ColRow = soul.gridContext.colRow;
-    const soulCenterX: number = soulColRow[0] * spriteSize;
-    const soulCenterY: number = soulColRow[1] * spriteSize;
     // At zoomIdentity (scale 1, translate 0, 0), the center of the view is at viewWidth/2, viewHeight/2.
     const viewWidth = imageBoard.attr('width');
     const viewHeight = imageBoard.attr('height');
-    const unscaledCenterX = viewWidth / 2;
-    const unscaledCenterY = viewHeight / 2;
-    const unscaledCenteringVectorX = unscaledCenterX - soulCenterX;
-    const unscaledCenteringVectorY = unscaledCenterY - soulCenterY;
-    // TODO: Fix so that this works with a focusScale other than 1.
-    var transform = Zoom.zoomIdentity.translate(
-      unscaledCenteringVectorX / focusScale,
-      unscaledCenteringVectorY / focusScale
+    var postzoomPt: Pt = [viewWidth / 2, viewHeight / 2];
+    var tPt: Pt = getTxTyForZoomMatrix(
+      focusScale,
+      [soul.x, soul.y],
+      postzoomPt
     );
+
+    var transform = Zoom.zoomIdentity
+      .translate(tPt[0], tPt[1])
+      .scale(focusScale);
     setUpZoom(draw, transform);
   }
+}
+
+// Matrix for d3-zoom looks like this:
+// [ k 0 tPt[0] ]
+// [ 0 k tPt[1] ]
+// [ 0 0 1  ]
+// postzoomPt is obtained by multiplying it by
+// [ prezoomPt[0] ]
+// [ prezoomPt[1] ]
+// [ 1 ]
+// So, if you want to know where you want your point to end up,
+// post-zoom, provide that, the prezoomPt, and the scale,
+// and this function figures out what tPt is.
+function getTxTyForZoomMatrix(k: number, prezoomPt: Pt, postzoomPt: Pt): Pt {
+  return [postzoomPt[0] - prezoomPt[0] * k, postzoomPt[1] - prezoomPt[1] * k];
 }
 
 function draw() {
