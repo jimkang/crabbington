@@ -18,11 +18,11 @@ Big exceptions: Diablo, Spelunky
 
 Some challenge rules:
 
->     You CAN use external libraries, game engines, pre-existing generic code/algorithms, pre-existing generic art, etc. You can even start your game from an existing game, if you are willing to turn it out into something unique, you must however say what resources were reused.
->    It is allowed and recommended to have a rough design idea of your project before starting
->    After the initial date chosen for the challenge, sign up in the jam page for the year.
->    Whenever you are ready to start working, take note of your starting time. You can optionally post a notice of you starting development in the game jam forum. 168 or less hours after this initial post, submit your game entry on the portal and mark it as successful or unsuccessful
->    The challenge is always Saturday to Sunday; if you start after Sunday you will have less than 168 hours as in-challenge 7DRLs must be completed by the closing time. You can still use 168 hours and have a normal, out of challenge, 7DRL, however
+     - You CAN use external libraries, game engines, pre-existing generic code/algorithms, pre-existing generic art, etc. You can even start your game from an existing game, if you are willing to turn it out into something unique, you must however say what resources were reused.
+    - It is allowed and recommended to have a rough design idea of your project before starting
+    - After the initial date chosen for the challenge, sign up in the jam page for the year.
+    - Whenever you are ready to start working, take note of your starting time. You can optionally post a notice of you starting development in the game jam forum. 168 or less hours after this initial post, submit your game entry on the portal and mark it as successful or unsuccessful
+    - The challenge is always Saturday to Sunday; if you start after Sunday you will have less than 168 hours as in-challenge 7DRLs must be completed by the closing time. You can still use 168 hours and have a normal, out of challenge, 7DRL, however
 
 ## How I do it
 
