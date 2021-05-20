@@ -10,6 +10,9 @@ export function moveCmd({ gameState, targetTree, cmd }: CmdParams) {
     cmd.params.destColRow
   );
   cmd.actor.gridContext.colRow = cmd.params.destColRow;
+  if (gameState.player.id === cmd.actor.id) {
+    cmd.actor.hp -= 1;
+  }
   updateSoul(gameState.grids, targetTree, cmd.actor);
 }
 

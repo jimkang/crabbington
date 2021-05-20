@@ -544,6 +544,7 @@ function getPlayerInteractionsWithThing(actor: Soul, thing): Array<CommandDef> {
     if (actor.items.some(isBlueBomb)) {
       interactions.push(cmdDefsById.blast);
     }
+    interactions.push(cmdDefsById.sleep);
     return interactions;
   }
   if (thing.categories) {

@@ -6,23 +6,25 @@ import { blastCmd } from './blast-command';
 import { takeCmd } from './take-command';
 import { bonkCmd } from './bonk-command';
 import { moveCmd } from './move-command';
+import { sleepCmd } from './sleep-command';
 
 export var cmdDefsById: Record<string, CommandDef> = {
   blast: {
     id: 'blast',
     name: 'Blast',
     cmdFn: blastCmd,
-    params: { blastSize: 3, color: 'yellow' }
+    params: { blastSize: 3, color: 'yellow' },
   },
   smallBlast: {
     id: 'smallBlast',
     name: 'Blast',
     cmdFn: blastCmd,
-    params: { blastSize: 1.5, color: 'red' }
+    params: { blastSize: 1.5, color: 'red' },
   },
   take: { id: 'take', name: 'Take', cmdFn: takeCmd },
   bonk: { id: 'bonk', name: 'Bonk', cmdFn: bonkCmd },
-  move: { id: 'move', name: 'Move', cmdFn: moveCmd }
+  move: { id: 'move', name: 'Move', cmdFn: moveCmd },
+  sleep: { id: 'sleep', name: 'Sleep', cmdFn: sleepCmd },
 };
 
 export function instantiateCmdFromDef(
