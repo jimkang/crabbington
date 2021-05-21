@@ -51,6 +51,26 @@ Vague concepts to fit in if somehow the basics come together
 - Idea-spreading
 - Geometrical movement
 
+Plans
+----
+
+- Getting damaged as you move.
+- An action that lets you sleep for one turn, which will heal you some.
+
+If fortune smiles on us, maybe we can get in:
+
+- Hurting shells instead of the crab when it's hit.
+
+Then, maybe I can actually get a sense of the viability of the concept!
+
+The code is organized like this:
+
+- There is an event-triggered game "loop". When the player ends their turn, the `advance` function in app.ts iterates over each 'soul' in the game, starting with the player. State is updated, then rendered in each `advance` call.
+- An `update` function (update.ts) lets each soul run a command.
+- Commands are objects that have functions that actually update state and sometime queue animations.
+
+-
+
 Installation
 ------------
 

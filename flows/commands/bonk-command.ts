@@ -8,21 +8,56 @@ export function bonkCmd({ gameState, targetTree, cmd, probable }: CmdParams) {
     type: 'bonk',
     custom: {
       bonkerSoul: cmd.actor,
-      bonkeeSoul: target
+      bonkeeSoul: target,
     },
     duration: 900,
-    postAnimationGameStateUpdater: updateStatePostBonkAnimation
+    postAnimationGameStateUpdater: updateStatePostBonkAnimation,
   });
 
   function updateStatePostBonkAnimation(notifyAnimationDone: Done) {
+    var damage = probable.rollDie(6);
+    var killed: Soul[] = [];
+
+    // Damage target's items before target.
+    for (let i = target.items.length - 1; damage > 0 && i >= 0; --i) {
+      let currentTarget = target.items[i];
+      damage = damageSoul(killed, currentTarget, damage);
+      if (damage >= 0) {
+        target.items.splice(i, 1);
+      }
+    }
+
+    // Damage target.
+    if (damage > 0) {
+      damageSoul(killed, target, damage);
+    }
+
+    gameState.soulTracker.removeSouls(targetTree, killed);
+    killSouls(gameState, targetTree, killed);
+
+    callNextTick(notifyAnimationDone);
+  }
+
+  // Returns remaining damage, if any.
+  function damageSoul(
+    recentlyDeceased: Soul[],
+    target: Soul,
+    damage: number
+  ): number {
     if (!isNaN(target.hp)) {
-      target.hp -= probable.rollDie(6);
+      if (target.hp > damage) {
+        target.hp -= damage;
+        damage = 0;
+      } else {
+        // Order is important here!
+        damage -= target.hp;
+        target.hp = 0;
+      }
+      if (target.hp < 1) {
+        recentlyDeceased.push(target);
+      }
       console.log('New hp for', target.id, target.hp, '/', target.maxHP);
     }
-    if (target.hp < 1) {
-      gameState.soulTracker.removeSouls(targetTree, [target]);
-      killSouls(gameState, targetTree, [target]);
-    }
-    callNextTick(notifyAnimationDone);
+    return damage;
   }
 }

@@ -83,7 +83,7 @@ export interface Soul extends SoulDef, Partial<Box> {
   x?: number;
   y?: number;
   gridContext?: GridContext;
-  items?: Array<Soul>;
+  items: Array<Soul>;
   hp?: number;
   maxHP?: number;
 }
