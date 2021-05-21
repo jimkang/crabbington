@@ -16,11 +16,11 @@ var defList: Array<SoulDef> = [
       row: 0,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    getInteractionsWithThing: getGuyInteractionsWithThing
+    getInteractionsWithThing: getGuyInteractionsWithThing,
   },
   {
     type: 'basicShell',
@@ -30,11 +30,11 @@ var defList: Array<SoulDef> = [
       row: 1,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'beanie',
@@ -44,11 +44,11 @@ var defList: Array<SoulDef> = [
       row: 2,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell', offset: [0, -64] }
+    itemRole: { itemPositioningStyle: 'shell', offset: [0, -64] },
   },
   {
     type: 'box',
@@ -58,11 +58,11 @@ var defList: Array<SoulDef> = [
       row: 3,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'bucket',
@@ -72,28 +72,31 @@ var defList: Array<SoulDef> = [
       row: 4,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'bug',
     categories: ['guy'],
     canMoveHereFn: getCanMoveHereFn({ avoid: ['guy'] }),
     move: randomMove,
-    facingsAllowed: [[1, 0], [-1, 0]],
+    facingsAllowed: [
+      [1, 0],
+      [-1, 0],
+    ],
     sprite: {
       col: 0,
       row: 5,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    getInteractionsWithThing: getGuyInteractionsWithThing
+    getInteractionsWithThing: getGuyInteractionsWithThing,
   },
   {
     type: 'cat',
@@ -105,28 +108,31 @@ var defList: Array<SoulDef> = [
       row: 6,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    getInteractionsWithThing: getGuyInteractionsWithThing
+    getInteractionsWithThing: getGuyInteractionsWithThing,
   },
   {
     type: 'cloud',
     categories: ['guy'],
     canMoveHereFn: getCanMoveHereFn({ avoid: [] }),
     move: randomMove,
-    facingsAllowed: [[1, 0], [-1, 0]],
+    facingsAllowed: [
+      [1, 0],
+      [-1, 0],
+    ],
     sprite: {
       col: 0,
       row: 7,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-air'],
     hitDice: '1d8',
-    getInteractionsWithThing: getGuyInteractionsWithThing
+    getInteractionsWithThing: getGuyInteractionsWithThing,
   },
   {
     type: 'corn',
@@ -138,11 +144,11 @@ var defList: Array<SoulDef> = [
       row: 8,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    getInteractionsWithThing: getGuyInteractionsWithThing
+    getInteractionsWithThing: getGuyInteractionsWithThing,
   },
   // TODO: Get sleep, other animation in.
   {
@@ -155,10 +161,10 @@ var defList: Array<SoulDef> = [
       row: 10,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
-    hitDice: '3d6'
+    hitDice: '3d6',
   },
   {
     type: 'cup',
@@ -168,11 +174,11 @@ var defList: Array<SoulDef> = [
       row: 12,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'devil',
@@ -184,11 +190,11 @@ var defList: Array<SoulDef> = [
       row: 13,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    getInteractionsWithThing: getMeanGuyInteractionsWithThing
+    getInteractionsWithThing: getMeanGuyInteractionsWithThing,
   },
   {
     type: 'fancyShell',
@@ -198,11 +204,11 @@ var defList: Array<SoulDef> = [
       row: 14,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'helmet',
@@ -212,11 +218,11 @@ var defList: Array<SoulDef> = [
       row: 15,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'horn',
@@ -226,11 +232,11 @@ var defList: Array<SoulDef> = [
       row: 16,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'lagavulinShell',
@@ -240,11 +246,11 @@ var defList: Array<SoulDef> = [
       row: 17,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'largeShell',
@@ -254,11 +260,11 @@ var defList: Array<SoulDef> = [
       row: 18,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'longShell',
@@ -268,11 +274,11 @@ var defList: Array<SoulDef> = [
       row: 19,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'pan',
@@ -282,11 +288,11 @@ var defList: Array<SoulDef> = [
       row: 20,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'pointyRock',
@@ -296,11 +302,11 @@ var defList: Array<SoulDef> = [
       row: 21,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     facingsAllowed: [[1, 0]],
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'roundRock',
@@ -310,11 +316,11 @@ var defList: Array<SoulDef> = [
       row: 22,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     facingsAllowed: [[1, 0]],
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'shoe',
@@ -324,11 +330,11 @@ var defList: Array<SoulDef> = [
       row: 23,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'skull',
@@ -340,12 +346,12 @@ var defList: Array<SoulDef> = [
       row: 24,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
     getInteractionsWithThing: getGuyInteractionsWithThing,
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'soupCan',
@@ -355,11 +361,11 @@ var defList: Array<SoulDef> = [
       row: 25,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'SUV',
@@ -371,11 +377,11 @@ var defList: Array<SoulDef> = [
       row: 26,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    getInteractionsWithThing: getGuyInteractionsWithThing
+    getInteractionsWithThing: getGuyInteractionsWithThing,
   },
   {
     type: 'tearDrop',
@@ -387,13 +393,16 @@ var defList: Array<SoulDef> = [
       row: 27,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
     getInteractionsWithThing: getGuyInteractionsWithThing,
-    facingsAllowed: [[1, 0], [-1, 0]],
-    itemRole: { itemPositioningStyle: 'shell' }
+    facingsAllowed: [
+      [1, 0],
+      [-1, 0],
+    ],
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'tinyShell',
@@ -403,11 +412,11 @@ var defList: Array<SoulDef> = [
       row: 28,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'trike',
@@ -419,11 +428,11 @@ var defList: Array<SoulDef> = [
       row: 29,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    getInteractionsWithThing: getGuyInteractionsWithThing
+    getInteractionsWithThing: getGuyInteractionsWithThing,
   },
   {
     type: 'trilby',
@@ -433,11 +442,11 @@ var defList: Array<SoulDef> = [
       row: 30,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'twistyShell',
@@ -447,11 +456,11 @@ var defList: Array<SoulDef> = [
       row: 31,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'twoPointRock',
@@ -461,10 +470,10 @@ var defList: Array<SoulDef> = [
       row: 32,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     facingsAllowed: [[1, 0]],
-    allowedGrids: ['grid-figures']
+    allowedGrids: ['grid-figures'],
   },
   {
     type: 'worm',
@@ -476,12 +485,12 @@ var defList: Array<SoulDef> = [
       row: 33,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-air'],
     hitDice: '1d8',
     getInteractionsWithThing: getGuyInteractionsWithThing,
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'grail',
@@ -491,11 +500,11 @@ var defList: Array<SoulDef> = [
       row: 34,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'blueBomb',
@@ -505,11 +514,11 @@ var defList: Array<SoulDef> = [
       row: 35,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
+    itemRole: { itemPositioningStyle: 'shell' },
   },
   {
     type: 'redBomb',
@@ -519,12 +528,12 @@ var defList: Array<SoulDef> = [
       row: 36,
       width: spriteSize,
       height: spriteSize,
-      hitRadius: spriteSize * 0.75
+      hitRadius: spriteSize * 0.75,
     },
     allowedGrids: ['grid-figures'],
     hitDice: '1d8',
-    itemRole: { itemPositioningStyle: 'shell' }
-  }
+    itemRole: { itemPositioningStyle: 'shell' },
+  },
 ];
 
 export var soulDefs: Record<string, SoulDef> = {};
